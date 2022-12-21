@@ -37,7 +37,7 @@ _Isaac Chan_, Project Member, Hardware (Schematic and PCB design, PCBA)<br/>
 ## Links
 [Spartan Racing Website](https://www.sjsuformulasae.com/)<br/>
 [Pico Pinout](https://microcontrollerslab.com/wp-content/uploads/2021/01/Raspberry-Pi-Pico-pinout-diagram.svg)<br/>
-[Hardware Bill of Materials](https://docs.google.com/spreadsheets/d/1v1PMumQIRmZhS1IUzn-vQS3euJqrCqfKRKHymnf3oms/edit?usp=sharing)<br/>
+[Hardware Bill of Materials](https://docs.google.com/spreadsheets/d/1UGtSwsXKJZJlghaglvCwl1YWrQGyW8ZNmpcijJZi6sg/edit#gid=0)<br/>
 [CDR Slides](https://docs.google.com/presentation/d/1rN90VLVj-aSsbMOXEkgrvWsR6Ec_Ea_NRq933g5CcTc/edit#slide=id.g164c7d6d0b3_1_0)<br/>
 [DDR Slides](https://docs.google.com/presentation/d/1xZXBK4U6u2NcAG4G7vK2h8TG5N_wlqzYkh3I5ew-82A/edit#slide=id.g171971f4135_0_310)<br/>
 
