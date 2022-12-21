@@ -11,8 +11,10 @@
 // 1 for Menu
 // 2 for Individual Menu Screens
 // 3 for RPM Threshold
-uint8_t DISPLAY_SCREEN = 0;
-uint8_t ROW_COUNT = 0; // for button selection
+
+static uint8_t DISPLAY_SCREEN = 0;
+static uint8_t ROW_COUNT = 0; // for button selection
+
 
 // Fonts and other Setup
 void lcd__init(U8G2_ST7565_NHD_C12864_F_4W_SW_SPI *lcd_ptr); // changed from SW -> HW
@@ -47,10 +49,11 @@ void lcd__print_screen(uint8_t selection, uint8_t row, char screen); // 5 row + 
 void lcd__drs_screen(uint8_t drs);
 
 // diagnostics screen
-lcd__diagnostics(uint8_t cellfault, uint8_t cellwarn, uint8_t bmsstate);
+void lcd__diagnostics(uint8_t cellfault, uint8_t cellwarn, uint8_t bmsstate);
+void lcd__print_rpm_diag(uint16_t rpm); // rpm diagnostics for ev
 
 void lcd__update_screen(uint16_t rpm, uint8_t gear, float lv, float oilpress, uint8_t drs, uint32_t curr_millis_lcd);
-void lcd__update_screenE(uint8_t cellfault, uint8_t cellwarn, uint8_t bmsstate, float hv, float soc, float lv, float hvlow, float hvtemp, uint32_t curr_millis_lcd);
+void lcd__update_screenE(uint16_t rpm, uint8_t cellfault, uint8_t cellwarn, uint8_t bmsstate, float hv, float soc, float lv, float hvlow, float hvtemp, uint32_t curr_millis_lcd);
 
 
 #endif /* LCD_H_ */

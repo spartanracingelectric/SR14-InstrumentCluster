@@ -88,6 +88,7 @@ float curr_hvlow = 0;
 float curr_hvtemp = 0;
 
 // diagnostics ---------------------------------
+float curr_rpm = 0;
 float curr_bms_fault = 0;
 float curr_bms_warn = 0;
 float curr_bms_stat = 0;
@@ -119,6 +120,11 @@ static void can__hvtemp_receive (const CANMessage & inMessage)
 }
 
 // diagnostics ---------------------------------
+static void can__rpm_receive (const CANMessage & inMessage)
+{
+  curr_rpm = ((inMessage.data[2]) | (inMessage.data[1] << 8));
+  //Serial.println ("Received RPM " + curr_rpm) ;
+}
 static void can__bms_fault_receive (const CANMessage & inMessage)
 {
   curr_bms_fault = inMessage.data[1];
@@ -159,6 +165,10 @@ float can__get_hvlow()
 }
 
 // diagnostics ---------------------------------
+float can__get_rpm()
+{
+  return curr_rpm;
+}
 float can__get_bms_fault()
 {
   return curr_bms_fault;
@@ -197,7 +207,7 @@ const ACAN2515AcceptanceFilter filters [] =
 {
   //Must have addresses in increasing order
   //{standard2515Filter (CAN_LV_ADDR, 0, 0), can__lv_receive},            //RXF0
-  
+  {standard2515Filter (CAN_RPM_ADDR, 0, 0), can__rpm_receive},
   {standard2515Filter (CAN_BMS_FAULT_ADDR, 0, 0), can__bms_fault_receive},  //RXF1 (new stuff)
   {standard2515Filter (CAN_BMS_WARN_ADDR, 0, 0), can__bms_warn_receive},  //RXF2
   {standard2515Filter (CAN_BMS_STAT_ADDR, 0, 0), can__bms_stat_receive},  //RXF3

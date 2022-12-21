@@ -89,14 +89,14 @@
 / BUTTON PINS AND Screen CONSTANTS
 /---------------------------------------------------------------------------*/
 #define BUT1 9 //PINC0
-//#define BUT2 14 //PINC1
-//#define BUT3 17 //PINC2
-//#define BUT4 15 //PINC3
+#define BUT2 10 //PINC1
+#define BUT3 11 //PINC2
+#define BUT4 12 //PINC3
 
 #define DEFAULT_SCREEN 0
 #define MENU_SCREEN 1
 #define DIAGNOSTICS_SCREEN 2
-//#define OPTIONX_SCREEN 3
+#define RPM_SCREEN 3
 //#define OPTIONY_SCREEN 4
 
 #define DEBOUNCE_TIME 600
@@ -115,6 +115,7 @@
 
 #elif (POWERTRAIN_TYPE == 'E')
 #define CANBUS_SPEED 500UL * 1000UL //500 kbit/s
+#define CAN_RPM_ADDR 0x0A5
 #define CAN_LV_ADDR 0x507
 
 #define CAN_BMS_FAULT_ADDR 0x602 // dec: 1538
@@ -127,9 +128,7 @@
 #define CAN_BAT_TEMP_ADDR 0x623
 
 
-
 // wrong addresses
-#define CAN_RPM_ADDR 0x0A5 // Does ev need rpm?
 #define CAN_REGEN_ADDR 0x508
 #endif
 

@@ -2,7 +2,7 @@
 #define BUTTONS_H_
 
 #include <Arduino.h>
-#include "lcd.h"
+
 #include "leds.h"
 #include "can.h"
 #include "config.h"

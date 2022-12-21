@@ -97,7 +97,8 @@ void lcd__print_default_screen_template()
     lcd__print8(104, 45, "HV T");
     lcd__print8(0, 45, "HVLO");
     lcd__print8(45, 28, "VOLTS");
-    lcd__print8(47, 40, "SOC%"); 
+    lcd__print8(47, 40, "SOC%");
+    lcd__print8(0, 0, "RPM Screen");
     
     #elif(POWERTRAIN_TYPE == 'C')
     lcd__print8(128 - 20, 18, "rpm");
@@ -331,14 +332,23 @@ void lcd__diagnostics(uint8_t cellfault, uint8_t cellwarn, uint8_t bmsstate)
   lcd__print_screen(5, 6, screens);
   
   char cellfault_str[2] = " ";
-  sprintf(callfault_str, "%1d", cellfault);
+  sprintf(cellfault_str, "%hu", cellfault);
   lcd__print8(56, 9, cellfault_str);
 
   char bmsstate_str[2] = " ";
-  sprintf(bmsstate_str, "%1d", bmsstate);
+  sprintf(bmsstate_str, "%hu", bmsstate);
   lcd__print8(56, 9+12, bmsstate_str);
 }
 
+void lcd__print_rpm_diag(uint16_t rpm)
+{ 
+  char rpm_str[6] = "     ";
+  //RPM up to 5 digits
+  sprintf(rpm_str, "%5hu", rpm); // transforms int or float or # into a string with a specifying operator in the middle.
+  
+  lcd__clear_section(4);
+  lcd__print18(35, 18, rpm_str);
+}
 
 // LCD Screen Update --------------------------------------------------------------- ---------------------------------------------------------------
 void lcd__update_screen(uint16_t rpm, uint8_t gear, float lv, float oilpress, uint8_t drs, uint32_t curr_millis_lcd) // C Car
@@ -355,7 +365,7 @@ void lcd__update_screen(uint16_t rpm, uint8_t gear, float lv, float oilpress, ui
   }
 }
 
-void lcd__update_screenE(uint8_t cellfault, uint8_t cellwarn, uint8_t bmsstate, float hv, float soc, float lv, float hvlow, float hvtemp, uint32_t curr_millis_lcd);
+void lcd__update_screenE(uint16_t rpm, uint8_t cellfault, uint8_t cellwarn, uint8_t bmsstate, float hv, float soc, float lv, float hvlow, float hvtemp, uint32_t curr_millis_lcd)
 {
   if (curr_millis_lcd - prev_millis_lcd >= LCD_UPDATE_MS) {
     prev_millis_lcd = curr_millis_lcd;
@@ -372,7 +382,10 @@ void lcd__update_screenE(uint8_t cellfault, uint8_t cellwarn, uint8_t bmsstate, 
       lcd__menu();
     }
     if (DISPLAY_SCREEN == 2) {
-      lcd__diagnostics(uint8_t cellfault, uint8_t cellwarn, uint8_t bmsstate);
+      lcd__diagnostics(cellfault, cellwarn, bmsstate);
+    }
+    if (DISPLAY_SCREEN == 3) {
+      lcd__print_rpm_diag(rpm);
     }
   }
 }

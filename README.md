@@ -31,7 +31,6 @@ _Shinika Balasundar_, Software Lead, Firmware & Hardware (Core Software Design, 
 _Sean Widjaja_, Project Lead, Hardware (Schematic and PCB design, PCBA)<br/>
 _Johnathon Lu_, Project Lead, Firmware (LCD FW design)<br/>
 _Shubham Mishra_, Project Member, Firmware (LCD FW design)<br/>
-_Isaac Chan_, Project Member, Hardware (Schematic and PCB design, PCBA)<br/>
 <br/>
 
 ## Links
@@ -40,5 +39,3 @@ _Isaac Chan_, Project Member, Hardware (Schematic and PCB design, PCBA)<br/>
 [Hardware Bill of Materials](https://docs.google.com/spreadsheets/d/1UGtSwsXKJZJlghaglvCwl1YWrQGyW8ZNmpcijJZi6sg/edit#gid=0)<br/>
 [CDR Slides](https://docs.google.com/presentation/d/1rN90VLVj-aSsbMOXEkgrvWsR6Ec_Ea_NRq933g5CcTc/edit#slide=id.g164c7d6d0b3_1_0)<br/>
 [DDR Slides](https://docs.google.com/presentation/d/1xZXBK4U6u2NcAG4G7vK2h8TG5N_wlqzYkh3I5ew-82A/edit#slide=id.g171971f4135_0_310)<br/>
-
-

@@ -1,6 +1,7 @@
 #include "buttons.h"
-
-uint8_t butnum = 1; // number of buttons
+uint8_t DISPLAY_SCREEN = 0;
+uint8_t ROW_COUNT = 0;
+const uint8_t butnum = 1; // number of buttons
 const byte button_pins[] = {BUT1}; //, BUT2, BUT3, BUT4};
 int button_flag[ butnum ];
 
@@ -77,27 +78,17 @@ void buttons__update_LCD() {
       buttons__flag_reset();
       break;
 //    
-    case SETTINGS_SCREEN: //DISPLAY_SCREEN = 2
+    case DIAGNOSTICS_SCREEN: //DISPLAY_SCREEN = 2
+      if (button_flag[0])
+        DISPLAY_SCREEN = 3;
+      buttons__flag_reset();
+      break;
+//    
+    case RPM_SCREEN: //DISPLAY_SCREEN = 3
       if (button_flag[0])
         DISPLAY_SCREEN = 0;
       buttons__flag_reset();
       break;
-//    
-//    case OPTIONX_SCREEN: //DISPLAY_SCREEN = 3, T Map
-//      if (button_flag[0]) {
-//        CAN__transmit_torquemap(1);
-//        indicator__blink_bottom();
-//      }
-//      if (button_flag[1]) {
-//        CAN__transmit_torquemap(2);
-//        indicator__blink_bottom();
-//      }
-//      if (button_flag[2])
-//        lcd__back();
-//      if (button_flag[3])
-//        CAN__transmit_torquemap(3);
-//      buttons__flag_reset();
-//      break;
 //    
 //    case OPTIONY_SCREEN: //DISPLAY_SCREEN = 4
 //      if (button_flag[0]) {
