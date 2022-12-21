@@ -30,7 +30,7 @@ A.k.a the ICU.<br/>
 _Shinika Balasundar_, Software Lead, Firmware & Hardware (Core Software Design, HW & FW Validation and Integration)<br/>
 _Sean Widjaja_, Project Lead, Hardware (Schematic and PCB design, PCBA)<br/>
 _Johnathon Lu_, Project Lead, Firmware (LCD FW design)<br/>
-_Shubham Mishra_, Project Member, Firmware (LCD FW design)<br/>
+_Shubham Mishra_, Project Designer, Firmware (LCD FW design)<br/>
 <br/>
 
 ## Links
