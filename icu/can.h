@@ -11,7 +11,7 @@ void can__send_test();
 void can__receive();
 
 // C car
-#if (POWERTRAIN_TYPE == 'C')
+/* #if (POWERTRAIN_TYPE == 'C')
 static void can__rpm_receive (const CANMessage & inMessage);
 static void can__gear_receive (const CANMessage & inMessage);
 static void can__oilpress_receive (const CANMessage & inMessage);
@@ -23,9 +23,10 @@ uint8_t can__get_gear();
 float can__get_oilpress();
 float can__get_lv();
 uint8_t can__get_drs();
+*/
 
 // E car
-#elif (POWERTRAIN_TYPE == 'E')
+#if (POWERTRAIN_TYPE == 'E')
 static void can__hv_receive (const CANMessage & inMessage);
 static void can__soc_receive (const CANMessage & inMessage);
 static void can__lv_receive (const CANMessage & inMessage);

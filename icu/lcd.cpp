@@ -100,12 +100,13 @@ void lcd__print_default_screen_template()
     lcd__print8(47, 40, "SOC%");
     lcd__print8(0, 0, "RPM Screen");
     
-    #elif(POWERTRAIN_TYPE == 'C')
+    /* #elif(POWERTRAIN_TYPE == 'C')
     lcd__print8(128 - 20, 18, "rpm");
     lcd__print8(52, 37, "Gear");
     lcd__print8(95, 45, "Oil PSI");
     lcd__print8(0, 45, "LV");
     lcd__print8(90, 35, "DRS");
+    */
     
     #endif
   #elif (DISPLAY_SCREEN == 1)

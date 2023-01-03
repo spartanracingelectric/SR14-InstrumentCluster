@@ -106,12 +106,13 @@
 
 //  CAN BUS
 /////////////////////
-#if (POWERTRAIN_TYPE == 'C')
+/* #if (POWERTRAIN_TYPE == 'C')
 //#define CANBUS_SPEED 1000UL * 1000UL //1 Mbit/s
 #define CANBUS_SPEED 500UL * 1000UL //500 kbit/s
 #define CAN_RPM_ADDR    0x640
 #define CAN_GEAR_ADDR   0x703
 // lv, drs, oil pressure, coolant temp
+*/
 
 #elif (POWERTRAIN_TYPE == 'E')
 #define CANBUS_SPEED 500UL * 1000UL //500 kbit/s

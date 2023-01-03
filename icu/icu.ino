@@ -18,14 +18,15 @@ U8G2_ST7565_NHD_C12864_F_4W_SW_SPI lcd_u8g2(U8G2_R2, PICO_LCD_SPI_SCK, PICO_LCD_
 
 MD_MAX72XX leds_md = MD_MAX72XX(MAX72XX_HARDWARE_TYPE, PICO_LED_SPI_CS, 1);
 
-#if (POWERTRAIN_TYPE == 'C')
+/* #if (POWERTRAIN_TYPE == 'C')
 uint16_t rpm = 0;
 uint8_t gear = 0;
 float oilpress = 0;
 float lv = 0.0f;
 uint8_t drs = 0;
+*/
 
-#elif (POWERTRAIN_TYPE == 'E')
+#if (POWERTRAIN_TYPE == 'E')
 float hv = 0.0f; 
 float soc = 0.0f;
 float lv = 0.0f;
@@ -114,13 +115,14 @@ void loop()
   //can__send_test();
   can__receive();
 
-#if(POWERTRAIN_TYPE == 'C')
+/* #if(POWERTRAIN_TYPE == 'C')
   rpm = can__get_rpm();
   gear = can__get_gear();
   oilpress = can__get_oilpress();
   lv = can__get_lv();
   drs = can__get_drs();
-#elif (POWERTRAIN_TYPE == 'E')
+*/
+#if (POWERTRAIN_TYPE == 'E')
   hv = can__get_hv();
   soc = can__get_soc();
 //  wattemp = can__get_wattemp();
@@ -153,9 +155,10 @@ void loop()
     //hvtemp = 52.3f;
 
   //lcd__print_rpm(rpm, curr_millis);
-#if (POWERTRAIN_TYPE == 'C')
+/* #if (POWERTRAIN_TYPE == 'C')
     leds__rpm_update_flash(rpm, gear, curr_millis);
     lcd__update_screen(rpm, gear, lv, oilpress, drs, curr_millis);
+*/
 
 #elif (POWERTRAIN_TYPE == 'E')
     leds__safety_update_flash(hvlow, hvtemp, curr_millis);
