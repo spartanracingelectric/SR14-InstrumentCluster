@@ -12,7 +12,7 @@
 // 2 for Individual Menu Screens
 // 3 for RPM Threshold
 
-static uint8_t DISPLAY_SCREEN = 1;
+static uint8_t DISPLAY_SCREEN = 0;
 static uint8_t ROW_COUNT = 0; // for button selection
 
 
@@ -27,9 +27,9 @@ void lcd__print_default_screen_template();
 void lcd__clear_section(uint8_t section);
 
 // C car
-void lcd__print_rpm(uint16_t rpm);
-void lcd__print_gear(uint8_t gear);
-void lcd__print_oilpress(float oilpress); // Oil coolant? pressure // float or uint8
+//void lcd__print_rpm(uint16_t rpm);
+//void lcd__print_gear(uint8_t gear);
+//void lcd__print_oilpress(float oilpress); // Oil coolant? pressure // float or uint8
 // E car
 void lcd__print_hv(float hv); // accumulator voltage
 void lcd__print_soc(uint8_t soc); // State of charge 0-100%

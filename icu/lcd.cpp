@@ -130,7 +130,7 @@ void lcd__clear_section (uint8_t sect)
 }
 
 // Combustion Car --------------------------------------------------------------- ---------------------------------------------------------------
-void lcd__print_rpm(uint16_t rpm)
+/* void lcd__print_rpm(uint16_t rpm)
 {
   if (rpm == rpm_prev) return; // if the value is the same, don't update that "section" 
   
@@ -143,8 +143,9 @@ void lcd__print_rpm(uint16_t rpm)
   lcd__clear_section(4);
   lcd__print18(35, 18, rpm_str);
 }
+*/
 
-void lcd__print_gear(uint8_t gear)
+/* void lcd__print_gear(uint8_t gear)
 {
   if (gear == gear_prev) return; // if the value is the same, don't update that "section" 
   
@@ -163,8 +164,9 @@ void lcd__print_gear(uint8_t gear)
     lcd__print24(56, 64, gear_str);
   }
 }
+*/
 
-void lcd__print_oilpress(float oilpress) // Oil coolant? pressure // warn if below 15 psi // float or uint8
+/* void lcd__print_oilpress(float oilpress) // Oil coolant? pressure // warn if below 15 psi // float or uint8
 {
   if (oilpress == oilpress_prev) return; // if the value is the same, don't update that "section" 
   
@@ -178,7 +180,7 @@ void lcd__print_oilpress(float oilpress) // Oil coolant? pressure // warn if bel
   lcd__clear_section(0);
   lcd__print14(94, 64, oil_str);
 }
-
+*/
 // E & C car --------------------------------------------------------------- ---------------------------------------------------------------
 void lcd__print_lv(float lv) // low voltage battery
 {
@@ -357,10 +359,10 @@ void lcd__update_screen(uint16_t rpm, uint8_t gear, float lv, float oilpress, ui
   if (curr_millis_lcd - prev_millis_lcd >= LCD_UPDATE_MS) {
     prev_millis_lcd = curr_millis_lcd;
     if (DISPLAY_SCREEN == 0) {
-      lcd__print_rpm(rpm);
-      lcd__print_gear(gear);
+      //lcd__print_rpm(rpm);
+      //lcd__print_gear(gear);
       lcd__print_lv(lv);
-      lcd__print_oilpress(oilpress);
+      //lcd__print_oilpress(oilpress);
       lcd__print_drs(drs);
     }
   }
