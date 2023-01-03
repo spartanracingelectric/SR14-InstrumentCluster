@@ -114,7 +114,7 @@
 // lv, drs, oil pressure, coolant temp
 */
 
-#elif (POWERTRAIN_TYPE == 'E')
+#if (POWERTRAIN_TYPE == 'E')
 #define CANBUS_SPEED 500UL * 1000UL //500 kbit/s
 #define CAN_RPM_ADDR 0x0A5
 #define CAN_LV_ADDR 0x507

@@ -160,7 +160,7 @@ void loop()
     lcd__update_screen(rpm, gear, lv, oilpress, drs, curr_millis);
 */
 
-#elif (POWERTRAIN_TYPE == 'E')
+#if (POWERTRAIN_TYPE == 'E')
     leds__safety_update_flash(hvlow, hvtemp, curr_millis);
     lcd__update_screenE(rpm, cellfault, cellwarn, bmsstate, hv, soc, lv, hvlow, hvtemp, curr_millis);
     
