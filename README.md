@@ -12,9 +12,9 @@ A.k.a the ICU.<br/>
 
 ## Environment Setup
 1. Install [git](https://git-scm.com/downloads)
-2. Clone this repo into any reachable folder using, in a command line of your choice (WSL Ubuntu, PowerShell, Terminal, etc), `git clone https://github.com/spartanracingelectric/SRE6-InstrumentCluster.git`
+2. Clone this repo into any reachable folder using, in a command line of your choice (WSL Ubuntu, PowerShell, Terminal, etc), `git clone https://github.com/spartanracingelectric/SR14-InstrumentCluster.git`
     1. Change your branch if necessary by using `git checkout <BRANCH_NAME>`
-3. Install the [Arduino IDE](https://www.arduino.cc/en/software)
+3. Install the [Arduino IDE](https://www.arduino.cc/en/software) **Make sure to install version 1.8.19**
 4. Install [earlephilower's Raspberry Pi Pico library](https://github.com/earlephilhower/arduino-pico#installing-via-arduino-boards-manager)
 5. Within the Arduino IDE `Tools->Manage Libraries...`, install the ACAN2515, U8g2, and MD_MAX72XX libraries. **MAKE SURE U8g2 IS VERSION 2.30.1**
 6. Hook up a microUSB cable to the ICU board.
