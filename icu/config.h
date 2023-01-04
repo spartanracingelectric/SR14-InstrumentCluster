@@ -18,6 +18,14 @@
 // Set to 1 if you want to print the input data over serial
 #define SERIAL_DEBUG_EN 0
 
+// Display Screen Status
+// 0 for Driver
+// 1 for Menu
+// 2 for Individual Menu Screens
+// 3 for RPM Threshold
+#define DISPLAY_SCREEN 0
+#define ROW_COUNT 0 // for button selection
+
 /*---------------------------------------------------------------------------/
 / DRIVER PARAMETERS
 /---------------------------------------------------------------------------*/
@@ -86,18 +94,23 @@
 #endif
 
 /*---------------------------------------------------------------------------/
-/ BUTTON PINS AND Screen CONSTANTS
+/ BUTTON PINS AND CONSTANTS
 /---------------------------------------------------------------------------*/
-#define BUT1 9 //PINC0
-#define BUT2 10 //PINC1
-#define BUT3 11 //PINC2
-#define BUT4 12 //PINC3
+#define BUT1 16 //PINC0
+#define BUT2 14 //PINC1
+#define BUT3 17 //PINC2
+#define BUT4 15 //PINC3
 
-#define DEFAULT_SCREEN 0
-#define MENU_SCREEN 1
-#define DIAGNOSTICS_SCREEN 2
-#define RPM_SCREEN 3
-//#define OPTIONY_SCREEN 4
+#define PCINT_BUT1 (1<<PCINT8)
+#define PCINT_BUT2 (1<<PCINT9)
+#define PCINT_BUT3 (1<<PCINT10)
+#define PCINT_BUT4 (1<<PCINT11)
+
+#define DEFAULT_SCREEN 1
+#define MENU_SCREEN 2
+#define SETTINGS_SCREEN 3
+#define OPTIONX_SCREEN 4
+#define OPTIONY_SCREEN 5
 
 #define DEBOUNCE_TIME 600
 #define LOCK_TIME 100
@@ -106,30 +119,22 @@
 
 //  CAN BUS
 /////////////////////
-/* #if (POWERTRAIN_TYPE == 'C')
+#if (POWERTRAIN_TYPE == 'C')
 //#define CANBUS_SPEED 1000UL * 1000UL //1 Mbit/s
 #define CANBUS_SPEED 500UL * 1000UL //500 kbit/s
 #define CAN_RPM_ADDR    0x640
 #define CAN_GEAR_ADDR   0x703
 // lv, drs, oil pressure, coolant temp
-*/
 
-#if (POWERTRAIN_TYPE == 'E')
+#elif (POWERTRAIN_TYPE == 'E')
 #define CANBUS_SPEED 500UL * 1000UL //500 kbit/s
-#define CAN_RPM_ADDR 0x0A5
 #define CAN_LV_ADDR 0x507
-
-#define CAN_BMS_FAULT_ADDR 0x602 // dec: 1538
-#define CAN_BMS_WARN_ADDR 0x604 // dec: 1540
-#define CAN_BMS_STAT_ADDR 0x610 // dec: 1552 // system status (should be idle - 1)
-
-#define CAN_HV_ADDR 0x620 // dec: 1568
+#define CAN_HV_ADDR 0x620
 #define CAN_SOC_ADDR 0x621
 #define CAN_HVLOW_ADDR 0x622
 #define CAN_BAT_TEMP_ADDR 0x623
-
-
 // wrong addresses
+#define CAN_RPM_ADDR 0x0A5 // Does ev need rpm?
 #define CAN_REGEN_ADDR 0x508
 #endif
 

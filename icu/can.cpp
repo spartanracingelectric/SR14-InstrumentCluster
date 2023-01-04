@@ -80,24 +80,12 @@ float can__get_lv()
   return curr_lv;
 }
 
-#elif (POWERTRAIN_TYPE == 'E') // ------------------------------------------------
+#elif (POWERTRAIN_TYPE == 'E')
 float curr_hv = 0;
 float curr_soc = 0;
 float curr_lv = 0;
 float curr_hvlow = 0;
 float curr_hvtemp = 0;
-
-// diagnostics ---------------------------------
-float curr_rpm = 0;
-float curr_bms_fault = 0;
-float curr_bms_warn = 0;
-float curr_bms_stat = 0;
-//
-
-static void can__lv_receive (const CANMessage & inMessage)
-{
-  curr_lv = ((inMessage.data[0]) | (inMessage.data[1] << 8)) * 0.001f; // for e car
-}
 
 static void can__hv_receive (const CANMessage & inMessage)
 {
@@ -109,6 +97,11 @@ static void can__soc_receive (const CANMessage & inMessage)
   curr_soc = ((inMessage.data[6]) | (inMessage.data[7] << 8)) * 0.1f;
 }
 
+static void can__lv_receive (const CANMessage & inMessage)
+{
+  curr_lv = ((inMessage.data[0]) | (inMessage.data[1] << 8)) * 0.001f; // for e car
+}
+
 static void can__hvlow_receive (const CANMessage & inMessage)
 {
   curr_hvlow = ((inMessage.data[4]) | (inMessage.data[5] << 8)) * 0.001f; // for e car
@@ -118,26 +111,6 @@ static void can__hvtemp_receive (const CANMessage & inMessage)
 {
   curr_hvtemp = ((inMessage.data[6]) | (inMessage.data[7] << 8)) * 0.1f;
 }
-
-// diagnostics ---------------------------------
-static void can__rpm_receive (const CANMessage & inMessage)
-{
-  curr_rpm = ((inMessage.data[2]) | (inMessage.data[1] << 8));
-  //Serial.println ("Received RPM " + curr_rpm) ;
-}
-static void can__bms_fault_receive (const CANMessage & inMessage)
-{
-  curr_bms_fault = inMessage.data[1];
-}
-static void can__bms_warn_receive (const CANMessage & inMessage)
-{
-  curr_bms_warn = inMessage.data[1];
-}
-static void can__bms_stat_receive (const CANMessage & inMessage)
-{
-  curr_bms_stat = inMessage.data[6];
-}
-//
 
 //Accessors
 float can__get_hv()
@@ -163,29 +136,7 @@ float can__get_hvlow()
 {
   return curr_hvlow;
 }
-
-// diagnostics ---------------------------------
-float can__get_rpm()
-{
-  return curr_rpm;
-}
-float can__get_bms_fault()
-{
-  return curr_bms_fault;
-}
-
-float can__get_bms_warn()
-{
-  return curr_bms_warn;
-}
-
-float can__get_bms_stat()
-{
-  return curr_bms_stat;
-}
-//
 #endif
-
 
 const ACAN2515Mask rxm0 = standard2515Mask (0x7FF, 0, 0) ;
 const ACAN2515Mask rxm1 = standard2515Mask (0x7FF, 0, 0) ;
@@ -206,20 +157,12 @@ const ACAN2515AcceptanceFilter filters [] =
 const ACAN2515AcceptanceFilter filters [] =
 {
   //Must have addresses in increasing order
-  //{standard2515Filter (CAN_LV_ADDR, 0, 0), can__lv_receive},            //RXF0
-  {standard2515Filter (CAN_RPM_ADDR, 0, 0), can__rpm_receive},
-  {standard2515Filter (CAN_BMS_FAULT_ADDR, 0, 0), can__bms_fault_receive},  //RXF1 (new stuff)
-  {standard2515Filter (CAN_BMS_WARN_ADDR, 0, 0), can__bms_warn_receive},  //RXF2
-  {standard2515Filter (CAN_BMS_STAT_ADDR, 0, 0), can__bms_stat_receive},  //RXF3
-  
+  {standard2515Filter (CAN_LV_ADDR, 0, 0), can__lv_receive},            //RXF0
   {standard2515Filter (CAN_HV_ADDR, 0, 0), can__hv_receive},            //RXF1
   {standard2515Filter (CAN_SOC_ADDR, 0, 0), can__soc_receive},          //RXF2
   {standard2515Filter (CAN_HVLOW_ADDR, 0, 0), can__hvlow_receive},          //RXF2
   {standard2515Filter (CAN_BAT_TEMP_ADDR, 0, 0), can__hvtemp_receive}  //RXF3
-  
-
 } ;
-
 #endif
 
 void can__start()
