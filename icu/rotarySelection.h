@@ -1,5 +1,5 @@
-#ifndef BUTTONS_H_
-#define BUTTONS_H_
+#ifndef ROTARYSELECTION_H_
+#define ROTARYSELECTION_H_
 
 #include <Arduino.h>
 
@@ -12,4 +12,4 @@ void buttons__poll();
 void buttons__update_LCD();
 void buttons__flag_reset();
 
-#endif /* BUTTONS_H_ */
+#endif /* ROTARYSELECTION_H_ */

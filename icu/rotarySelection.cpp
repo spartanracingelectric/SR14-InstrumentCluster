@@ -1,4 +1,4 @@
-#include "buttons.h"
+#include "rotarySelection.h"
 uint8_t DISPLAY_SCREEN = 0;
 uint8_t ROW_COUNT = 0;
 const uint8_t butnum = 1; // number of buttons
