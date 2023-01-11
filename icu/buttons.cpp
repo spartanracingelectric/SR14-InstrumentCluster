@@ -1,6 +1,6 @@
 #include "buttons.h"
-uint8_t DISPLAY_SCREEN = 0;
-uint8_t ROW_COUNT = 0;
+//uint8_t DISPLAY_SCREEN = 0;
+//uint8_t ROW_COUNT = 0;
 const uint8_t butnum = 1; // number of buttons
 const byte button_pins[] = {BUT1}; //, BUT2, BUT3, BUT4};
 int button_flag[ butnum ];

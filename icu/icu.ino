@@ -127,7 +127,7 @@ void loop()
   soc = can__get_soc();
 //  wattemp = can__get_wattemp();
   hvtemp = can__get_hvtemp();
-  //lv = can__get_lv();
+  lv = can__get_lv();
   hvlow = can__get_hvlow();
 
 // diagnostics ---------------------------------
@@ -162,7 +162,7 @@ void loop()
 
 #if (POWERTRAIN_TYPE == 'E')
     leds__safety_update_flash(hvlow, hvtemp, curr_millis);
-    lcd__update_screenE(rpm, cellfault, cellwarn, bmsstate, hv, soc, lv, hvlow, hvtemp, curr_millis);
+    lcd__update_screenE(hv, soc, lv, hvlow, hvtemp, curr_millis);
     
 #endif
   //delay(500);

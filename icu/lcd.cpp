@@ -95,7 +95,7 @@ void lcd__print_default_screen_template()
   #if (DISPLAY_SCREEN == 0)
     #if (POWERTRAIN_TYPE == 'E')
     lcd__print8(104, 45, "HV T");
-    lcd__print8(0, 45, "HVLO");
+    lcd__print8(0, 45, "LV");
     lcd__print8(45, 28, "VOLTS");
     lcd__print8(47, 40, "SOC%");
     lcd__print8(0, 0, "RPM Screen");
@@ -354,7 +354,7 @@ void lcd__print_rpm_diag(uint16_t rpm)
 }
 
 // LCD Screen Update --------------------------------------------------------------- ---------------------------------------------------------------
-void lcd__update_screen(uint16_t rpm, uint8_t gear, float lv, float oilpress, uint8_t drs, uint32_t curr_millis_lcd) // C Car
+/* void lcd__update_screen(uint16_t rpm, uint8_t gear, float lv, float oilpress, uint8_t drs, uint32_t curr_millis_lcd) // C Car
 {
   if (curr_millis_lcd - prev_millis_lcd >= LCD_UPDATE_MS) {
     prev_millis_lcd = curr_millis_lcd;
@@ -367,8 +367,8 @@ void lcd__update_screen(uint16_t rpm, uint8_t gear, float lv, float oilpress, ui
     }
   }
 }
-
-void lcd__update_screenE(uint16_t rpm, uint8_t cellfault, uint8_t cellwarn, uint8_t bmsstate, float hv, float soc, float lv, float hvlow, float hvtemp, uint32_t curr_millis_lcd)
+*/
+void lcd__update_screenE(float hv, float soc, float lv, float hvlow, float hvtemp, uint32_t curr_millis_lcd)
 {
   if (curr_millis_lcd - prev_millis_lcd >= LCD_UPDATE_MS) {
     prev_millis_lcd = curr_millis_lcd;
@@ -378,17 +378,17 @@ void lcd__update_screenE(uint16_t rpm, uint8_t cellfault, uint8_t cellwarn, uint
       lcd__print_hv(hv);
       lcd__print_soc(soc);
       lcd__print_hvlow(hvlow);
-      //lcd__print_lv(lv);
+      lcd__print_lv(lv);
       lcd__print_hvtemp(hvtemp);
     }
     if (DISPLAY_SCREEN == 1) {
       lcd__menu();
     }
     if (DISPLAY_SCREEN == 2) {
-      lcd__diagnostics(cellfault, cellwarn, bmsstate);
+      //lcd__diagnostics(cellfault, cellwarn, bmsstate);
     }
     if (DISPLAY_SCREEN == 3) {
-      lcd__print_rpm_diag(rpm);
+      //lcd__print_rpm_diag(rpm);
     }
   }
 }
