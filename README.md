@@ -9,7 +9,11 @@ A.k.a the ICU.<br/>
 - U8g2 2.30.1 library (**AND NOT ANY VERSION AFTER**)
 - MD_MAX72XX 3.3.0 library
 <br/>
-
+## How to Navigate Repo
+- main (Code that has been tested on the car)
+- shubham (Code being developed by Shubham)
+- user/johnathon (Code being developed by Johnathon)
+- flashReady (Code that needs to be tested on the car)
 ## Environment Setup
 1. Install [git](https://git-scm.com/downloads)
 2. Clone this repo into any reachable folder using, in a command line of your choice (WSL Ubuntu, PowerShell, Terminal, etc), `git clone https://github.com/spartanracingelectric/SR14-InstrumentCluster.git`
