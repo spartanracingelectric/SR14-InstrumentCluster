@@ -10,6 +10,13 @@ A.k.a the ICU.<br/>
 - MD_MAX72XX 3.3.0 library
 <br/>
 
+## How to Navigate Repo
+- main (Code that has been tested on the car)
+- shubham (Code being developed by Shubham)
+- user/johnathon (Code being developed by Johnathon)
+- flashReady (Code that needs to be tested on the car)
+<br/>
+
 ## Environment Setup
 1. Install [git](https://git-scm.com/downloads)
 2. Clone this repo into any reachable folder using, in a command line of your choice (WSL Ubuntu, PowerShell, Terminal, etc), `git clone https://github.com/spartanracingelectric/SR14-InstrumentCluster.git`
@@ -35,6 +42,7 @@ _Shubham Mishra_, Project Designer, Firmware (LCD FW design)<br/>
 
 ## Links
 [Spartan Racing Website](https://www.sjsuformulasae.com/)<br/>
+[Figma Mockup of Dashboard and Instrument Cluster Displays for SR-14](https://www.figma.com/file/OO0pxYkTq5pNKeiJYwpVl4/Dashboard-UI?node-id=4%3A48&t=adEPlYpGNrnOhfRT-0)
 [Pico Pinout](https://microcontrollerslab.com/wp-content/uploads/2021/01/Raspberry-Pi-Pico-pinout-diagram.svg)<br/>
 [Hardware Bill of Materials](https://docs.google.com/spreadsheets/d/1UGtSwsXKJZJlghaglvCwl1YWrQGyW8ZNmpcijJZi6sg/edit#gid=0)<br/>
 [CDR Slides](https://docs.google.com/presentation/d/1rN90VLVj-aSsbMOXEkgrvWsR6Ec_Ea_NRq933g5CcTc/edit#slide=id.g164c7d6d0b3_1_0)<br/>

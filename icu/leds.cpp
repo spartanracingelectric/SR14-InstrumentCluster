@@ -249,6 +249,7 @@ void leds__rpm_update_tach(uint16_t rpm) {
 }
 */
 
+/*
 void leds__rpm_update_flash(uint16_t rpm, uint8_t gear, uint32_t curr_millis_flash)
 {
   //Variable to hold shift RPM value based on current gear
@@ -278,6 +279,7 @@ void leds__rpm_update_flash(uint16_t rpm, uint8_t gear, uint32_t curr_millis_fla
       gear_shift_threshold_rpm = DEFAULT_SHIFT_THRESHOLD_RPM;
       break;
   }
+  
 
   //Add overrev adder to shift threshold to find overrev shift point based on current gear
   gear_overrev_threshold_rpm = gear_shift_threshold_rpm + OVERREV_THRESHOLD_RPM_ADDER;
@@ -311,6 +313,7 @@ void leds__rpm_update_flash(uint16_t rpm, uint8_t gear, uint32_t curr_millis_fla
   }
 
 }
+*/
 
 void leds__set_brightness(uint8_t brightness_value)
 {
@@ -319,6 +322,7 @@ void leds__set_brightness(uint8_t brightness_value)
   leds->control(MD_MAX72XX::INTENSITY, brightness_value);
 }
 
+/*
 void leds__oilpress(float oilpress) // float or uint8
 {
   if (oilpress < 15) {
@@ -330,6 +334,7 @@ void leds__oilpress(float oilpress) // float or uint8
     leds->setPoint(3, 4, true);
   }
 }
+*/
 
 void leds__lv(float lv)
 {

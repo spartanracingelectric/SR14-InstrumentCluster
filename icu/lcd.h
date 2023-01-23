@@ -12,8 +12,8 @@
 // 2 for Individual Menu Screens
 // 3 for RPM Threshold
 
-//static uint8_t DISPLAY_SCREEN = 0;
-//static uint8_t ROW_COUNT = 0; // for button selection
+static uint8_t DISPLAY_SCREEN = 2;
+static uint8_t ROW_COUNT = 0; // for button selection
 
 
 // Fonts and other Setup
