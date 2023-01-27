@@ -11,8 +11,7 @@ void can__send_test();
 void can__receive();
 
 // C car
-#if (POWERTRAIN_TYPE == 'C')
-static void can__rpm_receive (const CANMessage & inMessage);
+/* #if (POWERTRAIN_TYPE == 'C')
 static void can__gear_receive (const CANMessage & inMessage);
 static void can__oilpress_receive (const CANMessage & inMessage);
 static void can__lv_receive (const CANMessage & inMessage);

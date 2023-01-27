@@ -6,6 +6,16 @@
 #include <SPI.h>
 #include "config.h"
 
+// Display Screen Status
+// 0 for Driver
+// 1 for Menu
+// 2 for Individual Menu Screens
+// 3 for RPM Threshold
+
+
+
+
+// Fonts and other Setup
 void lcd__init(U8G2_ST7565_NHD_C12864_F_4W_SW_SPI *lcd_ptr); // changed from SW -> HW
 void lcd__clear_screen();
 void lcd__print8(uint8_t x, uint8_t y, const char *str);                 //Print str with Helvetica Bold Size 10
@@ -45,6 +55,5 @@ void lcd__drs_screen(uint8_t drs);
 
 void lcd__update_screen(uint16_t rpm, uint8_t gear, float lv, float oilpress, uint8_t drs, uint32_t curr_millis_lcd);
 void lcd__update_screenE(float hv, float soc, float lv, float hvlow, float hvtemp, uint32_t curr_millis_lcd);
-
 
 #endif /* LCD_H_ */

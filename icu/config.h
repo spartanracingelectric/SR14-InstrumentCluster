@@ -23,8 +23,9 @@
 // 1 for Menu
 // 2 for Individual Menu Screens
 // 3 for RPM Threshold
-#define DISPLAY_SCREEN 0
-#define ROW_COUNT 0 // for button selection
+
+static uint8_t DISPLAY_SCREEN = 0;
+static uint8_t ROW_COUNT = 0; // for button selection
 
 /*---------------------------------------------------------------------------/
 / DRIVER PARAMETERS
@@ -130,6 +131,11 @@
 #define CANBUS_SPEED 500UL * 1000UL //500 kbit/s
 #define CAN_LV_ADDR 0x507
 #define CAN_HV_ADDR 0x620
+#define CAN_BMS_FAULT_ADDR 0x602 // dec: 1538
+#define CAN_BMS_WARN_ADDR 0x604 // dec: 1540
+#define CAN_BMS_STAT_ADDR 0x610 // dec: 1552 // system status (should be idle - 1)
+
+#define CAN_HV_ADDR 0x620 // dec: 1568
 #define CAN_SOC_ADDR 0x621
 #define CAN_HVLOW_ADDR 0x622
 #define CAN_BAT_TEMP_ADDR 0x623

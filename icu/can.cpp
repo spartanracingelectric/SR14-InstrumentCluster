@@ -10,7 +10,7 @@ ACAN2515 can (PICO_CAN_SPI_CS, SPI1, PICO_CAN_INT);
 
 static const uint32_t QUARTZ_FREQUENCY = 16UL * 1000UL * 1000UL; // 16 MHz
 ACAN2515Settings settings (QUARTZ_FREQUENCY, 500UL * 1000UL) ; // CAN bit rate 500s kb/s
-
+/*
 #if (POWERTRAIN_TYPE == 'C')
 uint16_t curr_rpm = 0;
 uint8_t curr_gear = 0;
@@ -18,14 +18,14 @@ float curr_oilpress = 0;
 float curr_lv = 0;
 uint8_t curr_drs = 0;
 
-/*
+
 static void can__dummy_receive (const CANMessage & inMessage)
 {
   uint8_t durr;
   //curr_gear = inMessage.data[1];
   //Serial.println ("Received Gear " + curr_gear) ;
 }
-*/
+
 
 static void can__rpm_receive (const CANMessage & inMessage)
 {
@@ -43,6 +43,7 @@ static void can__oilpress_receive (const CANMessage & inMessage)
 {
 //  curr_oilpress = inMessage.data[1];
 }
+
 
 static void can__lv_receive (const CANMessage & inMessage)
 {
@@ -70,6 +71,7 @@ float can__get_oilpress()
   return curr_oilpress;
 }
 
+
 uint8_t can__get_drs()
 {
   return curr_drs;
@@ -80,7 +82,7 @@ float can__get_lv()
   return curr_lv;
 }
 
-#elif (POWERTRAIN_TYPE == 'E')
+#elif (POWERTRAIN_TYPE == 'E') // ------------------------------------------------
 float curr_hv = 0;
 float curr_soc = 0;
 float curr_lv = 0;
@@ -142,6 +144,7 @@ const ACAN2515Mask rxm0 = standard2515Mask (0x7FF, 0, 0) ;
 const ACAN2515Mask rxm1 = standard2515Mask (0x7FF, 0, 0) ;
 
 // POWERTRAIN_TYPE == 'C'
+/*
 #if (POWERTRAIN_TYPE == 'C')
 const ACAN2515AcceptanceFilter filters [] =
 {
@@ -152,12 +155,18 @@ const ACAN2515AcceptanceFilter filters [] =
   
   //{standard2515Filter (0x7FE, 0, 0), can__dummy_receive}, // RXF2
 } ;
+*/
 // POWERTRAIN_TYPE == 'E'
-#elif (POWERTRAIN_TYPE == 'E')
+#if (POWERTRAIN_TYPE == 'E')
 const ACAN2515AcceptanceFilter filters [] =
 {
   //Must have addresses in increasing order
-  {standard2515Filter (CAN_LV_ADDR, 0, 0), can__lv_receive},            //RXF0
+  //{standard2515Filter (CAN_LV_ADDR, 0, 0), can__lv_receive},            //RXF0
+  {standard2515Filter (CAN_RPM_ADDR, 0, 0), can__rpm_receive},
+  {standard2515Filter (CAN_BMS_FAULT_ADDR, 0, 0), can__bms_fault_receive},  //RXF1 (new stuff)
+  {standard2515Filter (CAN_BMS_WARN_ADDR, 0, 0), can__bms_warn_receive},  //RXF2
+  {standard2515Filter (CAN_BMS_STAT_ADDR, 0, 0), can__bms_stat_receive},  //RXF3
+  
   {standard2515Filter (CAN_HV_ADDR, 0, 0), can__hv_receive},            //RXF1
   {standard2515Filter (CAN_SOC_ADDR, 0, 0), can__soc_receive},          //RXF2
   {standard2515Filter (CAN_HVLOW_ADDR, 0, 0), can__hvlow_receive},          //RXF2

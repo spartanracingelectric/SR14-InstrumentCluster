@@ -145,8 +145,8 @@ void loop()
     leds__rpm_update_flash(rpm, gear, curr_millis);
     lcd__update_screen(rpm, gear, lv, oilpress, drs, curr_millis);
 
-#elif (POWERTRAIN_TYPE == 'E')
-//    leds__safety_update_flash(hvlow, hvtemp, curr_millis);
+#if (POWERTRAIN_TYPE == 'E')
+    leds__safety_update_flash(hvlow, hvtemp, curr_millis);
     lcd__update_screenE(hv, soc, lv, hvlow, hvtemp, curr_millis);
     
 #endif
