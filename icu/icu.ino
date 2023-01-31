@@ -68,7 +68,7 @@ void setup()
   SPI1.begin();
 #endif
 
-  // No need to initialize CAB here, as can.begin seems to hog the data
+  // No need to initialize CABN here, as can.begin seems to hog the data
   // buffer which in turn stalls the MAX7219 and therefore the whole program
 
   // Initialize leds, pass U8G2 object pointer
@@ -127,6 +127,7 @@ void loop()
   soc = can__get_soc();
 //  wattemp = can__get_wattemp();
   hvtemp = can__get_hvtemp();
+  // hvtemp = can__get_hv_current();
   lv = can__get_lv();
   hvlow = can__get_hvlow();
 
@@ -152,7 +153,7 @@ void loop()
 //  soc = 97;
 //  hvtemp = 51.8234;
     //hvlow = 3.2f;
-    //hvtemp = 52.3f;
+    // hvtemp = 52.3f;
 
   //lcd__print_rpm(rpm, curr_millis);
 /* #if (POWERTRAIN_TYPE == 'C')

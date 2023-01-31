@@ -36,6 +36,7 @@ void leds__safety_update_flash(float hvlow, float hvtemp, uint32_t curr_millis);
 void leds__set_brightness(uint8_t brightness_value);
 //void leds__oilpress(float oilpress);
 void leds__lv(float lv);
+void leds__hvtemp(float hvtemp);
 void leds__drs(uint8_t drs);
 
 //create LEDs Update function that takes CAN data and changes LEDs

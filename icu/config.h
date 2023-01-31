@@ -132,6 +132,7 @@ static uint8_t ROW_COUNT = 0; // for button selection
 #define CAN_BMS_WARN_ADDR 0x604 // dec: 1540
 #define CAN_BMS_STAT_ADDR 0x610 // dec: 1552 // system status (should be idle - 1)
 
+#define CAN_HV_CURRENT_ADDR 0x620
 #define CAN_HV_ADDR 0x620 // dec: 1568
 #define CAN_SOC_ADDR 0x621
 #define CAN_HVLOW_ADDR 0x622

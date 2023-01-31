@@ -7,7 +7,7 @@
 #include "can.h"
 #include "config.h"
 
-void buttons__init();
+void rotarySel__init();
 void buttons__poll();
 void buttons__update_LCD();
 void buttons__flag_reset();

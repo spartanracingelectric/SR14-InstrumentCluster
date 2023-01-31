@@ -6,11 +6,8 @@ int button_flag[ butnum ];
 uint32_t last_debounce_time = 0;
 
 // Initialize the buttons, run in the setup function
-void buttons__init() {
-  for (int i = 0; i < butnum; i++) {
-    pinMode(button_pins[i], INPUT);
-    button_flag[i] = 0;
-  }
+void rotarySel__init() {
+ 
   Serial.println("Button init done");
 }
 

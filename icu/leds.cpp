@@ -348,6 +348,18 @@ void leds__lv(float lv)
   }
 }
 
+void leds__hvtemp(float hvtemp)
+{
+  if (hvtemp < 10.0){
+    leds->setPoint(3, 1, false);
+    leds->setPoint(PIN_LED_RGB_R[3][0], PIN_LED_RGB_R[3][1], true);
+  }
+  else{
+    leds->setPoint(PIN_LED_RGB_R[3][0], PIN_LED_RGB_R[3][1], false);
+    leds->setPoint(3, 1, true);
+  }
+}
+
 void leds__safety_update_flash(float hvlow, float hvtemp, uint32_t curr_millis) {
   if (hvtemp > 50) { //50 C is VCU limit
     //Toggle 2nd half
