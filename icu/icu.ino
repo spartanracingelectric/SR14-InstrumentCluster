@@ -162,7 +162,7 @@ void loop()
 */
 
 #if (POWERTRAIN_TYPE == 'E')
-    leds__safety_update_flash(hvlow, hvtemp, curr_millis);
+//     leds__safety_update_flash(hvlow, hvtemp, curr_millis);
     lcd__update_screenE(hv, soc, lv, hvlow, hvtemp, curr_millis);
     
 #endif
