@@ -105,10 +105,6 @@ static void can__lv_receive (const CANMessage & inMessage)
 static void can__hv_receive (const CANMessage & inMessage)
 {
   curr_hv = ((inMessage.data[4]) | (inMessage.data[5] << 8) | (inMessage.data[6] << 16) | (inMessage.data[7] << 24)) * .001f;
-}
-
-static void can__hv_current_receive (const CANMessage & inMessage)
-{
   curr_hv_current = ((inMessage.data[0]) | (inMessage.data[1] << 8) | (inMessage.data[2] << 16) | (inMessage.data[3] << 24)) * .001f;
 }
 
@@ -203,7 +199,6 @@ float can__get_bms_stat()
 
 const ACAN2515Mask rxm0 = standard2515Mask (0x7FF, 0, 0) ;
 const ACAN2515Mask rxm1 = standard2515Mask (0x7FF, 0, 0) ;
-const ACAN2515Mask rxm2 = standard2515Mask (0x7FF, 0, 0) ;
 
 // POWERTRAIN_TYPE == 'C'
 /*
@@ -230,10 +225,7 @@ const ACAN2515AcceptanceFilter filters [] =
   // {standard2515Filter (CAN_BMS_STAT_ADDR, 0, 0), can__bms_stat_receive},  //RXF3
   
   {standard2515Filter (CAN_LV_ADDR, 0, 0), can__lv_receive},            //RXF0
-  // {standard2515Filter (CAN_HV_CURRENT_ADDR, 0, 0), can__hv_current_receive},
-  {standard2515Filter (CAN_HV_ADDR, 0, 0), can__hv_receive},            //RXF1
-  
-  
+  {standard2515Filter (CAN_HV_ADDR, 0, 0), can__hv_receive},            //RXF1 // filter for both HV and HV current
   {standard2515Filter (CAN_SOC_ADDR, 0, 0), can__soc_receive},          //RXF2
   {standard2515Filter (CAN_HVLOW_ADDR, 0, 0), can__hvlow_receive},          //RXF2
   {standard2515Filter (CAN_BAT_TEMP_ADDR, 0, 0), can__hvtemp_receive}  //RXF3
