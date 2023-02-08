@@ -27,7 +27,8 @@ uint8_t drs = 0;
 */
 
 #if (POWERTRAIN_TYPE == 'E')
-float hv = 0.0f; 
+float hv = 0.0f;
+float hvCurr = 0.0f;
 float soc = 0.0f;
 float lv = 0.0f;
 float hvtemp = 0.0f;
@@ -124,14 +125,14 @@ void loop()
 */
 #if (POWERTRAIN_TYPE == 'E')
   hv = can__get_hv();
+  hvCurr = can__get_hv_current();
   soc = can__get_soc();
-//  wattemp = can__get_wattemp();
+//  wattemp = can__get_wattemp(); // no can
   hvtemp = can__get_hvtemp();
-  // hvtemp = can__get_hv_current();
   lv = can__get_lv();
   hvlow = can__get_hvlow();
 
-// diagnostics ---------------------------------
+// diagnostics --------------------------------- // don't work
   cellfault = can__get_bms_fault();
   cellwarn = can__get_bms_warn();
   bmsstate = can__get_bms_stat();
