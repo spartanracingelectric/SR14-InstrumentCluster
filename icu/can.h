@@ -27,6 +27,7 @@ uint8_t can__get_drs();
 // E car
 #if (POWERTRAIN_TYPE == 'E')
 static void can__hv_receive (const CANMessage & inMessage);
+static void can__hv_current_receive (const CANMessage & inMessage);
 static void can__soc_receive (const CANMessage & inMessage);
 static void can__lv_receive (const CANMessage & inMessage);
 static void can__hv_low_receive (const CANMessage & inMessage);
@@ -42,6 +43,7 @@ float can__get_hv();
 float can__get_soc();
 float can__get_lv();
 float can__get_hvtemp(); // E car accumulator
+float can__get_hv_current();
 float can__get_hvlow(); // E car accumulator
 
 // diagnostics ---------------------------

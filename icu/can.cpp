@@ -88,6 +88,7 @@ float curr_soc = 0;
 float curr_lv = 0;
 float curr_hvlow = 0;
 float curr_hvtemp = 0;
+float curr_hv_current = 0;
 
 // diagnostics ---------------------------------
 float curr_rpm = 0;
@@ -104,6 +105,7 @@ static void can__lv_receive (const CANMessage & inMessage)
 static void can__hv_receive (const CANMessage & inMessage)
 {
   curr_hv = ((inMessage.data[4]) | (inMessage.data[5] << 8) | (inMessage.data[6] << 16) | (inMessage.data[7] << 24)) * .001f;
+  curr_hv_current = ((inMessage.data[0]) | (inMessage.data[1] << 8) | (inMessage.data[2] << 16) | (inMessage.data[3] << 24)) * .001f;
 }
 
 static void can__soc_receive (const CANMessage & inMessage)
@@ -141,7 +143,13 @@ static void can__bms_stat_receive (const CANMessage & inMessage)
 }
 //
 
+
 //Accessors
+float can__get_hv_current()
+{
+  return curr_hv_current;
+}
+
 float can__get_hv()
 {
   return curr_hv;
@@ -210,13 +218,14 @@ const ACAN2515AcceptanceFilter filters [] =
 const ACAN2515AcceptanceFilter filters [] =
 {
   //Must have addresses in increasing order
-  {standard2515Filter (CAN_LV_ADDR, 0, 0), can__lv_receive},            //RXF0
+  
   // {standard2515Filter (CAN_RPM_ADDR, 0, 0), can__rpm_receive},
   // {standard2515Filter (CAN_BMS_FAULT_ADDR, 0, 0), can__bms_fault_receive},  //RXF1 (new stuff)
   // {standard2515Filter (CAN_BMS_WARN_ADDR, 0, 0), can__bms_warn_receive},  //RXF2
   // {standard2515Filter (CAN_BMS_STAT_ADDR, 0, 0), can__bms_stat_receive},  //RXF3
   
-  {standard2515Filter (CAN_HV_ADDR, 0, 0), can__hv_receive},            //RXF1
+  {standard2515Filter (CAN_LV_ADDR, 0, 0), can__lv_receive},            //RXF0
+  {standard2515Filter (CAN_HV_ADDR, 0, 0), can__hv_receive},            //RXF1 // filter for both HV and HV current
   {standard2515Filter (CAN_SOC_ADDR, 0, 0), can__soc_receive},          //RXF2
   {standard2515Filter (CAN_HVLOW_ADDR, 0, 0), can__hvlow_receive},          //RXF2
   {standard2515Filter (CAN_BAT_TEMP_ADDR, 0, 0), can__hvtemp_receive}  //RXF3
@@ -237,7 +246,7 @@ void can__start()
 
   // With filter
   const uint16_t errorCode = can.begin (settings, [] { can.isr () ; },
-                                        rxm0, rxm1, filters, 4) ;
+                                        rxm0, rxm1, filters, 10) ;
   
   if (errorCode == 0) {
     Serial.print ("Bit Rate prescaler: ") ;

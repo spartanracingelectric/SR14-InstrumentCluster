@@ -222,6 +222,7 @@ void lcd__print_hvtemp(float hvtemp) // Accumulator/Engine temperature
   hvtemp_prev = hvtemp; // else, update value_prev and redraw that section
 
   char hvtemp_str[5] = "    ";
+  leds__hvtemp(hvtemp);
 
   sprintf(hvtemp_str, "%2.1f", hvtemp);
 
@@ -394,7 +395,7 @@ void lcd__update_screenE(float hv, float soc, float lv, float hvlow, float hvtem
     {
       lcd__print_hv(hv);
       lcd__print_soc(soc);
-      lcd__print_hvlow(hvlow);
+      // lcd__print_hvlow(hvlow);
       lcd__print_lv(lv);
       lcd__print_hvtemp(hvtemp);
     }
