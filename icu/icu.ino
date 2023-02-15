@@ -159,11 +159,12 @@ void loop()
   // hvtemp = 52.3f;
 
   // Rotary digitalRead CLK, DT, SW
+  // Updates rotary states every loop
   currentStateCLK = digitalRead(CLK);
   currentStateDT = digitalRead(DT);
   currentStateSW = digitalRead(SW);
 
-  displayRotary();
+  rotary__update_state();
   // leds__safety_update_flash(hvlow, hvtemp, curr_millis);
   lcd__update_screenE(hv, soc, lv, hvlow, hvtemp, curr_millis);
 
@@ -178,7 +179,7 @@ void loop()
 void tempDisplay()
 {
   Serial.print("Direction: ");
-//  Serial.print(currentDir);
+  Serial.print(currentDir);
   Serial.print(" | Counter: ");
   Serial.println(counter);
 
@@ -189,6 +190,7 @@ void tempDisplay()
     // button has been pressed, released and pressed again
     if (millis() - lastButtonPress > 50)
     {
+      counterSW++;
       Serial.println("Button pressed!");
     }
 

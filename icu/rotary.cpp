@@ -32,7 +32,11 @@
 //           lastStateCLK = currentStateCLK;
 // }
 
-void displayRotary()
+/**
+ * @brief redefines counter of rotary depending on the digitalRead from icu.ino
+ * 
+ */
+void rotary__update_state()
 {
           // If last and current state of CLK are different, then pulse occurred
           // React to only 1 state change to avoid double count
@@ -67,4 +71,32 @@ void displayRotary()
           //           // Remember last button press event
           //           lastButtonPress = millis();
           // }
+}
+
+/**
+ * @brief Updates LCD screen based on rotary counter that's updated from rotary__update_State()
+ * 
+ */
+void rotary__update_LCD()
+{
+          switch(counter % NUMBER_SCREEN) {// NUMBER_SCREEN is number of screens to limit counter to a rnge between 0 - #ofscreens
+          case 1:
+          // rotate rotary to change row highlighted
+          // button press to change to that screen
+                    break;
+          case 2:
+          // Testing screen button press to change to menu screen
+                    break;
+          case 3:
+          // debug vcu rotate rotary to sweep through screens
+          // press rotary to exit screen
+                    break;
+          case 4:
+          // debug bms screen rotate rotary to sweep through screens
+          // press rotary to exit screen
+                    break;
+          default:
+          // button press change to menu screen
+                    break;
+          }
 }

@@ -6,6 +6,7 @@
 #include "config.h"
 using namespace std;
 
-void displayRotary();
+void rotary__update_state();
+void rotary__update_LCD();
 
 #endif
