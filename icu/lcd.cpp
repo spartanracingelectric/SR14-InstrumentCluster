@@ -14,6 +14,8 @@ float hv_prev = -1.0f;
 float lv_prev = -1.0f;
 float hvtemp_prev = -1.0f;
 float hvlow_prev = -1.0f;
+float hvcurr = -1.0f;
+float hvcurr_prev = -1.0f;
 float oilpress_prev = -1.0f; // float or uint8
 uint8_t watertemp_prev = -1;
 uint8_t drs_prev = -1;
@@ -99,6 +101,7 @@ void lcd__print_default_screen_template()
     lcd__print8(45, 28, "VOLTS");
     lcd__print8(47, 40, "SOC%");
     lcd__print8(0, 0, "RPM Screen");
+    lcd__print8(0, 10, "HV CURR");
     
     /* #elif(POWERTRAIN_TYPE == 'C')
     lcd__print8(128 - 20, 18, "rpm");
@@ -119,10 +122,11 @@ void lcd__clear_section (uint8_t sect)
   int hvtemp[] = {90, 64-14, 40, 14};
   int hv[] = {30, 0, 70, 18};
   int lv[] = {0, 64-14, 45, 14};
+  int hvcurr[] = {40, 34-14, 45, 0};
   int soc[] = {40, 64-24, 45, 24};
   int rpm[] = {30, 0, 75,18};
   int gear[] = {50, 64-24, 30, 24};
-  int* sections[] = {hvtemp, hv, lv, soc, rpm, gear};
+  int* sections[] = {hvtemp, hv, hvcurr, lv, soc, rpm, gear};
   
   lcd->setDrawColor(0);
   lcd->drawBox(sections[sect][0], sections[sect][1], sections[sect][2], sections[sect][3]);
@@ -209,6 +213,20 @@ void lcd__print_hvlow(float hvlow) // low voltage battery
   
   lcd__clear_section(2);
   lcd__print14(0, 64, hvlow_str);
+}
+
+void lcd__print_hvcurr(float hvcurr) // hv current
+{
+  if (hvcurr == hvcurr_prev) return; // if the value is the same, don't update that "section" 
+  
+  hvcurr_prev = hvcurr; // else, update value_prev and redraw that section
+  
+  char hvcurr_str[5] = "   ";
+  
+  sprintf(hvcurr_str, "%1.0f", hvcurr);
+  
+  lcd__clear_section(2);
+  lcd__print14(0, 34, hvcurr_str);
 }
 
 void lcd__print_hvtemp(float hvtemp) // Accumulator/Engine temperature
@@ -369,7 +387,7 @@ void lcd__print_rpm_diag(uint16_t rpm)
   }
 }
 */
-void lcd__update_screenE(float hv, float soc, float lv, float hvlow, float hvtemp, uint32_t curr_millis_lcd)
+void lcd__update_screenE(float hv, float soc, float lv, float hvlow, float hvtemp, float hvcurr, uint32_t curr_millis_lcd)
 {
   if (curr_millis_lcd - prev_millis_lcd >= LCD_UPDATE_MS) {
     prev_millis_lcd = curr_millis_lcd;
@@ -378,9 +396,10 @@ void lcd__update_screenE(float hv, float soc, float lv, float hvlow, float hvtem
     if (DISPLAY_SCREEN == 0) {
       lcd__print_hv(hv);
       lcd__print_soc(soc);
-      // lcd__print_hvlow(hvlow);
+      //lcd__print_hvlow(hvlow);
       lcd__print_lv(lv);
       lcd__print_hvtemp(hvtemp);
+      lcd__print_hvcurr(hvcurr);
     }
     if (DISPLAY_SCREEN == 1) {
       lcd__menu();

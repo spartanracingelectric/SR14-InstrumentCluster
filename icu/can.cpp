@@ -246,7 +246,7 @@ void can__start()
 
   // With filter
   const uint16_t errorCode = can.begin (settings, [] { can.isr () ; },
-                                        rxm0, rxm1, filters, 10) ;
+                                        rxm0, rxm1, filters, 6) ;
   
   if (errorCode == 0) {
     Serial.print ("Bit Rate prescaler: ") ;
