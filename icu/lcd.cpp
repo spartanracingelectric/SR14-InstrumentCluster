@@ -96,12 +96,16 @@ void lcd__print_default_screen_template()
 
   #if (DISPLAY_SCREEN == 0)
     #if (POWERTRAIN_TYPE == 'E')
-    lcd__print8(104, 45, "HV T");
-    lcd__print8(0, 45, "LV");
-    lcd__print8(45, 28, "VOLTS");
-    lcd__print8(47, 40, "SOC%");
-    lcd__print8(0, 0, "RPM Screen");
-    lcd__print8(0, 10, "HV CURR");
+    //lcd__print8(104, 45, "HV T");
+    //lcd__print8(0, 45, "LV");
+    //lcd__print8(45, 28, "VOLTS");
+    //lcd__print8(47, 40, "SOC%");
+    //lcd__print8(0, 0, "RPM Screen");
+    //lcd__print8(0, 10, "HV CURR");
+    lcd__print8(85, 15, "DRS");
+    lcd__print8(85, 35, "REGEN");
+    lcd__print8(85, 55, "LAUNCH"); // Launch Control
+    
     
     /* #elif(POWERTRAIN_TYPE == 'C')
     lcd__print8(128 - 20, 18, "rpm");
@@ -119,18 +123,18 @@ void lcd__print_default_screen_template()
 
 void lcd__clear_section (uint8_t sect)
 {
-  int hvtemp[] = {90, 64-14, 40, 14};
-  int hv[] = {30, 0, 70, 18};
-  int lv[] = {0, 64-14, 45, 14};
-  int hvcurr[] = {40, 34-14, 45, 0};
-  int soc[] = {40, 64-24, 45, 24};
-  int rpm[] = {30, 0, 75,18};
-  int gear[] = {50, 64-24, 30, 24};
-  int* sections[] = {hvtemp, hv, hvcurr, lv, soc, rpm, gear};
+  //int hvtemp[] = {90, 64-14, 40, 14};
+  //int hv[] = {30, 0, 70, 18};
+  //int lv[] = {0, 64-14, 45, 14};
+  //int hvcurr[] = {40, 34-14, 45, 0};
+  //int soc[] = {40, 64-24, 45, 24};
+  //int rpm[] = {30, 0, 75,18};
+  //int gear[] = {50, 64-24, 30, 24};
+  //int* sections[] = {hvtemp, hv, hvcurr, lv, soc, rpm, gear};
   
-  lcd->setDrawColor(0);
-  lcd->drawBox(sections[sect][0], sections[sect][1], sections[sect][2], sections[sect][3]);
-  lcd->setDrawColor(1);
+  //lcd->setDrawColor(0);
+  //lcd->drawBox(sections[sect][0], sections[sect][1], sections[sect][2], sections[sect][3]);
+  //lcd->setDrawColor(1);
 }
 
 // Combustion Car --------------------------------------------------------------- ---------------------------------------------------------------
@@ -394,12 +398,12 @@ void lcd__update_screenE(float hv, float soc, float lv, float hvlow, float hvtem
 //    lcd__clear_screen();
 
     if (DISPLAY_SCREEN == 0) {
-      lcd__print_hv(hv);
-      lcd__print_soc(soc);
+      //lcd__print_hv(hv);
+      //lcd__print_soc(soc);
       //lcd__print_hvlow(hvlow);
-      lcd__print_lv(lv);
-      lcd__print_hvtemp(hvtemp);
-      lcd__print_hvcurr(hvcurr);
+      //lcd__print_lv(lv);
+      //lcd__print_hvtemp(hvtemp);
+      //lcd__print_hvcurr(hvcurr);
     }
     if (DISPLAY_SCREEN == 1) {
       lcd__menu();
