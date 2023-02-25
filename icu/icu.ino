@@ -28,18 +28,13 @@ uint8_t drs = 0;
 */
 
 #if (POWERTRAIN_TYPE == 'E')
-float hv = 0.0f;
-float hvCurr = 0.0f;
-float soc = 0.0f;
-float lv = 0.0f;
-float hvtemp = 0.0f;
-float hvlow = 0.0f;
+hv = 0.0f;
+hvCurr = 0.0f;
+soc = 0.0f;
+lv = 0.0f;
+hvtemp = 0.0f;
+hvlow = 0.0f;
 
-// diagnostics ---------------------------
-uint16_t rpm = 0;
-uint8_t cellfault = 0;
-uint8_t cellwarn = 0;
-uint8_t bmsstate = 0;
 #endif
 
 void setup()
@@ -119,7 +114,7 @@ void setup()
 
 void loop()
 {
-  uint32_t curr_millis = millis();
+  curr_millis = millis();
 #if (BOARD_REVISION == 'A')
   can__start();
   delay(10);
@@ -131,12 +126,12 @@ void loop()
   hv = can__get_hv();
   hvCurr = can__get_hv_current();
   soc = can__get_soc();
-//  wattemp = can__get_wattemp(); // no can
+  //  wattemp = can__get_wattemp(); // no can
   hvtemp = can__get_hvtemp();
   lv = can__get_lv();
   hvlow = can__get_hvlow();
 
-// diagnostics --------------------------------- // don't work
+  // diagnostics --------------------------------- // don't work
   cellfault = can__get_bms_fault();
   cellwarn = can__get_bms_warn();
   bmsstate = can__get_bms_stat();
@@ -166,7 +161,7 @@ void loop()
 
   rotary__update_state();
   // leds__safety_update_flash(hvlow, hvtemp, curr_millis);
-  lcd__update_screenE(hv, soc, lv, hvlow, hvtemp, curr_millis);
+  lcd__update_screenE();
 
   lastStateCLK = currentStateCLK;
   // delay(500);

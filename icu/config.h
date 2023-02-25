@@ -2,7 +2,7 @@
 #define CONFIG_H_
 
 #include <iostream>
-//#include <string>
+// #include <string>
 using namespace std;
 
 /********************************************************************/
@@ -14,22 +14,40 @@ using namespace std;
 / GLOBAL VARIABLES
 /---------------------------------------------------------------------------*/
 
-extern int counter = 0;
-extern char currentDir[] = "   "; // "_ _ _ null" for a c-string
-extern int currentStateCLK = 0;
-extern int currentStateDT = 0;
-extern int lastStateCLK = 0;
-extern int currentStateSW = 0;
-extern int counterSW = 0; // Switches counter, x % 2 = 1 complete press
-extern unsigned long lastButtonPress = 0;
+// Rotary
+extern int counter;
+extern char currentDirection[4]; // "_ _ _ null" for a c-string
+extern int currentStateCLK;
+extern int currentStateDT;
+extern int lastStateCLK;
+extern int currentStateSW;
+extern int counterSW; // Switches counter
+// extern int counterDelaySW; // delayed counter for switch to monitor when a change happens for rotary.cpp
+extern unsigned long lastButtonPress;
+
+// LCD
+extern float hv = 0.0f;
+extern float hvCurr = 0.0f;
+extern float soc = 0.0f;
+extern float lv = 0.0f;
+extern float hvtemp = 0.0f;
+extern float hvlow = 0.0f;
+extern uint32_t curr_millis;
 
 // Display Screen Status
-// 0 for Driver
-// 1 for Menu
-// 2 for Individual Menu Screens
-// 3 for RPM Threshold
-extern int DISPLAY_SCREEN = 0;
-extern int ROW_COUNT = 0; // for button selection
+// 0 for Testing
+// 1 for Minimalist
+// 2 for Menu
+// 3 for BMS Display
+// 4 for VCU Display
+extern int displayScreen;
+extern int rowCount;        // for button selection
+#define NUMBER_OF_SCREENS 5 // change when add or subtract screens
+#define TESTING_SCREEN 0
+#define MINIMALIST_SCREEN 1
+#define MENU_SCREEN 2
+#define DEBUG_BMS_SCREEN 3
+#define DEBUG_VCU_SCREEN 4
 
 /*---------------------------------------------------------------------------/
 / BOARD REVISION AND CAR ENGINE TYPE
@@ -99,7 +117,7 @@ extern int ROW_COUNT = 0; // for button selection
 #endif
 
 /*---------------------------------------------------------------------------/
-/ ROTARY AND BUTTON PINS AND Screen CONSTANTS
+/ ROTARY AND BUTTON PINS
 /---------------------------------------------------------------------------*/
 #define BUT1 9  // PINC0
 #define BUT2 10 // PINC1
@@ -110,13 +128,6 @@ extern int ROW_COUNT = 0; // for button selection
 #define CLK 9
 #define DT 10
 #define SW 11
-
-#define NUMBER_SCREEN 5 // change when add or subtract screens
-#define DEFAULT_SCREEN 0
-#define MENU_SCREEN 1
-#define TESTING_SCREEN 2
-#define DEBUG_VCU_SCREEN 3
-#define DEBUG_BMS_SCREEN 4
 
 #define DEBOUNCE_TIME 600
 #define LOCK_TIME 100
@@ -134,7 +145,6 @@ extern int ROW_COUNT = 0; // for button selection
 // #define CAN_RPM_ADDR    0x640
 // #define CAN_GEAR_ADDR   0x703
 // // lv, drs, oil pressure, coolant temp
-
 
 // #if (POWERTRAIN_TYPE == 'E')
 #define CANBUS_SPEED 500UL * 1000UL // 500 kbit/s
@@ -166,7 +176,6 @@ extern int ROW_COUNT = 0; // for button selection
 #define WHEEL_DIAMETER_IN 16.0f
 #define WHEEL_CIRCUMFERENCE_M (WHEEL_DIAMETER_IN * 0.0254 * 3.141f)
 #define METERS_SEC_TO_MPH 2.237f
-
 
 #define MAX72XX_HARDWARE_TYPE MD_MAX72XX::PAROLA_HW
 

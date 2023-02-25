@@ -370,10 +370,10 @@ void lcd__print_rpm_diag(uint16_t rpm)
 }
 
 // LCD Screen Update --------------------------------------------------------------- ---------------------------------------------------------------
-/* void lcd__update_screen(uint16_t rpm, uint8_t gear, float lv, float oilpress, uint8_t drs, uint32_t curr_millis_lcd) // C Car
+/* void lcd__update_screen(uint16_t rpm, uint8_t gear, float lv, float oilpress, uint8_t drs, uint32_t curr_millis) // C Car
 {
-  if (curr_millis_lcd - prev_millis_lcd >= LCD_UPDATE_MS) {
-    prev_millis_lcd = curr_millis_lcd;
+  if (curr_millis - prev_millis_lcd >= LCD_UPDATE_MS) {
+    prev_millis_lcd = curr_millis;
     if (DISPLAY_SCREEN == 0) {
       //lcd__print_rpm(rpm);
       //lcd__print_gear(gear);
@@ -384,11 +384,11 @@ void lcd__print_rpm_diag(uint16_t rpm)
   }
 }
 */
-void lcd__update_screenE(float hv, float soc, float lv, float hvlow, float hvtemp, uint32_t curr_millis_lcd)
+void lcd__update_screenE()
 {
-  if (curr_millis_lcd - prev_millis_lcd >= LCD_UPDATE_MS)
+  if (curr_millis - prev_millis_lcd >= LCD_UPDATE_MS)
   {
-    prev_millis_lcd = curr_millis_lcd;
+    prev_millis_lcd = curr_millis;
     //    lcd__clear_screen();
 
     if (DISPLAY_SCREEN == 0)
