@@ -19,6 +19,8 @@ float hvcurr_prev = -1.0f;
 float oilpress_prev = -1.0f; // float or uint8
 uint8_t watertemp_prev = -1;
 uint8_t drs_prev = -1;
+int rgm_prev = -1;
+float launch_prev = -1;
 
 // LCD Set-up --------------------------------------------------------------- ---------------------------------------------------------------
 void lcd__init(U8G2_ST7565_NHD_C12864_F_4W_SW_SPI *lcd_ptr) // changed from SW -> HW
@@ -105,7 +107,8 @@ void lcd__print_default_screen_template()
     lcd__print8(85, 15, "DRS");
     lcd__print8(85, 35, "REGEN");
     lcd__print8(85, 55, "LAUNCH"); // Launch Control
-    
+    lcd__print8(10, 10, "SOC"); // State of Charge 
+    lcd__print14(15, 45, "/400"); // Max Pack Voltage
     
     /* #elif(POWERTRAIN_TYPE == 'C')
     lcd__print8(128 - 20, 18, "rpm");
@@ -127,7 +130,8 @@ void lcd__clear_section (uint8_t sect)
   //int hv[] = {30, 0, 70, 18};
   //int lv[] = {0, 64-14, 45, 14};
   //int hvcurr[] = {40, 34-14, 45, 0};
-  //int soc[] = {40, 64-24, 45, 24};
+  int soc[] = {40, 60-20, 45, 24};
+  int rgm[] = {40, 60-20, 45, 24};
   //int rpm[] = {30, 0, 75,18};
   //int gear[] = {50, 64-24, 30, 24};
   //int* sections[] = {hvtemp, hv, hvcurr, lv, soc, rpm, gear};
@@ -190,6 +194,27 @@ void lcd__clear_section (uint8_t sect)
 }
 */
 // E & C car --------------------------------------------------------------- ---------------------------------------------------------------
+void lcd__print_launch(float launch){
+  if(launch == launch_prev) return;
+  launch_prev = launch;
+  char launch_str[5] = "   ";
+
+  sprintf(launch_str, "%0.1f", launch);
+  
+  lcd__clear_section(2);
+  lcd__print14(85, 65, launch_str);
+}
+void lcd__print_rgm(int rgm){
+  if(rgm == rgm_prev) return;
+  rgm_prev = rgm;
+  char rgm_str[5] = "   ";
+
+  sprintf(rgm_str, "%d", rgm);
+  
+  lcd__clear_section(2);
+  lcd__print14(85, 45, rgm_str);
+  
+}
 void lcd__print_lv(float lv) // low voltage battery
 {
   if (lv == lv_prev) return; // if the value is the same, don't update that "section" 
@@ -251,16 +276,16 @@ void lcd__print_hvtemp(float hvtemp) // Accumulator/Engine temperature
 void lcd__print_drs(uint8_t drs) // DRS Open or Closed: 0 or 1
 {
   if (drs == 0){
-    lcd__print14(113, 35, "O");
+    lcd__print14(85, 30, "O");
   } else if (drs == 1)
   {
-    lcd__print14(113, 35, "M");
+    lcd__print8(113, 35, "M");
   } else if (drs == 2)
   {
-    lcd__print14(113, 35, "A");
+    lcd__print8(113, 35, "A");
   } else if (drs == 3)
   {
-    lcd__print14(113, 35, "C");
+    lcd__print8(113, 35, "C");
   }
 
 }
@@ -299,7 +324,7 @@ void lcd__print_soc(float soc) // State of charge 0-100%
   }
   
   lcd__clear_section(3);
-  lcd__print18(46, 64, soc_str);
+  lcd__print18(10, 30, soc_str);
 }
 
 // Menu Functions --------------------------------------------------------------- ---------------------------------------------------------------
@@ -391,7 +416,7 @@ void lcd__print_rpm_diag(uint16_t rpm)
   }
 }
 */
-void lcd__update_screenE(float hv, float soc, float lv, float hvlow, float hvtemp, float hvcurr, uint32_t curr_millis_lcd)
+void lcd__update_screenE(float hv, float soc, float lv, float hvlow, float hvtemp, float hvcurr, uint8_t drs, int rgm, float launch, uint32_t curr_millis_lcd)
 {
   if (curr_millis_lcd - prev_millis_lcd >= LCD_UPDATE_MS) {
     prev_millis_lcd = curr_millis_lcd;
@@ -399,7 +424,10 @@ void lcd__update_screenE(float hv, float soc, float lv, float hvlow, float hvtem
 
     if (DISPLAY_SCREEN == 0) {
       //lcd__print_hv(hv);
-      //lcd__print_soc(soc);
+      lcd__print_soc(soc);
+      lcd__print_drs(drs);
+      lcd__print_rgm(rgm);
+      lcd__print_launch(launch);
       //lcd__print_hvlow(hvlow);
       //lcd__print_lv(lv);
       //lcd__print_hvtemp(hvtemp);
