@@ -197,39 +197,39 @@ void leds__toggle_revlim()
     leds->setPoint(PIN_LED_SOLID[NUM_LED_SOLID-1][0], PIN_LED_SOLID[NUM_LED_SOLID-1][1], true);
   }
 }
-/*
+
 void leds__rpm_update_tach(uint16_t rpm) {
   uint8_t leds_to_turn_off;
   uint8_t leds_to_turn_on = 0;
   switch(rpm) {
-    case 500 ... 2749:
+    case 0 ... 100:
       leds_to_turn_on = 1;
       break;
-    case 2750 ... 4499:
+    case 101 ... 200:
       leds_to_turn_on = 2;
       break;
-    case 4500 ... 5999:
+    case 201 ... 300:
       leds_to_turn_on = 3;
       break;
-    case 6000 ... 6999:
+    case 301 ... 400:
       leds_to_turn_on = 4;
       break;
-    case 7000 ... 7999:
+    case 401 ... 500:
       leds_to_turn_on = 5;
       break;
-    case 8000 ... 8999:
+    case 501 ... 600:
       leds_to_turn_on = 6;
       break;
-    case 9000 ... 9999:
+    case 601 ... 700:
       leds_to_turn_on = 7;
       break;
-    case 10000 ... 10999:
+    case 701 ... 800:
       leds_to_turn_on = 8;
       break;
-    case 11000 ... 11999:
+    case 801 ... 900:
       leds_to_turn_on = 9;
       break;
-    case 12000 ... 16000:
+    case 901 ... 1000:
       leds_to_turn_on = 10;
       break;
     default:
@@ -247,7 +247,7 @@ void leds__rpm_update_tach(uint16_t rpm) {
     leds->setPoint(PIN_LED_SOLID[NUM_LED_SOLID-led_idx][0],PIN_LED_SOLID[NUM_LED_SOLID-led_idx][1],false);
   }
 }
-*/
+
 
 /*
 void leds__rpm_update_flash(uint16_t rpm, uint8_t gear, uint32_t curr_millis_flash)

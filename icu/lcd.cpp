@@ -102,6 +102,7 @@ void lcd__print_default_screen_template()
     lcd__print8(47, 40, "SOC%");
     lcd__print8(0, 0, "RPM Screen");
     lcd__print8(0, 10, "HV CURR");
+    lcd__print8(104, 10, "RPM");
     
     /* #elif(POWERTRAIN_TYPE == 'C')
     lcd__print8(128 - 20, 18, "rpm");
@@ -369,7 +370,7 @@ void lcd__print_rpm_diag(uint16_t rpm)
   sprintf(rpm_str, "%5hu", rpm); // transforms int or float or # into a string with a specifying operator in the middle.
   
   lcd__clear_section(4);
-  lcd__print18(35, 18, rpm_str);
+  lcd__print14(90, 34, rpm_str);
 }
 
 // LCD Screen Update --------------------------------------------------------------- ---------------------------------------------------------------
@@ -387,7 +388,7 @@ void lcd__print_rpm_diag(uint16_t rpm)
   }
 }
 */
-void lcd__update_screenE(float hv, float soc, float lv, float hvlow, float hvtemp, float hvcurr, uint32_t curr_millis_lcd)
+void lcd__update_screenE(float hv, float soc, float lv, float hvlow, float hvtemp, float hvcurr, uint32_t curr_millis_lcd, uint16_t rpm)
 {
   if (curr_millis_lcd - prev_millis_lcd >= LCD_UPDATE_MS) {
     prev_millis_lcd = curr_millis_lcd;
@@ -400,6 +401,7 @@ void lcd__update_screenE(float hv, float soc, float lv, float hvlow, float hvtem
       lcd__print_lv(lv);
       lcd__print_hvtemp(hvtemp);
       lcd__print_hvcurr(hvcurr);
+      lcd__print_rpm_diag(rpm);
     }
     if (DISPLAY_SCREEN == 1) {
       lcd__menu();
