@@ -93,7 +93,7 @@ void lcd__print_default_screen_template()
 
   lcd__clear_screen();
 
-#if (DISPLAY_SCREEN == 0)
+#if (displayScreen == 0)
 #if (POWERTRAIN_TYPE == 'E')
   lcd__print8(104, 45, "HV T");
   lcd__print8(0, 45, "LV");
@@ -110,7 +110,7 @@ void lcd__print_default_screen_template()
   */
 
 #endif
-#elif (DISPLAY_SCREEN == 1)
+#elif (displayScreen == 1)
 
 #endif
 }
@@ -334,7 +334,7 @@ void lcd__menu(void)
   const char *back = "Back";
   const char *screens[6] = {zero, one, two, three, four, back};
 
-  lcd__print_screen(ROW_COUNT, 6, screens);
+  lcd__print_screen(rowCount, 6, screens);
 }
 
 void lcd__diagnostics(uint8_t cellfault, uint8_t cellwarn, uint8_t bmsstate)
@@ -374,7 +374,7 @@ void lcd__print_rpm_diag(uint16_t rpm)
 {
   if (curr_millis - prev_millis_lcd >= LCD_UPDATE_MS) {
     prev_millis_lcd = curr_millis;
-    if (DISPLAY_SCREEN == 0) {
+    if (displayScreen == 0) {
       //lcd__print_rpm(rpm);
       //lcd__print_gear(gear);
       lcd__print_lv(lv);
@@ -391,7 +391,7 @@ void lcd__update_screenE()
     prev_millis_lcd = curr_millis;
     //    lcd__clear_screen();
 
-    if (DISPLAY_SCREEN == 0)
+    if (displayScreen == 0)
     {
       lcd__print_hv(hv);
       lcd__print_soc(soc);
@@ -399,15 +399,15 @@ void lcd__update_screenE()
       lcd__print_lv(lv);
       lcd__print_hvtemp(hvtemp);
     }
-    if (DISPLAY_SCREEN == 1)
+    if (displayScreen == 1)
     {
       lcd__menu();
     }
-    if (DISPLAY_SCREEN == 2)
+    if (displayScreen == 2)
     {
       // lcd__diagnostics(cellfault, cellwarn, bmsstate);
     }
-    if (DISPLAY_SCREEN == 3)
+    if (displayScreen == 3)
     {
       // lcd__print_rpm_diag(rpm);
     }

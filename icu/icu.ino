@@ -19,6 +19,17 @@ U8G2_ST7565_NHD_C12864_F_4W_SW_SPI lcd_u8g2(U8G2_R2, PICO_LCD_SPI_SCK, PICO_LCD_
 
 MD_MAX72XX leds_md = MD_MAX72XX(MAX72XX_HARDWARE_TYPE, PICO_LED_SPI_CS, 1);
 
+// Global Variables
+
+// LCD
+extern float hv;
+extern float hvCurr;
+extern float soc;
+extern float lv;
+extern float hvtemp;
+extern float hvlow;
+extern uint32_t curr_millis;
+
 /* #if (POWERTRAIN_TYPE == 'C')
 uint16_t rpm = 0;
 uint8_t gear = 0;
@@ -27,18 +38,17 @@ float lv = 0.0f;
 uint8_t drs = 0;
 */
 
-#if (POWERTRAIN_TYPE == 'E')
-hv = 0.0f;
-hvCurr = 0.0f;
-soc = 0.0f;
-lv = 0.0f;
-hvtemp = 0.0f;
-hvlow = 0.0f;
-
-#endif
-
 void setup()
 {
+#if (POWERTRAIN_TYPE == 'E')
+  hv = 0.0f;
+  hvCurr = 0.0f;
+  soc = 0.0f;
+  lv = 0.0f;
+  hvtemp = 0.0f;
+  hvlow = 0.0f;
+
+#endif
   // Set encoder pins as inputs
   pinMode(CLK, INPUT);
   pinMode(DT, INPUT);
@@ -131,10 +141,10 @@ void loop()
   lv = can__get_lv();
   hvlow = can__get_hvlow();
 
-  // diagnostics --------------------------------- // don't work
-  cellfault = can__get_bms_fault();
-  cellwarn = can__get_bms_warn();
-  bmsstate = can__get_bms_stat();
+//  // diagnostics --------------------------------- // don't work
+//  cellfault = can__get_bms_fault();
+//  cellwarn = can__get_bms_warn();
+//  bmsstate = can__get_bms_stat();
 #endif
 
 #if (BOARD_REVISION == 'A')
@@ -174,9 +184,9 @@ void loop()
 void tempDisplay()
 {
   Serial.print("Direction: ");
-  Serial.print(currentDir);
+  Serial.print(currentDirection);
   Serial.print(" | Counter: ");
-  Serial.println(counter);
+  Serial.println(counterRotary);
 
   // If we detect LOW signal, button is pressed
   if (currentStateSW == 0) // LOW is 0V, testing if redefining works

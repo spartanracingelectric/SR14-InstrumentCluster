@@ -2,7 +2,7 @@
 
 // Rotary
 
-int counter;
+int counterRotary = 0;
 int currentStateCLK = 0;
 int currentStateDT = 0;
 int lastStateCLK = 0;
@@ -22,7 +22,6 @@ int displayScreen = 0;
 int rowCount = 0; // for button selection
 
 // LCD
-
 float hv = 0.0f;
 float hvCurr = 0.0f;
 float soc = 0.0f;

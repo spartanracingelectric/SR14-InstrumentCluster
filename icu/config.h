@@ -15,7 +15,7 @@ using namespace std;
 /---------------------------------------------------------------------------*/
 
 // Rotary
-extern int counter;
+extern int counterRotary;
 extern char currentDirection[4]; // "_ _ _ null" for a c-string
 extern int currentStateCLK;
 extern int currentStateDT;
@@ -26,12 +26,12 @@ extern int counterSW; // Switches counter
 extern unsigned long lastButtonPress;
 
 // LCD
-extern float hv = 0.0f;
-extern float hvCurr = 0.0f;
-extern float soc = 0.0f;
-extern float lv = 0.0f;
-extern float hvtemp = 0.0f;
-extern float hvlow = 0.0f;
+extern float hv;
+extern float hvCurr;
+extern float soc;
+extern float lv;
+extern float hvtemp;
+extern float hvlow;
 extern uint32_t curr_millis;
 
 // Display Screen Status
