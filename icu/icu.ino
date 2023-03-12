@@ -35,7 +35,7 @@ float hvtemp = 0.0f;
 float hvlow = 0.0f;
 
 // diagnostics ---------------------------
-uint16_t rpm = 400;
+uint16_t rpm = 0;
 uint8_t cellfault = 0;
 uint8_t cellwarn = 0;
 uint8_t bmsstate = 0;
@@ -48,7 +48,7 @@ void setup()
   pinMode(PICO_LED_SPI_CS, OUTPUT);
   digitalWrite(PICO_LED_SPI_CS, HIGH);
 
-  //Serial.begin(115200);
+//  Serial.begin(9600);
 #if (BOARD_REVISION == 'A')
   SPI.setSCK(PICO_CAN_SPI_SCK);
   SPI.setTX(PICO_CAN_SPI_MOSI);
@@ -131,6 +131,7 @@ void loop()
   hvtemp = can__get_hvtemp();
   lv = can__get_lv();
   hvlow = can__get_hvlow();
+  rpm = can__get_rpm();
 
 // diagnostics --------------------------------- // don't work
   cellfault = can__get_bms_fault();

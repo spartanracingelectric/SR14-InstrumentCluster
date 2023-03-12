@@ -126,8 +126,8 @@ static void can__hvtemp_receive (const CANMessage & inMessage)
 // diagnostics ---------------------------------
 static void can__rpm_receive (const CANMessage & inMessage)
 {
-  curr_rpm = ((inMessage.data[2]) | (inMessage.data[1] << 8));
-  //Serial.println ("Received RPM " + curr_rpm) ;
+  curr_rpm = ((inMessage.data[2]) | (inMessage.data[3] << 8));
+//  Serial.println ("Received RPM ");// + curr_rpm) ;
 }
 static void can__bms_fault_receive (const CANMessage & inMessage)
 {
