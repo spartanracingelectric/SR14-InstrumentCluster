@@ -352,7 +352,7 @@ void leds__hvtemp(float hvtemp)
 {
   if (hvtemp < 10.0){
     leds->setPoint(3, 1, false);
-    leds->setPoint(PIN_LED_RGB_R[3][0], PIN_LED_RGB_R[3][1], true);
+    leds->setPoint(PIN_LED_RGB_R[5][0], PIN_LED_RGB_R[5][1], true);
   }
   else{
     leds->setPoint(PIN_LED_RGB_R[3][0], PIN_LED_RGB_R[3][1], false);

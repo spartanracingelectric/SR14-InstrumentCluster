@@ -166,7 +166,7 @@ void loop()
 #if (POWERTRAIN_TYPE == 'E')
 //     leds__safety_update_flash(hvlow, hvtemp, curr_millis);
     lcd__update_screenE(hv, soc, lv, hvlow, hvtemp, hvCurr, curr_millis, rpm);
-    leds__rpm_update_tach(rpm);
+//    leds__rpm_update_tach(rpm);
     
 #endif
   //delay(500);
