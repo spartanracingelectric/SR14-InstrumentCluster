@@ -48,7 +48,7 @@ void setup()
   pinMode(PICO_LED_SPI_CS, OUTPUT);
   digitalWrite(PICO_LED_SPI_CS, HIGH);
 
-//  Serial.begin(9600);
+  Serial.begin(9600);
 #if (BOARD_REVISION == 'A')
   SPI.setSCK(PICO_CAN_SPI_SCK);
   SPI.setTX(PICO_CAN_SPI_MOSI);
@@ -165,8 +165,8 @@ void loop()
 
 #if (POWERTRAIN_TYPE == 'E')
 //     leds__safety_update_flash(hvlow, hvtemp, curr_millis);
-    lcd__update_screenE(hv, soc, lv, hvlow, hvtemp, hvCurr, curr_millis, rpm);
-//    leds__rpm_update_tach(rpm);
+    lcd__update_screenE(hv, soc, lv, hvlow, hvtemp, hvCurr, curr_millis);
+    leds__rpm_update_tach(rpm);
     
 #endif
   //delay(500);

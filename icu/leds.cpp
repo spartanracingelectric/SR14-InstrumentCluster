@@ -202,39 +202,39 @@ void leds__rpm_update_tach(uint16_t rpm) {
   uint8_t leds_to_turn_off;
   uint8_t leds_to_turn_on = 0;
   switch(rpm) {
-    case 0 ... 100:
-      leds_to_turn_on = 1;
-      break;
-    case 101 ... 200:
-      leds_to_turn_on = 2;
-      break;
-    case 201 ... 300:
-      leds_to_turn_on = 3;
-      break;
-    case 301 ... 400:
-      leds_to_turn_on = 4;
-      break;
-    case 401 ... 500:
-      leds_to_turn_on = 5;
-      break;
-    case 501 ... 600:
-      leds_to_turn_on = 6;
-      break;
-    case 601 ... 700:
-      leds_to_turn_on = 7;
-      break;
-    case 701 ... 800:
-      leds_to_turn_on = 8;
-      break;
-    case 801 ... 900:
-      leds_to_turn_on = 9;
-      break;
-    case 901 ... 1000:
-      leds_to_turn_on = 10;
-      break;
-    default:
+    case 1 ... 550:
       leds_to_turn_on = 0;
       break;
+    case 551 ... 1100:
+      leds_to_turn_on = 1;
+      break;
+    case 1101 ... 1650:
+      leds_to_turn_on = 2;
+      break;
+    case 1651 ... 2200:
+      leds_to_turn_on = 3;
+      break;
+    case 2201 ... 2750:
+      leds_to_turn_on = 4;
+      break;
+    case 2751 ... 3300:
+      leds_to_turn_on = 5;
+      break;
+    case 3301 ... 3850:
+      leds_to_turn_on = 6;
+      break;
+    case 3851 ... 4400:
+      leds_to_turn_on = 7;
+      break;
+    case 4401 ... 4950:
+      leds_to_turn_on = 8;
+      break;
+    case 4951 ... 5499:
+      leds_to_turn_on = 9;
+      break;
+    case 5500: 
+      leds_to_turn_on = 10;
+    
   }
   //Inverse of # leds ON
   leds_to_turn_off = NUM_LED_SOLID-leds_to_turn_on;
