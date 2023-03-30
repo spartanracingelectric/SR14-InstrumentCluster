@@ -9,7 +9,7 @@
 // Board Revision, select:
 // 'A' for Rev A
 // 'B' for Rev B
-//#define BOARD_REVISION 'A'
+// #define BOARD_REVISION 'A'
 #define BOARD_REVISION 'B'
 
 //#define POWERTRAIN_TYPE 'C'
@@ -24,8 +24,8 @@
 // 2 for Individual Menu Screens
 // 3 for RPM Threshold
 
-static uint8_t DISPLAY_SCREEN = 0;
-static uint8_t ROW_COUNT = 0; // for button selection
+static int DISPLAY_SCREEN = 0;
+static int ROW_COUNT = 0; // for button selection
 
 /*---------------------------------------------------------------------------/
 / DRIVER PARAMETERS
@@ -97,10 +97,10 @@ static uint8_t ROW_COUNT = 0; // for button selection
 /*---------------------------------------------------------------------------/
 / BUTTON PINS AND Screen CONSTANTS
 /---------------------------------------------------------------------------*/
-#define BUT1 9 //PINC0
-#define BUT2 10 //PINC1
-#define BUT3 11 //PINC2
-#define BUT4 12 //PINC3
+#define CLK 9
+#define DT 8
+#define SW 7
+// #define BUT4 12 //extra
 
 #define DEFAULT_SCREEN 0
 #define MENU_SCREEN 1

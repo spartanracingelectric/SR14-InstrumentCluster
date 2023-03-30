@@ -2,6 +2,9 @@
 #include "leds.h"
 #include "can.h"
 #include "lcd.h"
+#include "rotary.h"
+#include <string>
+using namespace std; 
 
 #ifndef ARDUINO_ARCH_RP2040
 #error "Select a Raspberry Pi Pico board"
@@ -38,16 +41,31 @@ uint16_t rpm = 0;
 uint8_t cellfault = 0;
 uint8_t cellwarn = 0;
 uint8_t bmsstate = 0;
+
+// rotary
+int lastStateCLK;  // Read the initial state of CLK
+int currentStateCLK;
+  int currentStateSW;
+  int currentStateDT;
 #endif
 
 void setup()
 {
+
+  // Set encoder pins as inputs
+  pinMode(CLK, INPUT);
+  pinMode(DT, INPUT);
+  pinMode(SW, INPUT);
+  int lastStateCLK = digitalRead(CLK);  // Read the initial state of CLK
+
+  // CAN Pins
   pinMode(PICO_CAN_SPI_CS, OUTPUT);
   digitalWrite(PICO_CAN_SPI_CS, HIGH);
   pinMode(PICO_LED_SPI_CS, OUTPUT);
   digitalWrite(PICO_LED_SPI_CS, HIGH);
 
-  //Serial.begin(115200);
+  Serial.begin(9600);
+  
 #if (BOARD_REVISION == 'A')
   SPI.setSCK(PICO_CAN_SPI_SCK);
   SPI.setTX(PICO_CAN_SPI_MOSI);
@@ -107,6 +125,11 @@ void setup()
 
 void loop()
 {
+   currentStateCLK = digitalRead(CLK);
+   currentStateSW = digitalRead(SW);
+   currentStateDT = digitalRead(DT);
+
+
   uint32_t curr_millis = millis();
   #if (BOARD_REVISION == 'A')
     can__start();
@@ -114,6 +137,8 @@ void loop()
   #endif
   //can__send_test();
   can__receive();
+
+   displayRotary( currentStateCLK, currentStateSW, currentStateDT, lastStateCLK);
 
 /* #if(POWERTRAIN_TYPE == 'C')
   rpm = can__get_rpm();
