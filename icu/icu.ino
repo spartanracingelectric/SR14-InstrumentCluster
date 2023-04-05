@@ -83,6 +83,7 @@ void setup()
   lcd__init(&lcd_u8g2);
 
   //Non functional as clearBuffer in loop overwrites for now
+ 
   lcd__print_default_screen_template();
   leds__set_brightness(MAX_LED_BRIGHTNESS);
   leds__wake();
