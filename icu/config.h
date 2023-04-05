@@ -189,6 +189,6 @@ static uint8_t ROW_COUNT = 0; // for button selection
 /*---------------------------------------------------------------------------/
 / HELPFUL MACROS
 /---------------------------------------------------------------------------*/
-#define MAX_LED_BRIGHTNESS 0xF
+#define MAX_LED_BRIGHTNESS 0xFF
 
 #endif /* CONF_H_ */

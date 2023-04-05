@@ -102,7 +102,6 @@ void lcd__print_default_screen_template()
     lcd__print8(47, 40, "SOC%");
     lcd__print8(0, 0, "RPM Screen");
     lcd__print8(0, 10, "HV CURR");
-    lcd__print8(104, 10, "RPM");
     
     /* #elif(POWERTRAIN_TYPE == 'C')
     lcd__print8(128 - 20, 18, "rpm");
@@ -125,9 +124,9 @@ void lcd__clear_section (uint8_t sect)
   int lv[] = {0, 64-14, 45, 14};
   int hvcurr[] = {40, 34-14, 45, 0};
   int soc[] = {40, 64-24, 45, 24};
-  int rpm[] = {30, 0, 75,18};
+  //int rpm[] = {30, 0, 75,18};
   int gear[] = {50, 64-24, 30, 24};
-  int* sections[] = {hvtemp, hv, hvcurr, lv, soc, rpm, gear};
+  int* sections[] = {hvtemp, hv, hvcurr, lv, soc, gear};
   
   lcd->setDrawColor(0);
   lcd->drawBox(sections[sect][0], sections[sect][1], sections[sect][2], sections[sect][3]);
@@ -194,11 +193,11 @@ void lcd__print_lv(float lv) // low voltage battery
   lv_prev = lv; // else, update value_prev and redraw that section
   
   char lv_str[5] = "   ";
-  // leds__lv(lv); // update low voltage led (bottom left)
+  leds__lv(lv); // update low voltage led (bottom left)
   
   sprintf(lv_str, "%0.1f", lv);
-  
-  lcd__clear_section(2);
+
+  lcd__clear_section(3);
   lcd__print14(0, 64, lv_str);
 }
 
@@ -388,7 +387,7 @@ void lcd__print_rpm_diag(uint16_t rpm)
   }
 }
 */
-void lcd__update_screenE(float hv, float soc, float lv, float hvlow, float hvtemp, float hvcurr, uint32_t curr_millis_lcd, uint16_t rpm)
+void lcd__update_screenE(float hv, float soc, float lv, float hvlow, float hvtemp, float hvcurr, uint32_t curr_millis_lcd)
 {
   if (curr_millis_lcd - prev_millis_lcd >= LCD_UPDATE_MS) {
     prev_millis_lcd = curr_millis_lcd;
@@ -401,7 +400,6 @@ void lcd__update_screenE(float hv, float soc, float lv, float hvlow, float hvtem
       lcd__print_lv(lv);
       lcd__print_hvtemp(hvtemp);
       lcd__print_hvcurr(hvcurr);
-      lcd__print_rpm_diag(rpm);
     }
     if (DISPLAY_SCREEN == 1) {
       lcd__menu();
