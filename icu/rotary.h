@@ -6,7 +6,7 @@ using namespace std;
 
 
 
-void displayRotary(int currentStateCLK, int currentStateSW, int currentStateDT, int& lastStateCLK);
+void displayRotary(int currentStateCLK, int currentStateSW, int currentStateDT, int& lastStateCLK, int displayScreen, int rowCount);
 
 // #define CLK 9
 // #define DT 10

@@ -12,7 +12,7 @@ using namespace std;
 
 // LCD Object Initialization
 // Args: (U8G2_R0/Rotate, SCK, MOSI, CS, A0/DC, RST) clock and data from SW_SPI: PICO_LCD_SPI_SCK, PICO_LCD_SPI_MOSI,
-// U8G2_ST7565_NHD_C12864_F_4W_HW_SPI lcd_u8g2(U8G2_R2, PICO_LCD_SPI_CS, PICO_LCD_A0, PICO_LCD_RST);
+//U8G2_ST7565_NHD_C12864_F_4W_HW_SPI lcd_u8g2(U8G2_R2, PICO_LCD_SPI_CS, PICO_LCD_A0, PICO_LCD_RST);
 U8G2_ST7565_NHD_C12864_F_4W_SW_SPI lcd_u8g2(U8G2_R2, PICO_LCD_SPI_SCK, PICO_LCD_SPI_MOSI, PICO_LCD_SPI_CS, PICO_LCD_A0, PICO_LCD_RST);
 
 // LED Object Initialization
@@ -20,17 +20,6 @@ U8G2_ST7565_NHD_C12864_F_4W_SW_SPI lcd_u8g2(U8G2_R2, PICO_LCD_SPI_SCK, PICO_LCD_
 // PAROLA_HW refers to an 8x8 LED matrix which we are sort of simulating
 
 MD_MAX72XX leds_md = MD_MAX72XX(MAX72XX_HARDWARE_TYPE, PICO_LED_SPI_CS, 1);
-
-// Global Variables
-
-// LCD
-extern float hv;
-extern float hvCurr;
-extern float soc;
-extern float lv;
-extern float hvtemp;
-extern float hvlow;
-extern uint32_t curr_millis;
 
 /* #if (POWERTRAIN_TYPE == 'C')
 uint16_t rpm = 0;
@@ -40,32 +29,29 @@ float lv = 0.0f;
 uint8_t drs = 0;
 */
 
-void setup()
-{
 #if (POWERTRAIN_TYPE == 'E')
-  hv = 0.0f;
-  hvCurr = 0.0f;
-  soc = 0.0f;
-  lv = 0.0f;
-  hvtemp = 0.0f;
-  hvlow = 0.0f;
+  float hv = 0.0f; 
+  float soc = 0.0f;
+  float lv = 0.0f;
+  float hvtemp = 0.0f;
+  float hvlow = 0.0f;
 
-// diagnostics ---------------------------
-uint16_t rpm = 0;
-uint8_t cellfault = 0;
-uint8_t cellwarn = 0;
-uint8_t bmsstate = 0;
+  // diagnostics ---------------------------
+  uint16_t rpm = 0;
+  uint8_t cellfault = 0;
+  uint8_t cellwarn = 0;
+  uint8_t bmsstate = 0;
 
-// rotary
-int lastStateCLK;  // Read the initial state of CLK
-int currentStateCLK;
+  // rotary ---------------------------
+  int lastStateCLK;  // Read the initial state of CLK
+  int currentStateCLK;
   int currentStateSW;
   int currentStateDT;
+
+  // lcd ---------------------------
+  int displayScreen;
+  int rowCount;
 #endif
-  // Set encoder pins as inputs
-  pinMode(CLK, INPUT);
-  pinMode(DT, INPUT);
-  pinMode(SW, INPUT);
 
 void setup()
 {
@@ -102,10 +88,9 @@ void setup()
   SPI1.setCS(PICO_CAN_SPI_CS);
   SPI.begin();
   SPI1.begin();
-  can__start();
 #endif
 
-  // No need to initialize CAN here, as can.begin seems to hog the data
+  // No need to initialize CAB here, as can.begin seems to hog the data
   // buffer which in turn stalls the MAX7219 and therefore the whole program
 
   // Initialize leds, pass U8G2 object pointer
@@ -114,16 +99,13 @@ void setup()
   // Initialize lcd, pass U8G2 object pointer
   lcd__init(&lcd_u8g2);
 
-  // Setup Serial Monitor
-  Serial.begin(9600);
-
-  // Initial Screen output once connected through power
+  //Non functional as clearBuffer in loop overwrites for now
   lcd__print_default_screen_template();
   leds__set_brightness(MAX_LED_BRIGHTNESS);
   leds__wake();
-
-  // Read the initial state of CLK
-  lastStateCLK = digitalRead(CLK);
+#if (BOARD_REVISION == 'B')
+  can__start();
+#endif
   /*
     //LED Sniffing code
     delay(5000);
@@ -140,27 +122,23 @@ void setup()
   */
 }
 
-// Test values for proof of concept
-// uint8_t cnt = 0;
-// uint16_t test_vals[] = {109, 250, 1259, 2400, 3658, 4815, 4405, 4623, 6042, 7404, 9480, 11400, 12000, 13004};
-// uint16_t test_vals[] = {14600};
+//Test values for proof of concept
+//uint8_t cnt = 0;
+//uint16_t test_vals[] = {109, 250, 1259, 2400, 3658, 4815, 4405, 4623, 6042, 7404, 9480, 11400, 12000, 13004};
+//uint16_t test_vals[] = {14600};
 
 void loop()
 {
-   currentStateCLK = digitalRead(CLK);
-   currentStateSW = digitalRead(SW);
-   currentStateDT = digitalRead(DT);
+  // rotary position variables
+  currentStateCLK = digitalRead(CLK);
+  currentStateSW = digitalRead(SW);
+  currentStateDT = digitalRead(DT);
+  uint32_t curr_millis = millis(); // switch time var
 
+  displayRotary (currentStateCLK, currentStateSW, currentStateDT, lastStateCLK, displayScreen, rowCount);
 
-  uint32_t curr_millis = millis();
-  #if (BOARD_REVISION == 'A')
-    can__start();
-    delay(10);
-  #endif
   //can__send_test();
   can__receive();
-
-   displayRotary( currentStateCLK, currentStateSW, currentStateDT, lastStateCLK);
 
 /* #if(POWERTRAIN_TYPE == 'C')
   rpm = can__get_rpm();
@@ -171,72 +149,35 @@ void loop()
 */
 #if (POWERTRAIN_TYPE == 'E')
   hv = can__get_hv();
-  hvCurr = can__get_hv_current();
   soc = can__get_soc();
-  //  wattemp = can__get_wattemp(); // no can
+//  wattemp = can__get_wattemp();
   hvtemp = can__get_hvtemp();
   lv = can__get_lv();
   hvlow = can__get_hvlow();
 
-//  // diagnostics --------------------------------- // don't work
-//  cellfault = can__get_bms_fault();
-//  cellwarn = can__get_bms_warn();
-//  bmsstate = can__get_bms_stat();
-#endif
-
-#if (BOARD_REVISION == 'A')
-  can__stop();
+  cellfault = can__get_bms_fault();
+  cellwarn = can__get_bms_warn();
+  bmsstate = can__get_bms_stat();
 #endif
 
   // placeholder values. uncomment when needed
   //  rpm = 10000;
   //  gear = 1;
-  // oilpress = 15; // most likely float - reference hv or lv
-  // drs = 3;
-  // lv = 14.540510;
+  //oilpress = 15; // most likely float - reference hv or lv
+  //drs = 3;
+  //lv = 14.540510;
   //  hv = 250.81430;
   //  soc = 97;
   //  hvtemp = 51.8234;
-  // hvlow = 3.2f;
-  // hvtemp = 52.3f;
+  //hvlow = 3.2f;
+  //hvtemp = 52.3f;
 
-  // Rotary digitalRead CLK, DT, SW
-  // Updates rotary states every loop
-  currentStateCLK = digitalRead(CLK);
-  currentStateDT = digitalRead(DT);
-  currentStateSW = digitalRead(SW);
+  //lcd__print_rpm(rpm, curr_millis);
 
-  rotary__update_state();
-  // leds__safety_update_flash(hvlow, hvtemp, curr_millis);
-  lcd__update_screenE();
-
-  lastStateCLK = currentStateCLK;
-  // delay(500);
-}
-
-/**
- * @brief temporary display function to display variables from the rotary switch as rotary.cpp can't access Serial Monitor
- *
- */
-void tempDisplay()
-{
-  Serial.print("Direction: ");
-  Serial.print(currentDirection);
-  Serial.print(" | Counter: ");
-  Serial.println(counterRotary);
-
-  // If we detect LOW signal, button is pressed
-  if (currentStateSW == 0) // LOW is 0V, testing if redefining works
-  {
-    // if 50ms have passed since last LOW pulse, it means that the
-    // button has been pressed, released and pressed again
-    if (millis() - lastButtonPress > 50)
-    {
-      counterSW++;
-      Serial.println("Button pressed!");
-    }
-
-    // Remember last button press event
-    lastButtonPress = millis();
-  }
+#if (POWERTRAIN_TYPE == 'E')
+    leds__safety_update_flash(hvlow, hvtemp, curr_millis);
+    lcd__update_screenE(hv, soc, lv, hvlow, hvtemp, displayScreen, rowCount, curr_millis);
+    
+#endif
+  //delay(500);
 }

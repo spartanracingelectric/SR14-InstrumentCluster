@@ -384,32 +384,34 @@ void lcd__print_rpm_diag(uint16_t rpm)
   }
 }
 */
-void lcd__update_screenE()
+void lcd__update_screenE(float hv, float soc, float lv, float hvlow, float hvtemp, int displayScreen, int rowCount,  uint32_t curr_millis_lcd)
 {
-  if (curr_millis - prev_millis_lcd >= LCD_UPDATE_MS)
-  {
-    prev_millis_lcd = curr_millis;
-    //    lcd__clear_screen();
+  if (curr_millis_lcd - prev_millis_lcd >= LCD_UPDATE_MS) {
+    prev_millis_lcd = curr_millis_lcd;
+//    lcd__clear_screen();
 
-    if (displayScreen == 0)
+    if (displayScreen == 0) 
     {
       lcd__print_hv(hv);
       lcd__print_soc(soc);
-      // lcd__print_hvlow(hvlow);
+      lcd__print_hvlow(hvlow);
       lcd__print_lv(lv);
       lcd__print_hvtemp(hvtemp);
     }
-    if (displayScreen == 1)
+    if (displayScreen == 1) 
+    {
+      
+    }
+    if (displayScreen == 2) 
+    {
+      //lcd__diagnostics(cellfault, cellwarn, bmsstate);
+    }
+    if (displayScreen == 3) 
+    {
+      //lcd__print_rpm_diag(rpm);
+    }
+    if (displayScreen == 4)
     {
       lcd__menu();
     }
-    if (displayScreen == 2)
-    {
-      // lcd__diagnostics(cellfault, cellwarn, bmsstate);
-    }
-    if (displayScreen == 3)
-    {
-      // lcd__print_rpm_diag(rpm);
-    }
   }
-}

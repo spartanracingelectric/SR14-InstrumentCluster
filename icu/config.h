@@ -11,7 +11,7 @@ using namespace std;
 /********************************************************************/
 
 /*---------------------------------------------------------------------------/
-/ GLOBAL VARIABLES
+/ GLOBAL VARIABLES (still testing)
 /---------------------------------------------------------------------------*/
 
 // Rotary
@@ -37,17 +37,22 @@ extern uint32_t curr_millis;
 // Display Screen Status
 // 0 for Testing
 // 1 for Minimalist
-// 2 for Menu
-// 3 for BMS Display
-// 4 for VCU Display
-extern int displayScreen;
-extern int rowCount;        // for button selection
-#define NUMBER_OF_SCREENS 5 // change when add or subtract screens
+// 2 for BMS Display
+// 3 for VCU Display
+// 4 for Menu
+
+// global variables still needs development
+// extern int displayScreen;
+// extern int rowCount;        // for button selection
+
 #define TESTING_SCREEN 0
 #define MINIMALIST_SCREEN 1
-#define MENU_SCREEN 2
-#define DEBUG_BMS_SCREEN 3
-#define DEBUG_VCU_SCREEN 4
+#define DEBUG_BMS_SCREEN 2
+#define DEBUG_VCU_SCREEN 3
+#define MENU_SCREEN 4         // menu screen always has to be last - when assigning row to screen after clicking it's 1 to 1 instead of many if statements
+
+#define NUMBER_OF_SCREENS 5   // change when add or subtract screens
+#define NUMBER_OF_ROWS 4      // number of rows at menu screen
 
 /*---------------------------------------------------------------------------/
 / BOARD REVISION AND CAR ENGINE TYPE
@@ -70,8 +75,8 @@ extern int rowCount;        // for button selection
 // 2 for Individual Menu Screens
 // 3 for RPM Threshold
 
-static int DISPLAY_SCREEN = 0;
-static int ROW_COUNT = 0; // for button selection
+// static int DISPLAY_SCREEN = 0;
+// static int ROW_COUNT = 0; // for button selection
 
 /*---------------------------------------------------------------------------/
 / DRIVER PARAMETERS
