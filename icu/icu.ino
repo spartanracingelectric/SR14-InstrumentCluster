@@ -7,7 +7,7 @@
 using namespace std; 
 
 #ifndef ARDUINO_ARCH_RP2040
-#error "Select a Raspberry Pi Pico board"
+  #error "Select a Raspberry Pi Pico board"
 #endif
 
 // LCD Object Initialization

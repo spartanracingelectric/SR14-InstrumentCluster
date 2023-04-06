@@ -323,7 +323,7 @@ void lcd__print_screen(uint8_t selection, uint8_t row, const char *screen[]) // 
     lcd__print8(128 - lcd->getStrWidth(screen[5]) - 1, 63, screen[5]);
 }
 
-void lcd__menu(void)
+void lcd__menu(int rowCount)
 {
   // Screens
   const char *zero = "Diagnostics";
@@ -400,18 +400,20 @@ void lcd__update_screenE(float hv, float soc, float lv, float hvlow, float hvtem
     }
     if (displayScreen == 1) 
     {
-      
+      lcd__print8(104, 45, "Display 1");
     }
     if (displayScreen == 2) 
     {
-      //lcd__diagnostics(cellfault, cellwarn, bmsstate);
+      lcd__print8(104, 45, "Display 2");
     }
     if (displayScreen == 3) 
     {
+      lcd__print8(104, 45, "Display 3");
       //lcd__print_rpm_diag(rpm);
     }
     if (displayScreen == 4)
     {
-      lcd__menu();
+      lcd__menu(rowCount);
     }
   }
+}

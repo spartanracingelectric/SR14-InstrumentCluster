@@ -42,7 +42,7 @@ void lcd__print_hvlow(float hvlow);
 //void lcd_print__tiracctemp(uint8_t tiracctemp); // Tire temperatures multiple variables?
 
 // Menu stuff
-void lcd__menu(void);
+void lcd__menu(int rowCount);
 void lcd__highlight_screen(uint8_t row, const char* screen);
 void lcd__print_screen(uint8_t selection, uint8_t row, char screen); // 5 row + Back template
 void lcd__drs_screen(uint8_t drs);
