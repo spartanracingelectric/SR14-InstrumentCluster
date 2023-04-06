@@ -64,6 +64,15 @@ extern int rowCount;        // for button selection
 // Set to 1 if you want to print the input data over serial
 #define SERIAL_DEBUG_EN 0
 
+// Display Screen Status
+// 0 for Driver
+// 1 for Menu
+// 2 for Individual Menu Screens
+// 3 for RPM Threshold
+
+static int DISPLAY_SCREEN = 0;
+static int ROW_COUNT = 0; // for button selection
+
 /*---------------------------------------------------------------------------/
 / DRIVER PARAMETERS
 /---------------------------------------------------------------------------*/
@@ -119,10 +128,10 @@ extern int rowCount;        // for button selection
 /*---------------------------------------------------------------------------/
 / ROTARY AND BUTTON PINS
 /---------------------------------------------------------------------------*/
-#define BUT1 9  // PINC0
-#define BUT2 10 // PINC1
-#define BUT3 11 // PINC2
-#define BUT4 12 // PINC3
+#define CLK 9
+#define DT 8
+#define SW 7
+// #define BUT4 12 //extra
 
 // Rotary Encoder Inputs
 #define CLK 9
