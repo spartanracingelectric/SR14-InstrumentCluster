@@ -139,7 +139,8 @@ void loop()
   rgm = can__get_regenmode();
   drs = can__get_drsMode();
   launch = can__get_launch();
-  
+    rpm = can__get_rpm();
+
 // diagnostics --------------------------------- // don't work
   cellfault = can__get_bms_fault();
   cellwarn = can__get_bms_warn();
@@ -173,6 +174,7 @@ void loop()
 #if (POWERTRAIN_TYPE == 'E')
 //     leds__safety_update_flash(hvlow, hvtemp, curr_millis);
     lcd__update_screenE(hv, soc, lv, hvlow, hvtemp, hvCurr, drs, rgm, launch, curr_millis);
+    leds__rpm_update_tach(rpm);
     
 #endif
   //delay(500);

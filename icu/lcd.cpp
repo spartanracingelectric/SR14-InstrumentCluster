@@ -256,6 +256,8 @@ void lcd__print_lv(float lv) // low voltage battery
   lv_prev = lv; // else, update value_prev and redraw that section
 
   char lv_str[5] = "   ";
+  leds__lv(lv); // update low voltage led (bottom left)
+  
   // leds__lv(lv); // update low voltage led (bottom left)
 
   sprintf(lv_str, "%0.1f", lv);
@@ -299,7 +301,7 @@ void lcd__print_hvtemp(float hvtemp) // Accumulator/Engine temperature
   hvtemp_prev = hvtemp; // else, update value_prev and redraw that section
 
   char hvtemp_str[5] = "    ";
-  leds__hvtemp(hvtemp);
+//  leds__hvtemp(hvtemp);
 
   sprintf(hvtemp_str, "%2.1f", hvtemp);
 
@@ -412,7 +414,7 @@ void lcd__diagnostics(uint8_t cellfault, uint8_t cellwarn, uint8_t bmsstate)
   // Screens
   const char* zero = "Cell Under Voltage Fault";
   const char* one = "Current BMS Status";
-  const char* two = "Plceholder";
+  const char* two = "Placeholder";
   const char* three = "Holder of Places";
   const char* four = "Placeholder";
   const char* back = "Back";
@@ -436,7 +438,7 @@ void lcd__print_rpm_diag(uint16_t rpm)
   sprintf(rpm_str, "%5hu", rpm); // transforms int or float or # into a string with a specifying operator in the middle.
 
   lcd__clear_section(4);
-  lcd__print18(35, 18, rpm_str);
+  lcd__print14(90, 34, rpm_str);
 }
 
 // LCD Screen Update --------------------------------------------------------------- ---------------------------------------------------------------
@@ -461,7 +463,7 @@ void lcd__update_screenE(float hv, float soc, float lv, float hvlow, float hvtem
     //    lcd__clear_screen();
 
     if (DISPLAY_SCREEN == 0) {
-      //lcd__print_hv(hv);
+      lcd__print_hv(hv);
       lcd__print_soc(soc);
       lcd__print_drs(drs);
       lcd__print_rgm(rgm);

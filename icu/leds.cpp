@@ -197,44 +197,44 @@ void leds__toggle_revlim()
     leds->setPoint(PIN_LED_SOLID[NUM_LED_SOLID-1][0], PIN_LED_SOLID[NUM_LED_SOLID-1][1], true);
   }
 }
-/*
+
 void leds__rpm_update_tach(uint16_t rpm) {
   uint8_t leds_to_turn_off;
   uint8_t leds_to_turn_on = 0;
   switch(rpm) {
-    case 500 ... 2749:
-      leds_to_turn_on = 1;
-      break;
-    case 2750 ... 4499:
-      leds_to_turn_on = 2;
-      break;
-    case 4500 ... 5999:
-      leds_to_turn_on = 3;
-      break;
-    case 6000 ... 6999:
-      leds_to_turn_on = 4;
-      break;
-    case 7000 ... 7999:
-      leds_to_turn_on = 5;
-      break;
-    case 8000 ... 8999:
-      leds_to_turn_on = 6;
-      break;
-    case 9000 ... 9999:
-      leds_to_turn_on = 7;
-      break;
-    case 10000 ... 10999:
-      leds_to_turn_on = 8;
-      break;
-    case 11000 ... 11999:
-      leds_to_turn_on = 9;
-      break;
-    case 12000 ... 16000:
-      leds_to_turn_on = 10;
-      break;
-    default:
+    case 1 ... 550:
       leds_to_turn_on = 0;
       break;
+    case 551 ... 1100:
+      leds_to_turn_on = 1;
+      break;
+    case 1101 ... 1650:
+      leds_to_turn_on = 2;
+      break;
+    case 1651 ... 2200:
+      leds_to_turn_on = 3;
+      break;
+    case 2201 ... 2750:
+      leds_to_turn_on = 4;
+      break;
+    case 2751 ... 3300:
+      leds_to_turn_on = 5;
+      break;
+    case 3301 ... 3850:
+      leds_to_turn_on = 6;
+      break;
+    case 3851 ... 4400:
+      leds_to_turn_on = 7;
+      break;
+    case 4401 ... 4950:
+      leds_to_turn_on = 8;
+      break;
+    case 4951 ... 5499:
+      leds_to_turn_on = 9;
+      break;
+    case 5500: 
+      leds_to_turn_on = 10;
+    
   }
   //Inverse of # leds ON
   leds_to_turn_off = NUM_LED_SOLID-leds_to_turn_on;
@@ -247,7 +247,7 @@ void leds__rpm_update_tach(uint16_t rpm) {
     leds->setPoint(PIN_LED_SOLID[NUM_LED_SOLID-led_idx][0],PIN_LED_SOLID[NUM_LED_SOLID-led_idx][1],false);
   }
 }
-*/
+
 
 /*
 void leds__rpm_update_flash(uint16_t rpm, uint8_t gear, uint32_t curr_millis_flash)
@@ -352,7 +352,7 @@ void leds__hvtemp(float hvtemp)
 {
   if (hvtemp < 10.0){
     leds->setPoint(3, 1, false);
-    leds->setPoint(PIN_LED_RGB_R[3][0], PIN_LED_RGB_R[3][1], true);
+    leds->setPoint(PIN_LED_RGB_R[5][0], PIN_LED_RGB_R[5][1], true);
   }
   else{
     leds->setPoint(PIN_LED_RGB_R[3][0], PIN_LED_RGB_R[3][1], false);
