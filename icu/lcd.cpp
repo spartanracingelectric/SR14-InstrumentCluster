@@ -463,7 +463,7 @@ void lcd__update_screenE(float hv, float soc, float lv, float hvlow, float hvtem
     //    lcd__clear_screen();
 
     if (DISPLAY_SCREEN == 0) {
-      lcd__print_hv(hv);
+      //lcd__print_hv(hv);
       lcd__print_soc(soc);
       lcd__print_drs(drs);
       lcd__print_rgm(rgm);
