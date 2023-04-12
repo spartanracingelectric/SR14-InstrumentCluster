@@ -33,12 +33,16 @@ float soc = 0.0f;
 float lv = 0.0f;
 float hvtemp = 0.0f;
 float hvlow = 0.0f;
+int rgm = 0;
+uint8_t drs = 0;
+float launch = 0;
 
 // diagnostics ---------------------------
 uint16_t rpm = 0;
 uint8_t cellfault = 0;
 uint8_t cellwarn = 0;
 uint8_t bmsstate = 0;
+
 #endif
 
 void setup()
@@ -79,6 +83,7 @@ void setup()
   lcd__init(&lcd_u8g2);
 
   //Non functional as clearBuffer in loop overwrites for now
+ 
   lcd__print_default_screen_template();
   leds__set_brightness(MAX_LED_BRIGHTNESS);
   leds__wake();
@@ -131,8 +136,10 @@ void loop()
   hvtemp = can__get_hvtemp();
   lv = can__get_lv();
   hvlow = can__get_hvlow();
-  rpm = can__get_rpm();
-
+  rgm = can__get_regenmode();
+  drs = can__get_drsMode();
+  launch = can__get_launch();
+  
 // diagnostics --------------------------------- // don't work
   cellfault = can__get_bms_fault();
   cellwarn = can__get_bms_warn();
@@ -165,7 +172,8 @@ void loop()
 
 #if (POWERTRAIN_TYPE == 'E')
 //     leds__safety_update_flash(hvlow, hvtemp, curr_millis);
-    lcd__update_screenE(hv, soc, lv, hvlow, hvtemp, hvCurr, curr_millis);
+    lcd__update_screenE(hv, soc, lv, hvlow, hvtemp, hvCurr, drs, rgm, launch, curr_millis);
+
     leds__rpm_update_tach(rpm);
     
 #endif
