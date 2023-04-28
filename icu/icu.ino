@@ -35,7 +35,7 @@ float hvtemp = 0.0f;
 float hvlow = 0.0f;
 
 // diagnostics ---------------------------
-uint16_t rpm = 300;
+uint16_t rpm = 1000;
 uint8_t cellfault = 0;
 uint8_t cellwarn = 0;
 uint8_t bmsstate = 0;
@@ -165,7 +165,7 @@ void loop()
 
 #if (POWERTRAIN_TYPE == 'E')
 //     leds__safety_update_flash(hvlow, hvtemp, curr_millis);
-    lcd__update_screenE(hv, soc, lv, hvlow, hvtemp, hvCurr, curr_millis, rpm);
+    lcd__update_screenE(hv, soc, lv, hvlow, hvtemp, hvCurr, curr_millis);
     leds__rpm_update_tach(rpm);
     
 #endif
