@@ -35,9 +35,11 @@ void lcd__print_soc(uint8_t soc); // State of charge 0-100%
 void lcd__print_wattemp(uint8_t watertemp); // Water Coolant Temp
 // E & C car
 void lcd__print_lv(float lv); // low voltage battery soc
+void lcd__print_tps0voltage(float tps0);
 void lcd__print_hvtemp(float hvtemp); // Accumulator/Engine temperature
 void lcd__print_hvlow(float hvlow);
 void lcd__print_launch(float launch);
+void lcd__print_drs(float drsMode);
 // 
 //void lcd_print__tiracctemp(uint8_t tiracctemp); // Tire temperatures multiple variables?
 
@@ -52,6 +54,6 @@ void lcd__diagnostics(uint8_t cellfault, uint8_t cellwarn, uint8_t bmsstate);
 void lcd__print_rpm_diag(uint16_t rpm); // rpm diagnostics for ev
 
 void lcd__update_screen(uint16_t rpm, uint8_t gear, float lv, float oilpress, uint8_t drs, uint32_t curr_millis_lcd);
-void lcd__update_screenE(float hv, float soc, float lv, float hvlow, float hvtemp, float hvcurr, uint8_t drs, int rgm, float launch, uint32_t curr_millis_lcd);
+void lcd__update_screenE(float hv, float soc, float lv, float hvlow, float hvtemp, float hvcurr, int drsMode, int regenmode, float launchReady, float tps0, uint32_t curr_millis_lcd);
 
 #endif /* LCD_H_ */

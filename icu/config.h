@@ -24,7 +24,7 @@
 // 2 for Individual Menu Screens
 // 3 for RPM Threshold
 
-static uint8_t DISPLAY_SCREEN = 1;
+static uint8_t DISPLAY_SCREEN = 0;
 static uint8_t ROW_COUNT = 0; // for button selection
 
 /*---------------------------------------------------------------------------/
@@ -137,10 +137,12 @@ static uint8_t ROW_COUNT = 0; // for button selection
 #define CAN_SOC_ADDR 0x621
 #define CAN_HVLOW_ADDR 0x622
 #define CAN_BAT_TEMP_ADDR 0x623
+#define CAN_DRS_ADDR 0x50C // Need to validate
+#define CAN_LAUNCH_ADDR 0x50B // Need to validate. technically done, test LCD
 
 
-// wrong addresses
-#define CAN_REGEN_ADDR 0x508
+// Need to validate
+#define CAN_REGEN_ADDR 0x508 // Need to validate. technically done, test LCD
 #endif
 
 //  LOW VOLTAGE

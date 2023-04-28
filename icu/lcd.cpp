@@ -12,13 +12,14 @@ uint8_t gear_prev = -1;
 float soc_prev = -1.0f;
 float hv_prev = -1.0f;
 float lv_prev = -1.0f;
+float tps0_prev = -1.0f;
 float hvtemp_prev = -1.0f;
 float hvlow_prev = -1.0f;
 float hvcurr = -1.0f;
 float hvcurr_prev = -1.0f;
 float oilpress_prev = -1.0f; // float or uint8
 uint8_t watertemp_prev = -1;
-uint8_t drs_prev = -1;
+int drs_prev = -1;
 int rgm_prev = -1;
 float launch_prev = -1;
 
@@ -93,7 +94,7 @@ void lcd__clear_screen()
 void lcd_welcome_screen()
 {
   // Welcome screen with the Logo.
-  lcd->setFont(u8g2_font_luRS18_tr);
+  //lcd->setFont(u8g2_font_luRS18_tr);
   // Setting the font monospace for the intial welcome screen
   char LOGO_S[]  = "S";
   char LOGO_R[]  = "R";
@@ -114,12 +115,12 @@ void lcd_welcome_screen()
 
 void lcd__print_default_screen_template()
 {
-  char default_str[] = "Created by: Sarthak Chauhan";
-  lcd__print14(0, 45, default_str);
-  delay(100);
+  //char default_str[] = "Created by: Sarthak Chauhan";
+  //lcd__print14(0, 45, default_str);
+  //lcd_welcome_screen();
+  //delay(3500);
 
-  lcd__clear_screen();
-  lcd_welcome_screen(); 
+  //lcd__clear_screen();
   
 #if (DISPLAY_SCREEN == 0)
 #if (POWERTRAIN_TYPE == 'E')
@@ -264,6 +265,18 @@ void lcd__print_lv(float lv) // low voltage battery
   lcd__print14(0, 64, lv_str);
 }
 
+void lcd__print_tps0voltage(float tps0){
+  if (tps0 == tps0_prev) return; // if the value is the same, don't update that "section"
+
+  tps0_prev = tps0;
+  char tps0_str[5] = "   ";
+  sprintf(tps0_str, "%0.1f", tps0);
+  lcd__clear_section(2);
+  lcd__print14(0, 64, tps0_str);
+
+
+}
+
 void lcd__print_hvlow(float hvlow) // low voltage battery
 {
   if (hvlow == hvlow_prev) return; // if the value is the same, don't update that "section"
@@ -307,7 +320,7 @@ void lcd__print_hvtemp(float hvtemp) // Accumulator/Engine temperature
   lcd__print14(94, 64, hvtemp_str);
 }
 
-void lcd__print_drs(uint8_t drs) // DRS Open or Closed: 0 or 1
+void lcd__print_drs(int drs)
 {
   if (drs == 0) {
     lcd__print8(110, 10, "O");
@@ -398,9 +411,9 @@ void lcd__menu(void)
   // Screens
   const char* zero = "Driver Screen";
   const char* one = "Debug Screen";
-  const char* two = "Placeholder";
-  const char* three = "Placeholder";
-  const char* four = "Placeholder";
+  const char* two = "------------";
+  const char* three = "------------";
+  const char* four = "------------";
   const char* back = "Back";
   const char* screens[6] = {zero, one, two, three, four, back};
 
@@ -420,15 +433,9 @@ void lcd__debugscreen()
 
   lcd__print_screen(5, 6, screens);
 
-  /* char cellfault_str[2] = " ";
-  sprintf(cellfault_str, "%hu", cellfault);
-  lcd__print8(56, 9, cellfault_str);
-
-  char bmsstate_str[2] = " ";
-  sprintf(bmsstate_str, "%hu", bmsstate);
-  lcd__print8(56, 9 + 12, bmsstate_str);
-  */
+  //lcd__print_tps0voltage(tps0);
 }
+
 
 void lcd__print_rpm_diag(uint16_t rpm)
 {
@@ -455,7 +462,7 @@ void lcd__print_rpm_diag(uint16_t rpm)
   }
   }
 */
-void lcd__update_screenE(float hv, float soc, float lv, float hvlow, float hvtemp, float hvcurr, uint8_t drs, int rgm, float launch, uint32_t curr_millis_lcd)
+void lcd__update_screenE(float hv, float soc, float lv, float hvlow, float hvtemp, float hvcurr, int drsMode, int regenmode, float launchReady, float tps0, uint32_t curr_millis_lcd)
 {
   if (curr_millis_lcd - prev_millis_lcd >= LCD_UPDATE_MS) {
     prev_millis_lcd = curr_millis_lcd;
@@ -464,9 +471,9 @@ void lcd__update_screenE(float hv, float soc, float lv, float hvlow, float hvtem
     if (DISPLAY_SCREEN == 0) {
       //lcd__print_hv(hv);
       lcd__print_soc(soc);
-      lcd__print_drs(drs);
-      lcd__print_rgm(rgm);
-      lcd__print_launch(launch);
+      lcd__print_drs(drsMode);
+      lcd__print_rgm(regenmode);
+      lcd__print_launch(launchReady);
       //lcd__print_hvlow(hvlow);
       //lcd__print_lv(lv);
       //lcd__print_hvtemp(hvtemp);
@@ -478,6 +485,7 @@ void lcd__update_screenE(float hv, float soc, float lv, float hvlow, float hvtem
     }
     if (DISPLAY_SCREEN == 2) {
       lcd__debugscreen();
+      
 
     }
     if (DISPLAY_SCREEN == 3) {

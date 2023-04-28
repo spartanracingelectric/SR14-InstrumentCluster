@@ -348,6 +348,18 @@ void leds__lv(float lv)
   }
 }
 
+void leds__drsEnable(float drsEnable){
+  if(drsEnable == 1){
+    leds->setPoint(4, 0, true);
+  }
+}
+
+void leds__launchReady(float launchReady){
+  if(launchReady == 1){
+    leds->setPoint(2,4, true);
+  }
+}
+
 void leds__hvtemp(float hvtemp)
 {
   if (hvtemp < 10.0){
