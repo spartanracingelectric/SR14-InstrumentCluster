@@ -89,13 +89,26 @@ float curr_lv = 0;
 float curr_hvlow = 0;
 float curr_hvtemp = 0;
 float curr_hv_current = 0;
-
+int curr_rgm = 0; // regen mode
+uint8_t curr_drs = 0;
+float curr_launch = 0;
 // diagnostics ---------------------------------
 float curr_rpm = 0;
 float curr_bms_fault = 0;
 float curr_bms_warn = 0;
 float curr_bms_stat = 0;
 //
+static void can__launch_receive(const CANMessage & inMessage){
+  curr_launch = 0;
+}
+
+static void can__drs_receive(const CANMessage & inMessage){
+  curr_drs = 0;
+}
+
+static void can__regenmode_receive(const CANMessage & inMessage){
+  curr_rgm =  0; 
+}
 
 static void can__lv_receive (const CANMessage & inMessage)
 {
@@ -145,6 +158,16 @@ static void can__bms_stat_receive (const CANMessage & inMessage)
 
 
 //Accessors
+float can__get_launch(){
+  return curr_launch;
+}
+bool can__get_drsMode(){
+  return curr_drs;
+
+}
+int can__get_regenmode(){
+  return curr_rgm;
+}
 float can__get_hv_current()
 {
   return curr_hv_current;
@@ -228,7 +251,9 @@ const ACAN2515AcceptanceFilter filters [] =
   {standard2515Filter (CAN_HV_ADDR, 0, 0), can__hv_receive},            //RXF1 // filter for both HV and HV current
   {standard2515Filter (CAN_SOC_ADDR, 0, 0), can__soc_receive},          //RXF2
   {standard2515Filter (CAN_HVLOW_ADDR, 0, 0), can__hvlow_receive},          //RXF2
-  {standard2515Filter (CAN_BAT_TEMP_ADDR, 0, 0), can__hvtemp_receive}  //RXF3
+  {standard2515Filter (CAN_BAT_TEMP_ADDR, 0, 0), can__hvtemp_receive},  //RXF3
+  {standard2515Filter (CAN_REGEN_ADDR, 0, 0), can__regenmode_receive}
+  // need to add filter for DRS and Launch control still ;
   
 
 } ;

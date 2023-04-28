@@ -168,7 +168,7 @@ static uint8_t ROW_COUNT = 0; // for button selection
 #define BAT_TEMP_ADDR 0x628
 #define RPM_ADDR 0x0A5
 #define WSS_ADDR 0x505      // Interpolated WSS address
-#define REGEN_ADDR 0x508
+#define REGEN_ADDR 0x508 // using for Regen mode
 #define HV_ADDR 0x623
 #define LV_ADDR 0x700
 #define TS_ADDR 0x701       // Timestamp Address (-> DAQ)
