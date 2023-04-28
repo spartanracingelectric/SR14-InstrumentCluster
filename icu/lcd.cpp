@@ -148,7 +148,7 @@ void lcd__print_default_screen_template()
 
 #endif
 #elif (DISPLAY_SCREEN == 1)
-
+  lcd__menu()
 #endif
 }
 
@@ -396,10 +396,10 @@ void lcd__print_screen(uint8_t selection, uint8_t row, const char* screen[]) // 
 void lcd__menu(void)
 {
   // Screens
-  const char* zero = "Diagnostics";
-  const char* one = "RPM Threshold";
-  const char* two = "Regen";
-  const char* three = "Catchphrase";
+  const char* zero = "Driver Screen";
+  const char* one = "Debug Screen";
+  const char* two = "Placeholder";
+  const char* three = "Placeholder";
   const char* four = "Placeholder";
   const char* back = "Back";
   const char* screens[6] = {zero, one, two, three, four, back};
@@ -407,26 +407,27 @@ void lcd__menu(void)
   lcd__print_screen(ROW_COUNT, 6, screens);
 }
 
-void lcd__diagnostics(uint8_t cellfault, uint8_t cellwarn, uint8_t bmsstate)
+void lcd__debugscreen()
 {
   // Screens
-  const char* zero = "Cell Under Voltage Fault";
-  const char* one = "Current BMS Status";
-  const char* two = "Plceholder";
-  const char* three = "Holder of Places";
-  const char* four = "Placeholder";
+  const char* zero = "TPS0 Voltage";
+  const char* one = "TPS0CalibMax";
+  const char* two = "TPS1Voltage";
+  const char* three = "TPS1CalibMax";
+  const char* four = "BPS0Voltage";
   const char* back = "Back";
   const char* screens[6] = {zero, one, two, three, four, back};
 
   lcd__print_screen(5, 6, screens);
 
-  char cellfault_str[2] = " ";
+  /* char cellfault_str[2] = " ";
   sprintf(cellfault_str, "%hu", cellfault);
   lcd__print8(56, 9, cellfault_str);
 
   char bmsstate_str[2] = " ";
   sprintf(bmsstate_str, "%hu", bmsstate);
   lcd__print8(56, 9 + 12, bmsstate_str);
+  */
 }
 
 void lcd__print_rpm_diag(uint16_t rpm)
@@ -473,9 +474,11 @@ void lcd__update_screenE(float hv, float soc, float lv, float hvlow, float hvtem
     }
     if (DISPLAY_SCREEN == 1) {
       lcd__menu();
+      
     }
     if (DISPLAY_SCREEN == 2) {
-      //lcd__diagnostics(cellfault, cellwarn, bmsstate);
+      lcd__debugscreen();
+
     }
     if (DISPLAY_SCREEN == 3) {
       //lcd__print_rpm_diag(rpm);
