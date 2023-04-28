@@ -35,7 +35,7 @@ float hvtemp = 0.0f;
 float hvlow = 0.0f;
 
 // diagnostics ---------------------------
-uint16_t rpm = 0;
+uint16_t rpm = 1000;
 uint8_t cellfault = 0;
 uint8_t cellwarn = 0;
 uint8_t bmsstate = 0;
