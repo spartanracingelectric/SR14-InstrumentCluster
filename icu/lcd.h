@@ -10,7 +10,7 @@
 // 0 for Driver
 // 1 for Menu
 // 2 for Individual Menu Screens
-// 3 for RPM Threshold
+// 3 for Settings
 
 
 
