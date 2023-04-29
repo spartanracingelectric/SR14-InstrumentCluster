@@ -436,7 +436,18 @@ void lcd__debugscreen()
   //lcd__print_tps0voltage(tps0);
 }
 
+void lcd_settings() {
+  const char* zero = "Max Torque Set";
+  const char* one = "Regen Mode";
+  const char* two = "------------";
+  const char* three = "------------";
+  const char* four = "------------";
+  const char* back = "Back";
+  const char* screens[6] = {zero, one, two, three, four, back};
 
+  lcd__print_screen(5, 6, screens);
+}
+/*
 void lcd__print_rpm_diag(uint16_t rpm)
 {
   char rpm_str[6] = "     ";
@@ -448,7 +459,7 @@ void lcd__print_rpm_diag(uint16_t rpm)
 }
 
 // LCD Screen Update --------------------------------------------------------------- ---------------------------------------------------------------
-/* void lcd__update_screen(uint16_t rpm, uint8_t gear, float lv, float oilpress, uint8_t drs, uint32_t curr_millis_lcd) // C Car
+ void lcd__update_screen(uint16_t rpm, uint8_t gear, float lv, float oilpress, uint8_t drs, uint32_t curr_millis_lcd) // C Car
   {
   if (curr_millis_lcd - prev_millis_lcd >= LCD_UPDATE_MS) {
     prev_millis_lcd = curr_millis_lcd;
@@ -489,7 +500,7 @@ void lcd__update_screenE(float hv, float soc, float lv, float hvlow, float hvtem
 
     }
     if (DISPLAY_SCREEN == 3) {
-      //lcd__print_rpm_diag(rpm);
+      lcd_settings();
     }
   }
 }

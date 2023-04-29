@@ -369,9 +369,9 @@ static uint32_t gSentFrameCount = 0 ;
 void can__send_test()
 {
   CANMessage frame;
-  frame.id = 0x7EE;
+  frame.id = 0x702;
   frame.len = 8;
-  frame.data[0] = 0x53; 
+  frame.data[0] = 0x69; 
   if (gBlinkLedDate < millis ()) {
     gBlinkLedDate += 200 ;
     const bool ok = can.tryToSend (frame) ;
