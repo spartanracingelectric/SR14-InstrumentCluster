@@ -39,7 +39,7 @@ void leds__lv(float lv);
 void leds__hvtemp(float hvtemp);
 void leds__drsEnable(float drsEnable);
 void leds__launchReady(float launchReady);
-
+void leds__hvlow(float hvlow);
 
 //create LEDs Update function that takes CAN data and changes LEDs
 

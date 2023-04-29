@@ -323,19 +323,19 @@ void lcd__print_hvtemp(float hvtemp) // Accumulator/Engine temperature
 void lcd__print_drs(int drs)
 {
   if (drs == 0) {
-    lcd__print8(110, 10, "O");
+    lcd__print8(110, 10, "OFF");
   } else if (drs == 1)
   {
     // lcd__print8(113, 35, "M");
-    lcd__print8(110, 10, "M") ;
+    lcd__print8(110, 10, "ON") ;
   } else if (drs == 2)
   {
     // lcd__print8(113, 35, "A")
-    lcd__print8(110, 10, "A");
+    lcd__print8(110, 10, "MAN");
   } else if (drs == 3)
   {
     // lcd__print8(113, 35, "C");
-    lcd__print8(110, 10, "C");
+    lcd__print8(110, 10, "AUTO");
   }
 
 }

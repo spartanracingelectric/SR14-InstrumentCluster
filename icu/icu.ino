@@ -183,7 +183,8 @@ void loop()
     leds__rpm_update_tach(rpm);
     leds__drsEnable(drsEnable);
     leds__launchReady(launchReady);
-    
+    leds__lv(lv);
+    leds__hvtemp(hvtemp);    
 #endif
   //delay(500);
 }

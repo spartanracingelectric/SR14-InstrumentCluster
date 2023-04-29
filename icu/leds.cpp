@@ -338,19 +338,21 @@ void leds__oilpress(float oilpress) // float or uint8
 
 void leds__lv(float lv)
 {
-  if (lv < 10.0){
-    leds->setPoint(3, 1, false);
-    leds->setPoint(PIN_LED_RGB_R[3][0], PIN_LED_RGB_R[3][1], true);
-  }
-  else{
-    leds->setPoint(PIN_LED_RGB_R[3][0], PIN_LED_RGB_R[3][1], false);
+  if (lv < 5.0){
     leds->setPoint(3, 1, true);
   }
+  else{
+    leds->setPoint(3, 1, false);
+  }
+ 
 }
 
 void leds__drsEnable(float drsEnable){
   if(drsEnable == 1){
     leds->setPoint(4, 0, true);
+  }
+  else{
+    leds->setPoint(4, 0, false);
   }
 }
 
@@ -358,17 +360,30 @@ void leds__launchReady(float launchReady){
   if(launchReady == 1){
     leds->setPoint(2,4, true);
   }
+  else{
+    leds->setPoint(2,4, false);
+  }
 }
 
-void leds__hvtemp(float hvtemp)
+void leds__hvtemp(float hvtemp) // Highest Cell Temperature Address - 0x623
 {
-  if (hvtemp < 10.0){
-    leds->setPoint(3, 1, false);
-    leds->setPoint(PIN_LED_RGB_R[5][0], PIN_LED_RGB_R[5][1], true);
+  if(hvtemp > 85){
+    leds->setPoint(3, 5, true);
   }
+
   else{
-    leds->setPoint(PIN_LED_RGB_R[3][0], PIN_LED_RGB_R[3][1], false);
-    leds->setPoint(3, 1, true);
+    leds->setPoint(3, 5, false);
+  }
+}
+
+void leds__hvlow(float hvlow){
+
+  if(hvlow == 5){
+    leds->setPoint(3,5,true);
+  }
+
+  else{
+    leds->setPoint(3,5,false);
   }
 }
 

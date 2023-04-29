@@ -107,19 +107,21 @@ static void can__launch_receive(const CANMessage & inMessage){
   }
   */
   curr_launchStatus = inMessage.data[1];
-  if (curr_launchStatus == 1){
+  /* if (curr_launchStatus == 1){
     digitalWrite(LED_BUILTIN, HIGH);
   }
+  */
   
 
 }
 
 static void can__drs_receive(const CANMessage & inMessage){
   curr_drsMode = inMessage.data[3]; // DRS Mode
-  /* if (curr_drsMode == 3){
+  /*if (curr_drsMode == 3){
     digitalWrite(LED_BUILTIN, HIGH);
   }
   */
+  
  curr_drsEnable = inMessage.data[2]; // DRS Enable
  /*if (curr_drsEnable == 1){
     digitalWrite(LED_BUILTIN, HIGH);
@@ -158,25 +160,34 @@ static void can__soc_receive (const CANMessage & inMessage)
 
 static void can__hvlow_receive (const CANMessage & inMessage)
 {
-  curr_hvlow = ((inMessage.data[4]) | (inMessage.data[5] << 8)) * 0.001f; // for e car
+  curr_hvlow = ((inMessage.data[5] << 8) | (inMessage.data[4])) * 0.001f;
+  
 }
 
 static void can__hvtemp_receive (const CANMessage & inMessage)
 {
-  curr_hvtemp = ((inMessage.data[6]) | (inMessage.data[7] << 8)) * 0.1f;
+  curr_hvtemp = ((inMessage.data[7] << 8)  | (inMessage.data[6])) * 0.1f;
+  /*if (curr_hvtemp == 50){
+    digitalWrite(LED_BUILTIN, HIGH);
+  }
+  */
+  
+    
 }
 
 // diagnostics ---------------------------------
 static void can__rpm_receive (const CANMessage & inMessage)
 {
   curr_rpm = ((inMessage.data[2]) | (inMessage.data[3] << 8));
-//  Serial.println ("Received RPM ");// + curr_rpm) ;
+  /*if (curr_rpm == 1100){
+    digitalWrite(LED_BUILTIN, HIGH);
+  }
+  */
+
 }
 static void can__bms_fault_receive (const CANMessage & inMessage)
 {
   curr_bms_fault = inMessage.data[0] << 16;
-  digitalWrite(LED_BUILTIN, HIGH);
-
 }
 static void can__bms_warn_receive (const CANMessage & inMessage)
 {
@@ -285,23 +296,15 @@ const ACAN2515AcceptanceFilter filters [] =
 {
   //Must have addresses in increasing order
   
-  {standard2515Filter (CAN_RPM_ADDR, 0, 0), can__rpm_receive},
-  // {standard2515Filter (CAN_BMS_FAULT_ADDR, 0, 0), can__bms_fault_receive},  //RXF1 (new stuff)
-  // {standard2515Filter (CAN_BMS_WARN_ADDR, 0, 0), can__bms_warn_receive},  //RXF2
-  // {standard2515Filter (CAN_BMS_STAT_ADDR, 0, 0), can__bms_stat_receive},  //RXF3
-  
+  {standard2515Filter (CAN_RPM_ADDR, 0, 0), can__rpm_receive},  
   {standard2515Filter (CAN_LV_ADDR, 0, 0), can__lv_receive},            //RXF0
-   {standard2515Filter (CAN_REGEN_ADDR, 0, 0), can__regenmode_receive},
+  {standard2515Filter (CAN_REGEN_ADDR, 0, 0), can__regenmode_receive},
   {standard2515Filter (CAN_LAUNCH_ADDR, 0, 0), can__launch_receive},
   {standard2515Filter (CAN_DRS_ADDR, 0, 0), can__drs_receive},
-  {standard2515Filter (CAN_HV_ADDR, 0, 0), can__hv_receive},            //RXF1 // filter for both HV and HV current
-  {standard2515Filter (CAN_SOC_ADDR, 0, 0), can__soc_receive},          //RXF2
-  {standard2515Filter (CAN_HVLOW_ADDR, 0, 0), can__hvlow_receive},          //RXF2
-  {standard2515Filter (CAN_BAT_TEMP_ADDR, 0, 0), can__hvtemp_receive},  //RXF3
- 
-
-  // need to add filter for DRS and Launch control still ;
-  
+  //{standard2515Filter (CAN_HV_ADDR, 0, 0), can__hv_receive},            //RXF1 // filter for both HV and HV current
+  //{standard2515Filter (CAN_SOC_ADDR, 0, 0), can__soc_receive},          //RXF2
+  //{standard2515Filter (CAN_HVLOW_ADDR, 0, 0), can__hvlow_receive},          //RXF2
+  {standard2515Filter (CAN_BAT_TEMP_ADDR, 0, 0), can__hvtemp_receive},  //RXF3  
 
 } ;
 
