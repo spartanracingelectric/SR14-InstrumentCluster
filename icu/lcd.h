@@ -23,7 +23,6 @@ void lcd__print14(uint8_t x, uint8_t y, const char *str);                 //Prin
 void lcd__print18(uint8_t x, uint8_t y, char *str);                 //Print str with Helvetica Bold Size 18
 void lcd__print24(uint8_t x, uint8_t y, char *str);                 //Print str with Helvetica Bold Size 24
 void lcd__print_default_screen_template();
-void lcd__clear_section(uint8_t section);
 
 // C car
 //void lcd__print_rpm(uint16_t rpm);

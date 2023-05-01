@@ -178,7 +178,7 @@ void loop()
 
 #if (POWERTRAIN_TYPE == 'E')
 //     leds__safety_update_flash(hvlow, hvtemp, curr_millis);
-    lcd__update_screenE(hv, soc, lv, hvlow, hvtemp, hvCurr, drsMode, regenmode, launchReady, tps0, curr_millis);
+    lcd__update_screenE(hv, soc, lv, hvlow, hvtemp, hvCurr, drsMode, regenmode, launchStatus, tps0, curr_millis);
 
     leds__rpm_update_tach(rpm);
     leds__drsEnable(drsEnable);

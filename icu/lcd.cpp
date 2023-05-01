@@ -130,13 +130,15 @@ void lcd__print_default_screen_template()
   //lcd__print8(47, 40, "SOC%");
   //lcd__print8(0, 0, "RPM Screen");
   //lcd__print8(0, 10, "HV CURR");
-  lcd__print8(60, 10, "DRS");
-  lcd__print8(60, 25, "REGEN");
-  lcd__print8(60, 40, "LAUNCH"); // Launch Control
+  lcd__print8(60, 28, "DRS");
+  lcd__print8(60, 43, "REGEN");
+  lcd__print8(60, 58, "LAUNCH"); // Launch Control
   // lcd__print8(10, 10, "SOC"); // State of Charge
-  lcd__print8(10, 10, "VOL");
-  lcd__print8(10, 20, "0/400"); // Max Pack Voltage
-  lcd__print14(10, 62, "SOC");
+  //lcd__print8(10, 10, "VOL");
+  //lcd__print8(10, 20, "0/400"); // Max Pack Voltage
+  lcd__print8(0, 20, "HV T"); // Lowest Cell Temp
+  lcd__print8(0, 38, "LV"); // Low Voltage
+  //lcd__print14(10, 62, "SOC");
   // lcd__print8(5,5,"------");
 
   /* #elif(POWERTRAIN_TYPE == 'C')
@@ -149,30 +151,9 @@ void lcd__print_default_screen_template()
 
 #endif
 #elif (DISPLAY_SCREEN == 1)
-  lcd__menu()
+
 #endif
 }
-
-void lcd__clear_section (uint8_t sect)
-{
-
-  //Where is the sect arg use eh ?
-
-  //int hvtemp[] = {90, 64-14, 40, 14};
-  //int hv[] = {30, 0, 70, 18};
-  //int lv[] = {0, 64-14, 45, 14};
-  //int hvcurr[] = {40, 34-14, 45, 0};
-  int soc[] = {40, 60 - 20, 45, 24};
-  int rgm[] = {40, 60 - 20, 45, 24};
-  //int rpm[] = {30, 0, 75,18};
-  //int gear[] = {50, 64-24, 30, 24};
-  //int* sections[] = {hvtemp, hv, hvcurr, lv, soc, rpm, gear};
-
-  //lcd->setDrawColor(0);
-  //lcd->drawBox(sections[sect][0], sections[sect][1], sections[sect][2], sections[sect][3]);
-  //lcd->setDrawColor(1);
-}
-
 
 // Combustion Car --------------------------------------------------------------- ---------------------------------------------------------------
 /* void lcd__print_rpm(uint16_t rpm)
@@ -232,10 +213,10 @@ void lcd__print_launch(float launch) {
   launch_prev = launch;
   char launch_str[5] = "   ";
 
-  sprintf(launch_str, "%0.1f", launch);
-
-  lcd__clear_section(2);
-  lcd__print8(110, 40, launch_str);
+  lcd->sendBuffer();
+  sprintf(launch_str, "%d", launch);
+  
+  lcd__print8(110, 58, launch_str);
 }
 
 
@@ -244,10 +225,10 @@ void lcd__print_rgm(int rgm) {
   rgm_prev = rgm;
   char rgm_str[5] = "   ";
 
+  lcd->sendBuffer();
   sprintf(rgm_str, "%d", rgm);
 
-  lcd__clear_section(2);
-  lcd__print8(110, 25, rgm_str);
+  lcd__print8(100, 43, rgm_str);
 
 }
 void lcd__print_lv(float lv) // low voltage battery
@@ -261,7 +242,7 @@ void lcd__print_lv(float lv) // low voltage battery
   
   sprintf(lv_str, "%0.1f", lv);
 
-  lcd__clear_section(2);
+  //lcd__clear_section(2);
   lcd__print14(0, 64, lv_str);
 }
 
@@ -271,7 +252,7 @@ void lcd__print_tps0voltage(float tps0){
   tps0_prev = tps0;
   char tps0_str[5] = "   ";
   sprintf(tps0_str, "%0.1f", tps0);
-  lcd__clear_section(2);
+  //lcd__clear_section(2);
   lcd__print14(0, 64, tps0_str);
 
 
@@ -287,7 +268,7 @@ void lcd__print_hvlow(float hvlow) // low voltage battery
 
   sprintf(hvlow_str, "%1.2f", hvlow);
 
-  lcd__clear_section(2);
+  //lcd__clear_section(2);
   lcd__print14(0, 64, hvlow_str);
 }
 
@@ -301,7 +282,7 @@ void lcd__print_hvcurr(float hvcurr) // hv current
 
   sprintf(hvcurr_str, "%1.0f", hvcurr);
 
-  lcd__clear_section(2);
+  //lcd__clear_section(2);
   lcd__print14(0, 34, hvcurr_str);
 }
 
@@ -316,28 +297,29 @@ void lcd__print_hvtemp(float hvtemp) // Accumulator/Engine temperature
 
   sprintf(hvtemp_str, "%2.1f", hvtemp);
 
-  lcd__clear_section(0);
+  //lcd__clear_section(0);
   lcd__print14(94, 64, hvtemp_str);
 }
 
 void lcd__print_drs(int drs)
 {
+
   if (drs == 0) {
-    lcd__print8(110, 10, "OFF");
+    lcd__print8(100, 25, "OFF");
   } else if (drs == 1)
   {
     // lcd__print8(113, 35, "M");
-    lcd__print8(110, 10, "ON") ;
+    lcd__print8(100, 25, "ON") ;
   } else if (drs == 2)
   {
     // lcd__print8(113, 35, "A")
-    lcd__print8(110, 10, "MAN");
+    lcd__print8(100, 25, "MAN");
   } else if (drs == 3)
   {
     // lcd__print8(113, 35, "C");
-    lcd__print8(110, 10, "AUTO");
+    lcd__print8(100, 25, "AUTO");
   }
-
+  lcd->sendBuffer();
 }
 
 // Electric car --------------------------------------------------------------- ---------------------------------------------------------------
@@ -352,7 +334,7 @@ void lcd__print_hv(float hv) // accumulator voltage (comes in float or integer?)
   // Round to one decimal place
   sprintf(hv_str, "%5.1f", hv);
 
-  lcd__clear_section(1);
+  //lcd__clear_section(1);
   lcd__print18(35, 18, hv_str);
 }
 
@@ -374,7 +356,7 @@ void lcd__print_soc(float soc) // State of charge 0-100%
     sprintf(soc_str, "%3.1f", soc);
   }
 
-  lcd__clear_section(3);
+  //lcd__clear_section(3);
   lcd__print14(70, 62, soc_str);
 }
 
@@ -481,7 +463,7 @@ void lcd__update_screenE(float hv, float soc, float lv, float hvlow, float hvtem
 
     if (DISPLAY_SCREEN == 0) {
       //lcd__print_hv(hv);
-      lcd__print_soc(soc);
+      //lcd__print_soc(soc);
       lcd__print_drs(drsMode);
       lcd__print_rgm(regenmode);
       lcd__print_launch(launchReady);

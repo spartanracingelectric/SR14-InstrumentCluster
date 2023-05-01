@@ -107,10 +107,11 @@ static void can__launch_receive(const CANMessage & inMessage){
   }
   */
   curr_launchStatus = inMessage.data[1];
-  /* if (curr_launchStatus == 1){
+  /*if (curr_launchStatus == 1){
     digitalWrite(LED_BUILTIN, HIGH);
   }
   */
+  
   
 
 }
@@ -166,11 +167,12 @@ static void can__hvlow_receive (const CANMessage & inMessage)
 
 static void can__hvtemp_receive (const CANMessage & inMessage)
 {
-  curr_hvtemp = ((inMessage.data[7] << 8)  | (inMessage.data[6])) * 0.1f;
+  curr_hvtemp = ((inMessage.data[5] << 8)  | (inMessage.data[4])) * 0.1f;
   /*if (curr_hvtemp == 50){
     digitalWrite(LED_BUILTIN, HIGH);
   }
   */
+  
   
     
 }

@@ -365,14 +365,14 @@ void leds__launchReady(float launchReady){
   }
 }
 
-void leds__hvtemp(float hvtemp) // Highest Cell Temperature Address - 0x623
+void leds__hvtemp(float hvtemp)
 {
   if(hvtemp > 85){
-    leds->setPoint(3, 5, true);
+    leds->setPoint(3, 3, true);
   }
 
   else{
-    leds->setPoint(3, 5, false);
+    leds->setPoint(3, 3, false);
   }
 }
 
