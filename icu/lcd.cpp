@@ -219,6 +219,21 @@ void lcd__print_launch(float launch) {
   lcd__print8(110, 58, launch_str);
 }
 
+void lcd__clear_section (uint8_t sect)
+{
+  int hvtemp[] = {90, 64-14, 40, 14};
+  int hv[] = {30, 0, 70, 18};
+  int lv[] = {0, 64-14, 45, 14};
+  int hvcurr[] = {40, 34-14, 45, 0};
+  int soc[] = {40, 64-24, 45, 24};
+  //int rpm[] = {30, 0, 75,18};
+  int gear[] = {50, 64-24, 30, 24};
+  int* sections[] = {hvtemp, hv, hvcurr, lv, soc, gear};
+  
+  lcd->setDrawColor(0);
+  lcd->drawBox(sections[sect][0], sections[sect][1], sections[sect][2], sections[sect][3]);
+  lcd->setDrawColor(1);
+}
 
 void lcd__print_rgm(int rgm) {
   if (rgm == rgm_prev) return;
