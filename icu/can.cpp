@@ -102,10 +102,11 @@ float curr_bms_stat = 0;
 //
 static void can__launch_receive(const CANMessage & inMessage){
   curr_launchReady = inMessage.data[0]; // Launch Ready
-  /* if (curr_launch == 1){
+  /*if (curr_launchReady == 1){
     digitalWrite(LED_BUILTIN, HIGH);
   }
   */
+  
   curr_launchStatus = inMessage.data[1];
   /*if (curr_launchStatus == 1){
     digitalWrite(LED_BUILTIN, HIGH);

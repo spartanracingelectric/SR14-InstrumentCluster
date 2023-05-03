@@ -248,7 +248,6 @@ void leds__rpm_update_tach(uint16_t rpm) {
   }
 }
 
-
 /*
 void leds__rpm_update_flash(uint16_t rpm, uint8_t gear, uint32_t curr_millis_flash)
 {
@@ -358,13 +357,21 @@ void leds__drsEnable(float drsEnable){
 
 void leds__launchReady(float launchReady){
   if(launchReady == 1){
-    leds->setPoint(2,4, true);
+    leds->setPoint(4,4, true);
   }
   else{
-    leds->setPoint(2,4, false);
+    leds->setPoint(4,4, false);
   }
 }
+void leds__regenMode(int regenmode){
+  if(regenmode == 1 | regenmode == 4){
+    leds->setPoint(4, 2, true);
+  }
 
+  else{
+    leds->setPoint(4, 2, false);
+  }
+}
 void leds__hvtemp(float hvtemp)
 {
   if(hvtemp > 85){

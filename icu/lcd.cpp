@@ -130,9 +130,9 @@ void lcd__print_default_screen_template()
   //lcd__print8(47, 40, "SOC%");
   //lcd__print8(0, 0, "RPM Screen");
   //lcd__print8(0, 10, "HV CURR");
-  lcd__print8(60, 28, "DRS");
-  lcd__print8(60, 43, "REGEN");
-  lcd__print8(60, 58, "LAUNCH"); // Launch Control
+  lcd__print8(57, 28, "DRS");
+  lcd__print8(57, 43, "REGEN");
+  lcd__print8(57, 58, "LAUNCH"); // Launch Control
   // lcd__print8(10, 10, "SOC"); // State of Charge
   //lcd__print8(10, 10, "VOL");
   //lcd__print8(10, 20, "0/400"); // Max Pack Voltage
@@ -208,41 +208,53 @@ void lcd__print_default_screen_template()
   }
 */
 // E & C car --------------------------------------------------------------- ---------------------------------------------------------------
-void lcd__print_launch(float launch) {
-  if (launch == launch_prev) return;
-  launch_prev = launch;
-  char launch_str[5] = "   ";
-
-  lcd->sendBuffer();
-  sprintf(launch_str, "%d", launch);
-  
-  lcd__print8(110, 58, launch_str);
-}
 
 void lcd__clear_section (uint8_t sect)
 {
-  int hvtemp[] = {90, 64-14, 40, 14};
-  int hv[] = {30, 0, 70, 18};
-  int lv[] = {0, 64-14, 45, 14};
-  int hvcurr[] = {40, 34-14, 45, 0};
-  int soc[] = {40, 64-24, 45, 24};
-  //int rpm[] = {30, 0, 75,18};
-  int gear[] = {50, 64-24, 30, 24};
-  int* sections[] = {hvtemp, hv, hvcurr, lv, soc, gear};
+  int rgm[] = {100, 35, 20, 14};
+  int drs[] = {100, 15, 30, 14};
+  int launch[] = {100, 49, 40, 14};
+  int* sections[] = {rgm, drs, launch};
+  
   
   lcd->setDrawColor(0);
   lcd->drawBox(sections[sect][0], sections[sect][1], sections[sect][2], sections[sect][3]);
+
+  lcd->sendBuffer();
   lcd->setDrawColor(1);
+}
+
+void lcd__print_launch(float launch) {
+  if(launch == launch_prev) return;
+  launch_prev = launch;
+
+  char launch_str[5] = "   ";
+  if(launch == 1){
+    sprintf(launch_str, "%s", "AC");
+  }
+  
+  else{
+    sprintf(launch_str, "%s", "DI");
+    
+  }
+  
+  lcd__clear_section(2);
+  lcd__print8(110, 58, launch_str);
 }
 
 void lcd__print_rgm(int rgm) {
   if (rgm == rgm_prev) return;
   rgm_prev = rgm;
   char rgm_str[5] = "   ";
+  if(rgm == 1){
+    sprintf(rgm_str, "%s", "H");
+  }
 
-  lcd->sendBuffer();
-  sprintf(rgm_str, "%d", rgm);
-
+  if(rgm == 4){
+    sprintf(rgm_str, "%s", "N");
+  }
+  
+  lcd__clear_section(0);
   lcd__print8(100, 43, rgm_str);
 
 }
@@ -318,23 +330,29 @@ void lcd__print_hvtemp(float hvtemp) // Accumulator/Engine temperature
 
 void lcd__print_drs(int drs)
 {
+  if(drs == drs_prev) return;
+  drs_prev = drs;
+
+  char drs_str[5] = "    ";
 
   if (drs == 0) {
-    lcd__print8(100, 25, "OFF");
+    sprintf(drs_str, "%s", "OFF");
+    
   } else if (drs == 1)
   {
-    // lcd__print8(113, 35, "M");
-    lcd__print8(100, 25, "ON") ;
+    sprintf(drs_str, "%s", "ON");
+    
   } else if (drs == 2)
   {
-    // lcd__print8(113, 35, "A")
-    lcd__print8(100, 25, "MAN");
+    sprintf(drs_str, "%s", "MAN");
+    
   } else if (drs == 3)
   {
-    // lcd__print8(113, 35, "C");
-    lcd__print8(100, 25, "AUTO");
+    printf(drs_str, "%s", "AUTO");
   }
-  lcd->sendBuffer();
+
+  lcd__clear_section(1);
+  lcd__print8(100, 25, drs_str);
 }
 
 // Electric car --------------------------------------------------------------- ---------------------------------------------------------------
