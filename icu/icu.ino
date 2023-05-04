@@ -88,7 +88,7 @@ void setup()
 
   //Non functional as clearBuffer in loop overwrites for now
  
-  lcd__print_default_screen_template();
+//  lcd__print_default_screen_template();
   leds__set_brightness(MAX_LED_BRIGHTNESS);
   leds__wake();
 #if (BOARD_REVISION == 'B')
