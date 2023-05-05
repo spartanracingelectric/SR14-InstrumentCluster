@@ -453,6 +453,32 @@ void lcd__debugscreen()
   //lcd__print_tps0voltage(tps0);
 }
 
+void lcd__debugscreen2() {
+  // Screens
+  const char* zero = "CellOverVoltage";
+  const char* one = "PackOverVoltage";
+  const char* two = "MonitorCommFault";
+  const char* three = "PrechargeFault";
+  const char* four = "FailedThermistor";
+  const char* back = "Back";
+  const char* screens[6] = {zero, one, two, three, four, back};
+
+  lcd__print_screen(5, 6, screens);
+}
+
+void lcd__debugscreen3() {
+  // Screens
+  const char* zero = "LowVoltage";
+  const char* one = "MaxTorqueSet";
+  const char* two = "------------";
+  const char* three = "------------";
+  const char* four = "------------";
+  const char* back = "Back";
+  const char* screens[6] = {zero, one, two, three, four, back};
+
+  lcd__print_screen(5, 6, screens);
+}
+
 void lcd_settings() {
   const char* zero = "Max Torque Set";
   const char* one = "Regen Mode";
@@ -513,10 +539,14 @@ void lcd__update_screenE(float hv, float soc, float lv, float hvlow, float hvtem
     }
     if (DISPLAY_SCREEN == 2) {
       lcd__debugscreen();
-      
-
     }
     if (DISPLAY_SCREEN == 3) {
+      lcd__debugscreen2();
+    }
+    if (DISPLAY_SCREEN == 4) {
+      lcd__debugscreen3();
+    }
+    if (DISPLAY_SCREEN == 5) {
       lcd_settings();
     }
   }
