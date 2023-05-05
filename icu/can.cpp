@@ -1,5 +1,6 @@
 #include "can.h"
 #include "config.h"
+#include "lcd.h"
 
 //Skip INT pin for Rev A, set to 0
 #if (BOARD_REVISION == 'A')
@@ -108,10 +109,11 @@ static void can__launch_receive(const CANMessage & inMessage){
   */
   
   curr_launchStatus = inMessage.data[1];
-  /*if (curr_launchStatus == 1){
+  /* if (curr_launchStatus == 1){
     digitalWrite(LED_BUILTIN, HIGH);
   }
   */
+  
   
   
 
@@ -153,6 +155,10 @@ static void can__hv_receive (const CANMessage & inMessage)
 {
   curr_hv = ((inMessage.data[4]) | (inMessage.data[5] << 8) | (inMessage.data[6] << 16) | (inMessage.data[7] << 24)) * .001f;
   curr_hv_current = ((inMessage.data[0]) | (inMessage.data[1] << 8) | (inMessage.data[2] << 16) | (inMessage.data[3] << 24)) * .001f;
+  /* if (curr_hv == 1){
+    digitalWrite(LED_BUILTIN, HIGH);
+  }
+  */
 }
 
 static void can__soc_receive (const CANMessage & inMessage)
@@ -163,16 +169,24 @@ static void can__soc_receive (const CANMessage & inMessage)
 static void can__hvlow_receive (const CANMessage & inMessage)
 {
   curr_hvlow = ((inMessage.data[5] << 8) | (inMessage.data[4])) * 0.001f;
+  /*
+  if(curr_hvlow == 5){
+    digitalWrite(LED_BUILTIN, HIGH);
+  }
+  */
+  
+  
   
 }
 
 static void can__hvtemp_receive (const CANMessage & inMessage)
 {
   curr_hvtemp = ((inMessage.data[5] << 8)  | (inMessage.data[4])) * 0.1f;
-  /*if (curr_hvtemp == 50){
+  /* if (curr_hvtemp == 50){
     digitalWrite(LED_BUILTIN, HIGH);
   }
   */
+  
   
   
     
@@ -182,10 +196,19 @@ static void can__hvtemp_receive (const CANMessage & inMessage)
 static void can__rpm_receive (const CANMessage & inMessage)
 {
   curr_rpm = ((inMessage.data[2]) | (inMessage.data[3] << 8));
-  /*if (curr_rpm == 1100){
+  extern uint8_t DISPLAY_SCREEN;
+  /* if (curr_rpm == 1100){
     digitalWrite(LED_BUILTIN, HIGH);
   }
   */
+
+  if(curr_rpm == 2200 && DISPLAY_SCREEN != 0){
+    lcd__clear_screen();
+    DISPLAY_SCREEN = 0;
+    lcd__print_default_screen_template();
+    Serial.println(DISPLAY_SCREEN);
+  }
+  
 
 }
 static void can__bms_fault_receive (const CANMessage & inMessage)
@@ -304,8 +327,8 @@ const ACAN2515AcceptanceFilter filters [] =
   // {standard2515Filter (CAN_BMS_WARN_ADDR, 0, 0), can__bms_warn_receive},  //RXF2
   // {standard2515Filter (CAN_BMS_STAT_ADDR, 0, 0), can__bms_stat_receive},  //RXF3
   
-  {standard2515Filter (CAN_LV_ADDR, 0, 0), can__lv_receive},            //RXF0
-  //{standard2515Filter (CAN_HV_ADDR, 0, 0), can__hv_receive},            //RXF1 // filter for both HV and HV current
+  //{standard2515Filter (CAN_LV_ADDR, 0, 0), can__lv_receive},            //RXF0
+  {standard2515Filter (CAN_HV_ADDR, 0, 0), can__hv_receive},            //RXF1 // filter for both HV and HV current
   //{standard2515Filter (CAN_SOC_ADDR, 0, 0), can__soc_receive},          //RXF2
   {standard2515Filter (CAN_REGEN_ADDR, 0, 0), can__regenmode_receive},
   {standard2515Filter (CAN_LAUNCH_ADDR, 0, 0), can__launch_receive},

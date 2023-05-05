@@ -137,7 +137,7 @@ void lcd__print_default_screen_template()
   //lcd__print8(10, 10, "VOL");
   //lcd__print8(10, 20, "0/400"); // Max Pack Voltage
   lcd__print8(0, 20, "HV T"); // Lowest Cell Temp
-  lcd__print8(0, 38, "LV"); // Low Voltage
+  //lcd__print8(0, 38, "LV"); // Low Voltage
   //lcd__print14(10, 62, "SOC");
   // lcd__print8(5,5,"------");
 
@@ -214,7 +214,8 @@ void lcd__clear_section (uint8_t sect)
   int rgm[] = {100, 35, 20, 14};
   int drs[] = {100, 15, 30, 14};
   int launch[] = {100, 49, 40, 14};
-  int* sections[] = {rgm, drs, launch};
+  int hv[] = {25, 10, 25, 18};
+  int* sections[] = {rgm, drs, launch, hv};
   
   
   lcd->setDrawColor(0);
@@ -230,11 +231,11 @@ void lcd__print_launch(float launch) {
 
   char launch_str[5] = "   ";
   if(launch == 1){
-    sprintf(launch_str, "%s", "AC");
+    sprintf(launch_str, "%s", "ON");
   }
   
   else{
-    sprintf(launch_str, "%s", "DI");
+    sprintf(launch_str, "%s", "OFF");
     
   }
   
@@ -365,10 +366,10 @@ void lcd__print_hv(float hv) // accumulator voltage (comes in float or integer?)
 
   char hv_str[6] = "   ";
   // Round to one decimal place
-  sprintf(hv_str, "%5.1f", hv);
+  sprintf(hv_str, "%05.1f", hv);
 
-  //lcd__clear_section(1);
-  lcd__print18(35, 18, hv_str);
+  lcd__clear_section(3);
+  lcd__print14(40, 15, hv_str);
 }
 
 void lcd__print_soc(float soc) // State of charge 0-100%
@@ -433,6 +434,7 @@ void lcd__menu(void)
   const char* screens[6] = {zero, one, two, three, four, back};
 
   lcd__print_screen(ROW_COUNT, 6, screens);
+
 }
 
 void lcd__debugscreen()
@@ -495,7 +497,7 @@ void lcd__update_screenE(float hv, float soc, float lv, float hvlow, float hvtem
     //    lcd__clear_screen();
 
     if (DISPLAY_SCREEN == 0) {
-      //lcd__print_hv(hv);
+      lcd__print_hv(hv);
       //lcd__print_soc(soc);
       lcd__print_drs(drsMode);
       lcd__print_rgm(regenmode);

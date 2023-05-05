@@ -362,6 +362,7 @@ void leds__launchReady(float launchReady){
   else{
     leds->setPoint(4,4, false);
   }
+
 }
 void leds__regenMode(int regenmode){
   if(regenmode == 1 | regenmode == 4){
@@ -374,7 +375,7 @@ void leds__regenMode(int regenmode){
 }
 void leds__hvtemp(float hvtemp)
 {
-  if(hvtemp > 85){
+  if(hvtemp > 60){
     leds->setPoint(3, 3, true);
   }
 
@@ -384,14 +385,7 @@ void leds__hvtemp(float hvtemp)
 }
 
 void leds__hvlow(float hvlow){
-
-  if(hvlow == 5){
-    leds->setPoint(3,5,true);
-  }
-
-  else{
-    leds->setPoint(3,5,false);
-  }
+  leds->setPoint(3,5,true);
 }
 
 void leds__safety_update_flash(float hvlow, float hvtemp, uint32_t curr_millis) {

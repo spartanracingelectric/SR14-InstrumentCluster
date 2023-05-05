@@ -88,7 +88,7 @@ void setup()
 
   //Non functional as clearBuffer in loop overwrites for now
  
-  lcd__print_default_screen_template();
+  //lcd__print_default_screen_template();
   leds__set_brightness(MAX_LED_BRIGHTNESS);
   leds__wake();
 #if (BOARD_REVISION == 'B')
@@ -183,9 +183,9 @@ void loop()
     leds__rpm_update_tach(rpm);
     leds__drsEnable(drsEnable);
     leds__launchReady(launchStatus);
-    leds__lv(lv);
-    leds__hvtemp(hvtemp);
-    leds__regenMode(regenmode);    
+    //leds__lv(lv);
+    leds__regenMode(regenmode);
+    leds__hvtemp(hvtemp);    
 #endif
   //delay(500);
 }
