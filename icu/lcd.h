@@ -48,8 +48,8 @@ void lcd__print_drs(float drsMode);
 // Menu stuff
 void lcd__menu(int rowCount, int prevRowCount);
 void lcd__highlight_screen(uint8_t row, const char* screen);
-void lcd__print_screen(uint8_t selection, uint8_t row, char screen, int& rowCount, int& prevRowCount); // 5 row + Back template
-void lcd__drs_screen(uint8_t drs);
+void lcd__print_screen(uint8_t selection, uint8_t row, const char* screen[], int& prevRowCount) // 5 row + Back template
+// void lcd__drs_screen(uint8_t drs);
 
 // diagnostics screen
 void lcd__diagnostics(uint8_t cellfault, uint8_t cellwarn, uint8_t bmsstate);

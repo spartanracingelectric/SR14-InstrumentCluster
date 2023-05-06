@@ -399,7 +399,7 @@ void lcd__highlight_screen(uint8_t row, const char* screen) // number 0-5
   }
 }
 
-void lcd__print_screen(uint8_t selection, uint8_t row, const char* screen[], int& rowCount, int& prevRowCount) // 5 row + Back template
+void lcd__print_screen(uint8_t selection, uint8_t row, const char* screen[], int& prevRowCount) // 5 row + Back template
 {
     // Overlay Highlight Button Selected Screen
   lcd__highlight_screen(selection, screen[selection]);
@@ -411,6 +411,8 @@ void lcd__print_screen(uint8_t selection, uint8_t row, const char* screen[], int
   if (selection != 5) lcd__print8(128 - lcd->getStrWidth(screen[5]) - 1, 63, screen[5]);
 }
 
+
+// isn't in use
 void lcd__menu(int rowCount, int prevRowCount)
 {
 //  #define TESTING_SCREEN 0
@@ -427,10 +429,10 @@ void lcd__menu(int rowCount, int prevRowCount)
   const char* back = "Back";
   const char* screens[6] = {zero, one, two, three, four, back};
 
-  lcd__print_screen(rowCount, 6, screens, rowCount, prevRowCount);
+  lcd__print_screen(5, 6, screens, prevRowCount);
 }
 
-void lcd__debugscreen()
+void lcd__debugscreen(int rowCount, int prevRowCount)
 {
   // Screens
   const char* zero = "TPS0 Voltage";
@@ -441,12 +443,12 @@ void lcd__debugscreen()
   const char* back = "Back";
   const char* screens[6] = {zero, one, two, three, four, back};
 
-  lcd__print_screen(5, 6, screens);
+  lcd__print_screen(5, 6, screens, prevRowCount);
 
   //lcd__print_tps0voltage(tps0);
 }
 
-void lcd__debugscreen2() {
+void lcd__debugscreen2(int rowCount, int prevRowCount) {
   // Screens
   const char* zero = "CellOverVoltage";
   const char* one = "PackOverVoltage";
@@ -456,10 +458,10 @@ void lcd__debugscreen2() {
   const char* back = "Back";
   const char* screens[6] = {zero, one, two, three, four, back};
 
-  lcd__print_screen(5, 6, screens);
+  lcd__print_screen(5, 6, screens, prevRowCount);
 }
 
-void lcd__debugscreen3() {
+void lcd__debugscreen3(int rowCount, int prevRowCount) {
   // Screens
   const char* zero = "LowVoltage";
   const char* one = "MaxTorqueSet";
@@ -469,10 +471,10 @@ void lcd__debugscreen3() {
   const char* back = "Back";
   const char* screens[6] = {zero, one, two, three, four, back};
 
-  lcd__print_screen(5, 6, screens);
+  lcd__print_screen(5, 6, screens, prevRowCount);
 }
 
-void lcd_settings() {
+void lcd_settings(int rowCount, int prevRowCount) {
   const char* zero = "Max Torque Set";
   const char* one = "Regen Mode";
   const char* two = "------------";
@@ -481,7 +483,7 @@ void lcd_settings() {
   const char* back = "Back";
   const char* screens[6] = {zero, one, two, three, four, back};
 
-  lcd__print_screen(5, 6, screens);
+  lcd__print_screen(5, 6, screens, prevRowCount);
 }
 /*
 void lcd__print_rpm_diag(uint16_t rpm)
@@ -537,7 +539,7 @@ void lcd__update_screenE(float hv, float soc, float lv, float hvlow, float hvtem
         prevDisplayScreen = displayScreen;
         lcd__clear_screen();
       }
-      lcd__debugscreen();
+      lcd__debugscreen(rowCount, prevRowCount);
       lcd__print8(50, 64, "Display 1");
     }
     if (displayScreen == 2) 
@@ -547,7 +549,7 @@ void lcd__update_screenE(float hv, float soc, float lv, float hvlow, float hvtem
         prevDisplayScreen = displayScreen;
         lcd__clear_screen();
       }
-      lcd__debugscreen2();
+      lcd__debugscreen2(rowCount, prevRowCount);
       lcd__print8(50, 64, "Display 2");
     }
     if (displayScreen == 3) 
@@ -557,7 +559,7 @@ void lcd__update_screenE(float hv, float soc, float lv, float hvlow, float hvtem
         prevDisplayScreen = displayScreen;
         lcd__clear_screen();
       }
-      lcd__debugscreen3();
+      lcd__debugscreen3(rowCount, prevRowCount);
       lcd__print8(50, 64, "Display 3");
       //lcd__print_rpm_diag(rpm);
     }
@@ -568,7 +570,7 @@ void lcd__update_screenE(float hv, float soc, float lv, float hvlow, float hvtem
         prevDisplayScreen = displayScreen;
         lcd__clear_screen();
       }
-      lcd_settings();
+      lcd_settings(rowCount, prevRowCount);
       lcd__print8(50, 64, "Display 4");
     }
   }
