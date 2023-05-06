@@ -127,6 +127,7 @@
 #define CAN_BMS_WARN_ADDR 0x604 // dec: 1540
 #define CAN_BMS_STAT_ADDR 0x610 // dec: 1552 // system status (should be idle - 1)
 
+#define CAN_HV_CURRENT_ADDR 0x620
 #define CAN_HV_ADDR 0x620 // dec: 1568
 #define CAN_SOC_ADDR 0x621
 #define CAN_HVLOW_ADDR 0x622
@@ -162,7 +163,7 @@
 #define BAT_TEMP_ADDR 0x628
 #define RPM_ADDR 0x0A5
 #define WSS_ADDR 0x505      // Interpolated WSS address
-#define REGEN_ADDR 0x508
+#define REGEN_ADDR 0x508 // using for Regen mode
 #define HV_ADDR 0x623
 #define LV_ADDR 0x700
 #define TS_ADDR 0x701       // Timestamp Address (-> DAQ)
@@ -183,6 +184,6 @@
 /*---------------------------------------------------------------------------/
 / HELPFUL MACROS
 /---------------------------------------------------------------------------*/
-#define MAX_LED_BRIGHTNESS 0x3
+#define MAX_LED_BRIGHTNESS 0xFF
 
 #endif /* CONF_H_ */

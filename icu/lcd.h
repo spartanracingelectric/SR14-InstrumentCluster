@@ -37,7 +37,7 @@ void lcd__print_wattemp(uint8_t watertemp); // Water Coolant Temp
 void lcd__print_lv(float lv); // low voltage battery soc
 void lcd__print_hvtemp(float hvtemp); // Accumulator/Engine temperature
 void lcd__print_hvlow(float hvlow);
-
+void lcd__print_launch(float launch);
 // 
 //void lcd_print__tiracctemp(uint8_t tiracctemp); // Tire temperatures multiple variables?
 

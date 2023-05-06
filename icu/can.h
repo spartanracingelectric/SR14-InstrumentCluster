@@ -27,10 +27,14 @@ uint8_t can__get_drs();
 // E car
 #if (POWERTRAIN_TYPE == 'E')
 static void can__hv_receive (const CANMessage & inMessage);
+static void can__hv_current_receive (const CANMessage & inMessage);
 static void can__soc_receive (const CANMessage & inMessage);
 static void can__lv_receive (const CANMessage & inMessage);
 static void can__hv_low_receive (const CANMessage & inMessage);
 static void can__hvtemp_receive (const CANMessage & inMessage);
+static void can__regenmode_receive(const CANMessage & inMessage);
+static void can__drs_receive(const CANMessage & inMessage);
+static void can__launch_receive(const CANMessage & inMessage);
 
 // diagnostics ---------------------------
 static void can__rpm_receive (const CANMessage & inMessage); // rpm
@@ -42,8 +46,11 @@ float can__get_hv();
 float can__get_soc();
 float can__get_lv();
 float can__get_hvtemp(); // E car accumulator
+float can__get_hv_current();
 float can__get_hvlow(); // E car accumulator
-
+int can__get_regenmode();
+bool can__get_drsMode();
+float can__get_launch();
 // diagnostics ---------------------------
 float can__get_rpm(); // not tested
 float can__get_bms_fault(); //

@@ -30,11 +30,15 @@ uint8_t drs = 0;
 */
 
 #if (POWERTRAIN_TYPE == 'E')
-float hv = 0.0f; 
+float hv = 0.0f;
+float hvCurr = 0.0f;
 float soc = 0.0f;
 float lv = 0.0f;
 float hvtemp = 0.0f;
 float hvlow = 0.0f;
+int rgm = 0;
+uint8_t drs = 0;
+float launch = 0;
 
 // diagnostics ---------------------------
 uint16_t rpm = 0;
@@ -42,17 +46,17 @@ uint8_t cellfault = 0;
 uint8_t cellwarn = 0;
 uint8_t bmsstate = 0;
 
-  // rotary ---------------------------
-  int lastStateCLK;  // Read the initial state of CLK
-  int currentStateCLK;
-  int currentStateSW;
-  int currentStateDT;
+// rotary ---------------------------
+int lastStateCLK;  // Read the initial state of CLK
+int currentStateCLK;
+int currentStateSW;
+int currentStateDT;
 
-  // lcd ---------------------------
-  int displayScreen = 0;
-  int prevDisplayScreen = 0;
-  int rowCount = 0;
-  int prevRowCount = 0;
+// lcd ---------------------------
+int displayScreen = 0;
+int prevDisplayScreen = 0;
+int rowCount = 0;
+int prevRowCount = 0;
 #endif
 
 void setup()
@@ -155,13 +159,17 @@ void loop()
 */
 #if (POWERTRAIN_TYPE == 'E')
   hv = can__get_hv();
+  hvCurr = can__get_hv_current();
   soc = can__get_soc();
-//  wattemp = can__get_wattemp();
+//  wattemp = can__get_wattemp(); // no can
   hvtemp = can__get_hvtemp();
   lv = can__get_lv();
   hvlow = can__get_hvlow();
-
-// diagnostics ---------------------------------
+  rgm = can__get_regenmode();
+  drs = can__get_drsMode();
+  launch = can__get_launch();
+  
+// diagnostics --------------------------------- // don't work
   cellfault = can__get_bms_fault();
   cellwarn = can__get_bms_warn();
   bmsstate = can__get_bms_stat();
@@ -183,7 +191,7 @@ void loop()
 //  soc = 97;
 //  hvtemp = 51.8234;
     //hvlow = 3.2f;
-    //hvtemp = 52.3f;
+    // hvtemp = 52.3f;
 
   //lcd__print_rpm(rpm, curr_millis);
 /* #if (POWERTRAIN_TYPE == 'C')
@@ -193,7 +201,9 @@ void loop()
 
 #if (POWERTRAIN_TYPE == 'E')
 //    leds__safety_update_flash(hvlow, hvtemp, curr_millis);
-    lcd__update_screenE(hv, soc, lv, hvlow, hvtemp, displayScreen, rowCount, prevDisplayScreen, prevRowCount, curr_millis);
+  lcd__update_screenE(hv, soc, lv, hvlow, hvtemp, displayScreen, rowCount, prevDisplayScreen, prevRowCount, curr_millis);
+
+  leds__rpm_update_tach(rpm);
     
 #endif
   //delay(500);
