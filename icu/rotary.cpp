@@ -25,28 +25,17 @@ if (currentStateCLK != lastStateCLK && currentStateCLK == 1)
   if (currentStateDT == currentStateCLK)
   {
     counter--;
-    if (displayScreen != MENU_SCREEN)
-    {
-//      displayScreen = counter % NUMBER_OF_SCREENS;
-    }
-    else if (displayScreen == MENU_SCREEN)
-    {
-      rowCount = abs((rowCount - 1) % NUMBER_OF_ROWS);
-    }
+
+     displayScreen = counter % NUMBER_OF_SCREENS;
+      // rowCount = abs((rowCount - 1) % NUMBER_OF_ROWS); // for menu
       currentDir = "CCW";
   }
   else
   {
     // Encoder is rotating CW so increment
     counter++;
-    if (displayScreen != MENU_SCREEN)
-    {
-//      displayScreen = counter % NUMBER_OF_SCREENS;
-    }
-    else if (displayScreen == MENU_SCREEN)
-    {
-      rowCount =  (rowCount + 1) % NUMBER_OF_ROWS;
-    }
+     displayScreen = counter % NUMBER_OF_SCREENS;
+      // rowCount =  (rowCount + 1) % NUMBER_OF_ROWS;
     currentDir = "CW";
   }
   char ch[5]; 
@@ -55,7 +44,12 @@ if (currentStateCLK != lastStateCLK && currentStateCLK == 1)
   Serial.print("Direction: ");
   Serial.print(ch);
   Serial.print(" | Counter: ");
-  Serial.println(counter);
+  Serial.print(counter);
+  Serial.print(" | Screen: ");
+  Serial.print(displayScreen);
+  Serial.print(" | Expected Screen: ");
+  Serial.print(counter % NUMBER_OF_SCREENS);
+  Serial.println("");
 }
 
 // Remember last CLK State

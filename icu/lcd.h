@@ -17,11 +17,13 @@
 
 // Fonts and other Setup
 void lcd__init(U8G2_ST7565_NHD_C12864_F_4W_SW_SPI *lcd_ptr); // changed from SW -> HW
-void lcd__clear_screen();
 void lcd__print8(uint8_t x, uint8_t y, const char *str);                 //Print str with Helvetica Bold Size 10
 void lcd__print14(uint8_t x, uint8_t y, const char *str);                 //Print str with Helvetica Bold Size 14
 void lcd__print18(uint8_t x, uint8_t y, char *str);                 //Print str with Helvetica Bold Size 18
 void lcd__print24(uint8_t x, uint8_t y, char *str);                 //Print str with Helvetica Bold Size 24
+void lcd__clear_screen();
+
+void lcd_welcome_screen();
 void lcd__print_default_screen_template();
 void lcd__clear_section(uint8_t section);
 
@@ -52,6 +54,7 @@ void lcd__diagnostics(uint8_t cellfault, uint8_t cellwarn, uint8_t bmsstate);
 void lcd__print_rpm_diag(uint16_t rpm); // rpm diagnostics for ev
 
 void lcd__update_screen(uint16_t rpm, uint8_t gear, float lv, float oilpress, uint8_t drs, uint32_t curr_millis_lcd);
-void lcd__update_screenE(float hv, float soc, float lv, float hvlow, float hvtemp, int displayScreen, int& rowCount, int& prevDisplayScreen, int& prevRowCount, uint32_t curr_millis_lcd);
+void lcd__update_screenE(float hv, float soc, float lv, float hvlow, float hvtemp, float hvcurr, uint8_t drs, int rgm, float launch, int displayScreen, int& rowCount, int& prevDisplayScreen, int& prevRowCount, uint32_t curr_millis_lcd);
+
 
 #endif /* LCD_H_ */

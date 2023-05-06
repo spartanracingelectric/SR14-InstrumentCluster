@@ -54,9 +54,9 @@ int currentStateDT;
 
 // lcd ---------------------------
 int displayScreen = 0;
-int prevDisplayScreen = 0;
+int prevDisplayScreen = -1;
 int rowCount = 0;
-int prevRowCount = 0;
+int prevRowCount = -1;
 #endif
 
 void setup()
@@ -106,6 +106,7 @@ void setup()
   lcd__init(&lcd_u8g2);
 
   //Non functional as clearBuffer in loop overwrites for now
+  lcd_welcome_screen();
   lcd__print_default_screen_template();
   leds__set_brightness(MAX_LED_BRIGHTNESS);
   leds__wake();
@@ -201,7 +202,7 @@ void loop()
 
 #if (POWERTRAIN_TYPE == 'E')
 //    leds__safety_update_flash(hvlow, hvtemp, curr_millis);
-  lcd__update_screenE(hv, soc, lv, hvlow, hvtemp, displayScreen, rowCount, prevDisplayScreen, prevRowCount, curr_millis);
+  lcd__update_screenE(hv, soc, lv, hvlow, hvtemp, hvCurr, drs, rgm, launch, displayScreen, rowCount, prevDisplayScreen, prevRowCount, curr_millis);
 
   leds__rpm_update_tach(rpm);
     

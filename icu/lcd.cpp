@@ -31,11 +31,6 @@ void lcd__init(U8G2_ST7565_NHD_C12864_F_4W_SW_SPI *lcd_ptr) // changed from SW -
   lcd->begin();
 }
 
-void lcd__clear_screen() 
-{
-  lcd->clearBuffer();
-}
-
 void lcd__print8(uint8_t x, uint8_t y, const char *str)
 {
   // Need to implement a way to update ONLY the space that is to be printed
@@ -97,6 +92,9 @@ void lcd__clear_screen()
 
 void lcd_welcome_screen()
 {
+  // char default_str[] = "Created by: Sarthak Chauhan";
+  // lcd__print14(0, 45, default_str);
+  // delay(100);
   // Welcome screen with the Logo.
   lcd->setFont(u8g2_font_luRS18_tr);
   // Setting the font monospace for the intial welcome screen
@@ -119,15 +117,6 @@ void lcd_welcome_screen()
 
 void lcd__print_default_screen_template()
 {
-  char default_str[] = "Created by: Sarthak Chauhan";
-  lcd__print14(0, 45, default_str);
-  delay(100);
-
-  lcd__clear_screen();
-  lcd_welcome_screen(); 
-  
-#if (DISPLAY_SCREEN == 0)
-#if (POWERTRAIN_TYPE == 'E')
   //lcd__print8(104, 45, "HV T");
   //lcd__print8(0, 45, "LV");
   //lcd__print8(45, 28, "VOLTS");
@@ -150,11 +139,6 @@ void lcd__print_default_screen_template()
     lcd__print8(0, 45, "LV");
     lcd__print8(90, 35, "DRS");
   */
-
-#endif
-#elif (DISPLAY_SCREEN == 1)
-
-#endif
 }
 
 void lcd__clear_section (uint8_t sect)
@@ -385,31 +369,37 @@ void lcd__highlight_screen(uint8_t row, const char* screen) // number 0-5
   }
 }
 
-void lcd__print_screen(uint8_t selection, uint8_t row, const char* screen[]) // 5 row + Back template
+void lcd__print_screen(uint8_t selection, uint8_t row, const char* screen[], int& rowCount, int& prevRowCount) // 5 row + Back template
 {
-  // Overlay Highlight Button Selected Screen
+    // Overlay Highlight Button Selected Screen
   lcd__highlight_screen(selection, screen[selection]);
-
+  
   // Display screens that are not the selected screen
-  for (int i = 0; i < row - 1; i++) {
+  for (int i = 0; i < row - 1; i++){
     if (selection != i) lcd__print8(1, 1 + 8 + 12 * i, screen[i]);
   }
   if (selection != 5) lcd__print8(128 - lcd->getStrWidth(screen[5]) - 1, 63, screen[5]);
 }
 
-void lcd__menu(void)
+void lcd__menu(int rowCount, int prevRowCount)
 {
+//  #define TESTING_SCREEN 0
+//#define MINIMALIST_SCREEN 1
+//#define DEBUG_BMS_SCREEN 2
+//#define DEBUG_VCU_SCREEN 3
+//#define MENU_SCREEN 4
   // Screens
-  const char* zero = "Diagnostics";
-  const char* one = "RPM Threshold";
-  const char* two = "Regen";
-  const char* three = "Catchphrase";
-  const char* four = "Placeholder";
+  const char* zero = "Testing";
+  const char* one = "Minimalist";
+  const char* two = "BMS?";
+  const char* three = "VCU?";
+  const char* four = "Menu";
   const char* back = "Back";
   const char* screens[6] = {zero, one, two, three, four, back};
 
-  lcd__print_screen(ROW_COUNT, 6, screens);
+  lcd__print_screen(rowCount, 6, screens, rowCount, prevRowCount);
 }
+
 
 void lcd__diagnostics(uint8_t cellfault, uint8_t cellwarn, uint8_t bmsstate)
 {
@@ -421,8 +411,6 @@ void lcd__diagnostics(uint8_t cellfault, uint8_t cellwarn, uint8_t bmsstate)
   const char* four = "Placeholder";
   const char* back = "Back";
   const char* screens[6] = {zero, one, two, three, four, back};
-
-  lcd__print_screen(5, 6, screens);
 
   char cellfault_str[2] = " ";
   sprintf(cellfault_str, "%hu", cellfault);
@@ -444,45 +432,64 @@ void lcd__print_rpm_diag(uint16_t rpm)
 }
 
 // LCD Screen Update --------------------------------------------------------------- ---------------------------------------------------------------
-/* void lcd__update_screen(uint16_t rpm, uint8_t gear, float lv, float oilpress, uint8_t drs, uint32_t curr_millis_lcd) // C Car
-  {
-  if (curr_millis_lcd - prev_millis_lcd >= LCD_UPDATE_MS) {
-    prev_millis_lcd = curr_millis_lcd;
-    if (DISPLAY_SCREEN == 0) {
-      //lcd__print_rpm(rpm);
-      //lcd__print_gear(gear);
-      lcd__print_lv(lv);
-      //lcd__print_oilpress(oilpress);
-      lcd__print_drs(drs);
-    }
-  }
-  }
-*/
-void lcd__update_screenE(float hv, float soc, float lv, float hvlow, float hvtemp, float hvcurr, uint8_t drs, int rgm, float launch, uint32_t curr_millis_lcd)
+
+
+void lcd__update_screenE(float hv, float soc, float lv, float hvlow, float hvtemp, float hvcurr, uint8_t drs, int rgm, float launch, int displayScreen, int& rowCount, int& prevDisplayScreen, int& prevRowCount, uint32_t curr_millis_lcd)
 {
   if (curr_millis_lcd - prev_millis_lcd >= LCD_UPDATE_MS) {
     prev_millis_lcd = curr_millis_lcd;
-    //    lcd__clear_screen();
-
-    if (DISPLAY_SCREEN == 0) {
-      //lcd__print_hv(hv);
+//    lcd__clear_screen();
+  
+    if (displayScreen == 0) 
+    {
+      if(prevDisplayScreen != displayScreen)
+      {
+        prevDisplayScreen = displayScreen;
+        lcd__clear_screen();
+        lcd__print_default_screen_template();
+      }
       lcd__print_soc(soc);
       lcd__print_drs(drs);
       lcd__print_rgm(rgm);
       lcd__print_launch(launch);
-      //lcd__print_hvlow(hvlow);
-      //lcd__print_lv(lv);
-      //lcd__print_hvtemp(hvtemp);
-      //lcd__print_hvcurr(hvcurr);
+      lcd__print8(123, 64, "0");
     }
-    if (DISPLAY_SCREEN == 1) {
-      lcd__menu();
+    if (displayScreen == 1) 
+    {
+      if(prevDisplayScreen != displayScreen)
+      {
+        prevDisplayScreen = displayScreen;
+        lcd__clear_screen();
+      }
+      lcd__print8(50, 64, "Display 1");
     }
-    if (DISPLAY_SCREEN == 2) {
-      //lcd__diagnostics(cellfault, cellwarn, bmsstate);
+    if (displayScreen == 2) 
+    {
+      if(prevDisplayScreen != displayScreen)
+      {
+        prevDisplayScreen = displayScreen;
+        lcd__clear_screen();
+      }
+      lcd__print8(50, 64, "Display 2");
     }
-    if (DISPLAY_SCREEN == 3) {
+    if (displayScreen == 3) 
+    {
+      if(prevDisplayScreen != displayScreen)
+      {
+        prevDisplayScreen = displayScreen;
+        lcd__clear_screen();
+      }
+      lcd__print8(50, 64, "Display 3");
       //lcd__print_rpm_diag(rpm);
+    }
+    if (displayScreen == 4)
+    {
+      if(prevDisplayScreen != displayScreen)
+      {
+        prevDisplayScreen = displayScreen;
+        lcd__clear_screen();
+      }
+      lcd__print8(50, 64, "Display 4");
     }
   }
 }
