@@ -12,13 +12,14 @@ uint8_t gear_prev = -1;
 float soc_prev = -1.0f;
 float hv_prev = -1.0f;
 float lv_prev = -1.0f;
+float tps0_prev = -1.0f;
 float hvtemp_prev = -1.0f;
 float hvlow_prev = -1.0f;
 float hvcurr = -1.0f;
 float hvcurr_prev = -1.0f;
 float oilpress_prev = -1.0f; // float or uint8
 uint8_t watertemp_prev = -1;
-uint8_t drs_prev = -1;
+int drs_prev = -1;
 int rgm_prev = -1;
 float launch_prev = -1;
 
@@ -96,7 +97,7 @@ void lcd_welcome_screen()
   // lcd__print14(0, 45, default_str);
   // delay(100);
   // Welcome screen with the Logo.
-  lcd->setFont(u8g2_font_luRS18_tr);
+  //lcd->setFont(u8g2_font_luRS18_tr);
   // Setting the font monospace for the intial welcome screen
   char LOGO_S[]  = "S";
   char LOGO_R[]  = "R";
@@ -123,13 +124,15 @@ void lcd__print_default_screen_template()
   //lcd__print8(47, 40, "SOC%");
   //lcd__print8(0, 0, "RPM Screen");
   //lcd__print8(0, 10, "HV CURR");
-  lcd__print8(60, 10, "DRS");
-  lcd__print8(60, 25, "REGEN");
-  lcd__print8(60, 40, "LAUNCH"); // Launch Control
+  lcd__print8(57, 28, "DRS");
+  lcd__print8(57, 43, "REGEN");
+  lcd__print8(57, 58, "LAUNCH"); // Launch Control
   // lcd__print8(10, 10, "SOC"); // State of Charge
-  lcd__print8(10, 10, "VOL");
-  lcd__print8(10, 20, "0/400"); // Max Pack Voltage
-  lcd__print14(10, 62, "SOC");
+  //lcd__print8(10, 10, "VOL");
+  //lcd__print8(10, 20, "0/400"); // Max Pack Voltage
+  lcd__print8(0, 20, "HV T"); // Lowest Cell Temp
+  //lcd__print8(0, 38, "LV"); // Low Voltage
+  //lcd__print14(10, 62, "SOC");
   // lcd__print8(5,5,"------");
 
   /* #elif(POWERTRAIN_TYPE == 'C')
@@ -140,27 +143,6 @@ void lcd__print_default_screen_template()
     lcd__print8(90, 35, "DRS");
   */
 }
-
-void lcd__clear_section (uint8_t sect)
-{
-
-  //Where is the sect arg use eh ?
-
-  //int hvtemp[] = {90, 64-14, 40, 14};
-  //int hv[] = {30, 0, 70, 18};
-  //int lv[] = {0, 64-14, 45, 14};
-  //int hvcurr[] = {40, 34-14, 45, 0};
-  int soc[] = {40, 60 - 20, 45, 24};
-  int rgm[] = {40, 60 - 20, 45, 24};
-  //int rpm[] = {30, 0, 75,18};
-  //int gear[] = {50, 64-24, 30, 24};
-  //int* sections[] = {hvtemp, hv, hvcurr, lv, soc, rpm, gear};
-
-  //lcd->setDrawColor(0);
-  //lcd->drawBox(sections[sect][0], sections[sect][1], sections[sect][2], sections[sect][3]);
-  //lcd->setDrawColor(1);
-}
-
 
 // Combustion Car --------------------------------------------------------------- ---------------------------------------------------------------
 /* void lcd__print_rpm(uint16_t rpm)
@@ -215,27 +197,55 @@ void lcd__clear_section (uint8_t sect)
   }
 */
 // E & C car --------------------------------------------------------------- ---------------------------------------------------------------
-void lcd__print_launch(float launch) {
-  if (launch == launch_prev) return;
-  launch_prev = launch;
-  char launch_str[5] = "   ";
 
-  sprintf(launch_str, "%0.1f", launch);
+void lcd__clear_section (uint8_t sect)
+{
+  int rgm[] = {100, 35, 20, 14};
+  int drs[] = {100, 15, 30, 14};
+  int launch[] = {100, 49, 40, 14};
+  int hv[] = {25, 10, 25, 18};
+  int* sections[] = {rgm, drs, launch, hv};
+  
+  
+  lcd->setDrawColor(0);
+  lcd->drawBox(sections[sect][0], sections[sect][1], sections[sect][2], sections[sect][3]);
 
-  lcd__clear_section(2);
-  lcd__print8(110, 40, launch_str);
+  lcd->sendBuffer();
+  lcd->setDrawColor(1);
 }
 
+void lcd__print_launch(float launch) {
+  if(launch == launch_prev) return;
+  launch_prev = launch;
+
+  char launch_str[5] = "   ";
+  if(launch == 1){
+    sprintf(launch_str, "%s", "ON");
+  }
+  
+  else{
+    sprintf(launch_str, "%s", "OFF");
+    
+  }
+  
+  lcd__clear_section(2);
+  lcd__print8(110, 58, launch_str);
+}
 
 void lcd__print_rgm(int rgm) {
   if (rgm == rgm_prev) return;
   rgm_prev = rgm;
   char rgm_str[5] = "   ";
+  if(rgm == 1){
+    sprintf(rgm_str, "%s", "H");
+  }
 
-  sprintf(rgm_str, "%d", rgm);
-
-  lcd__clear_section(2);
-  lcd__print8(110, 25, rgm_str);
+  if(rgm == 4){
+    sprintf(rgm_str, "%s", "N");
+  }
+  
+  lcd__clear_section(0);
+  lcd__print8(100, 43, rgm_str);
 
 }
 void lcd__print_lv(float lv) // low voltage battery
@@ -248,8 +258,21 @@ void lcd__print_lv(float lv) // low voltage battery
   leds__lv(lv); // update low voltage led (bottom left)
   
   sprintf(lv_str, "%0.1f", lv);
-  lcd__clear_section(2);
+
+  //lcd__clear_section(2);
   lcd__print14(0, 64, lv_str);
+}
+
+void lcd__print_tps0voltage(float tps0){
+  if (tps0 == tps0_prev) return; // if the value is the same, don't update that "section"
+
+  tps0_prev = tps0;
+  char tps0_str[5] = "   ";
+  sprintf(tps0_str, "%0.1f", tps0);
+  //lcd__clear_section(2);
+  lcd__print14(0, 64, tps0_str);
+
+
 }
 
 void lcd__print_hvlow(float hvlow) // low voltage battery
@@ -262,7 +285,7 @@ void lcd__print_hvlow(float hvlow) // low voltage battery
 
   sprintf(hvlow_str, "%1.2f", hvlow);
 
-  lcd__clear_section(2);
+  //lcd__clear_section(2);
   lcd__print14(0, 64, hvlow_str);
 }
 
@@ -276,7 +299,7 @@ void lcd__print_hvcurr(float hvcurr) // hv current
 
   sprintf(hvcurr_str, "%1.0f", hvcurr);
 
-  lcd__clear_section(2);
+  //lcd__clear_section(2);
   lcd__print14(0, 34, hvcurr_str);
 }
 
@@ -291,28 +314,35 @@ void lcd__print_hvtemp(float hvtemp) // Accumulator/Engine temperature
 
   sprintf(hvtemp_str, "%2.1f", hvtemp);
 
-  lcd__clear_section(0);
+  //lcd__clear_section(0);
   lcd__print14(94, 64, hvtemp_str);
 }
 
-void lcd__print_drs(uint8_t drs) // DRS Open or Closed: 0 or 1
+void lcd__print_drs(int drs)
 {
+  if(drs == drs_prev) return;
+  drs_prev = drs;
+
+  char drs_str[5] = "    ";
+
   if (drs == 0) {
-    lcd__print8(110, 10, "O");
+    sprintf(drs_str, "%s", "OFF");
+    
   } else if (drs == 1)
   {
-    // lcd__print8(113, 35, "M");
-    lcd__print8(110, 10, "M") ;
+    sprintf(drs_str, "%s", "ON");
+    
   } else if (drs == 2)
   {
-    // lcd__print8(113, 35, "A")
-    lcd__print8(110, 10, "A");
+    sprintf(drs_str, "%s", "MAN");
+    
   } else if (drs == 3)
   {
-    // lcd__print8(113, 35, "C");
-    lcd__print8(110, 10, "C");
+    printf(drs_str, "%s", "AUTO");
   }
 
+  lcd__clear_section(1);
+  lcd__print8(100, 25, drs_str);
 }
 
 // Electric car --------------------------------------------------------------- ---------------------------------------------------------------
@@ -325,10 +355,10 @@ void lcd__print_hv(float hv) // accumulator voltage (comes in float or integer?)
 
   char hv_str[6] = "   ";
   // Round to one decimal place
-  sprintf(hv_str, "%5.1f", hv);
+  sprintf(hv_str, "%05.1f", hv);
 
-  lcd__clear_section(1);
-  lcd__print18(35, 18, hv_str);
+  lcd__clear_section(3);
+  lcd__print14(40, 15, hv_str);
 }
 
 void lcd__print_soc(float soc) // State of charge 0-100%
@@ -349,7 +379,7 @@ void lcd__print_soc(float soc) // State of charge 0-100%
     sprintf(soc_str, "%3.1f", soc);
   }
 
-  lcd__clear_section(3);
+  //lcd__clear_section(3);
   lcd__print14(70, 62, soc_str);
 }
 
@@ -389,38 +419,71 @@ void lcd__menu(int rowCount, int prevRowCount)
 //#define DEBUG_VCU_SCREEN 3
 //#define MENU_SCREEN 4
   // Screens
-  const char* zero = "Testing";
-  const char* one = "Minimalist";
-  const char* two = "BMS?";
-  const char* three = "VCU?";
-  const char* four = "Menu";
+  const char* zero = "Driver Screen";
+  const char* one = "Debug Screen";
+  const char* two = "------------";
+  const char* three = "------------";
+  const char* four = "------------";
   const char* back = "Back";
   const char* screens[6] = {zero, one, two, three, four, back};
 
   lcd__print_screen(rowCount, 6, screens, rowCount, prevRowCount);
 }
 
-
-void lcd__diagnostics(uint8_t cellfault, uint8_t cellwarn, uint8_t bmsstate)
+void lcd__debugscreen()
 {
   // Screens
-  const char* zero = "Cell Under Voltage Fault";
-  const char* one = "Current BMS Status";
-  const char* two = "Plceholder";
-  const char* three = "Holder of Places";
-  const char* four = "Placeholder";
+  const char* zero = "TPS0 Voltage";
+  const char* one = "TPS0CalibMax";
+  const char* two = "TPS1Voltage";
+  const char* three = "TPS1CalibMax";
+  const char* four = "BPS0Voltage";
   const char* back = "Back";
   const char* screens[6] = {zero, one, two, three, four, back};
 
-  char cellfault_str[2] = " ";
-  sprintf(cellfault_str, "%hu", cellfault);
-  lcd__print8(56, 9, cellfault_str);
+  lcd__print_screen(5, 6, screens);
 
-  char bmsstate_str[2] = " ";
-  sprintf(bmsstate_str, "%hu", bmsstate);
-  lcd__print8(56, 9 + 12, bmsstate_str);
+  //lcd__print_tps0voltage(tps0);
 }
 
+void lcd__debugscreen2() {
+  // Screens
+  const char* zero = "CellOverVoltage";
+  const char* one = "PackOverVoltage";
+  const char* two = "MonitorCommFault";
+  const char* three = "PrechargeFault";
+  const char* four = "FailedThermistor";
+  const char* back = "Back";
+  const char* screens[6] = {zero, one, two, three, four, back};
+
+  lcd__print_screen(5, 6, screens);
+}
+
+void lcd__debugscreen3() {
+  // Screens
+  const char* zero = "LowVoltage";
+  const char* one = "MaxTorqueSet";
+  const char* two = "------------";
+  const char* three = "------------";
+  const char* four = "------------";
+  const char* back = "Back";
+  const char* screens[6] = {zero, one, two, three, four, back};
+
+  lcd__print_screen(5, 6, screens);
+}
+
+void lcd_settings() {
+  const char* zero = "Max Torque Set";
+  const char* one = "Regen Mode";
+  const char* two = "------------";
+  const char* three = "------------";
+  const char* four = "------------";
+  const char* back = "Back";
+  const char* screens[6] = {zero, one, two, three, four, back};
+
+  lcd__print_screen(5, 6, screens);
+}
+/*
 void lcd__print_rpm_diag(uint16_t rpm)
 {
   char rpm_str[6] = "     ";
@@ -432,9 +495,21 @@ void lcd__print_rpm_diag(uint16_t rpm)
 }
 
 // LCD Screen Update --------------------------------------------------------------- ---------------------------------------------------------------
-
-
-void lcd__update_screenE(float hv, float soc, float lv, float hvlow, float hvtemp, float hvcurr, uint8_t drs, int rgm, float launch, int displayScreen, int& rowCount, int& prevDisplayScreen, int& prevRowCount, uint32_t curr_millis_lcd)
+ void lcd__update_screen(uint16_t rpm, uint8_t gear, float lv, float oilpress, uint8_t drs, uint32_t curr_millis_lcd) // C Car
+  {
+  if (curr_millis_lcd - prev_millis_lcd >= LCD_UPDATE_MS) {
+    prev_millis_lcd = curr_millis_lcd;
+    if (DISPLAY_SCREEN == 0) {
+      //lcd__print_rpm(rpm);
+      //lcd__print_gear(gear);
+      lcd__print_lv(lv);
+      //lcd__print_oilpress(oilpress);
+      lcd__print_drs(drs);
+    }
+  }
+  }
+*/
+void lcd__update_screenE(float hv, float soc, float lv, float hvlow, float hvtemp, float hvcurr, int drsMode, int regenmode, float launchReady, float tps0, int displayScreen, int& rowCount, int& prevDisplayScreen, int& prevRowCount, uint32_t curr_millis_lcd)
 {
   if (curr_millis_lcd - prev_millis_lcd >= LCD_UPDATE_MS) {
     prev_millis_lcd = curr_millis_lcd;
@@ -448,10 +523,11 @@ void lcd__update_screenE(float hv, float soc, float lv, float hvlow, float hvtem
         lcd__clear_screen();
         lcd__print_default_screen_template();
       }
-      lcd__print_soc(soc);
-      lcd__print_drs(drs);
-      lcd__print_rgm(rgm);
-      lcd__print_launch(launch);
+      lcd__print_hv(hv);
+      //lcd__print_soc(soc);
+      lcd__print_drs(drsMode);
+      lcd__print_rgm(regenmode);
+      lcd__print_launch(launchReady);
       lcd__print8(123, 64, "0");
     }
     if (displayScreen == 1) 
@@ -461,6 +537,7 @@ void lcd__update_screenE(float hv, float soc, float lv, float hvlow, float hvtem
         prevDisplayScreen = displayScreen;
         lcd__clear_screen();
       }
+      lcd__debugscreen();
       lcd__print8(50, 64, "Display 1");
     }
     if (displayScreen == 2) 
@@ -470,6 +547,7 @@ void lcd__update_screenE(float hv, float soc, float lv, float hvlow, float hvtem
         prevDisplayScreen = displayScreen;
         lcd__clear_screen();
       }
+      lcd__debugscreen2();
       lcd__print8(50, 64, "Display 2");
     }
     if (displayScreen == 3) 
@@ -479,6 +557,7 @@ void lcd__update_screenE(float hv, float soc, float lv, float hvlow, float hvtem
         prevDisplayScreen = displayScreen;
         lcd__clear_screen();
       }
+      lcd__debugscreen3();
       lcd__print8(50, 64, "Display 3");
       //lcd__print_rpm_diag(rpm);
     }
@@ -489,6 +568,7 @@ void lcd__update_screenE(float hv, float soc, float lv, float hvlow, float hvtem
         prevDisplayScreen = displayScreen;
         lcd__clear_screen();
       }
+      lcd_settings();
       lcd__print8(50, 64, "Display 4");
     }
   }

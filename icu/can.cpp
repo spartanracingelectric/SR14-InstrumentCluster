@@ -1,5 +1,6 @@
 #include "can.h"
 #include "config.h"
+#include "lcd.h"
 
 //Skip INT pin for Rev A, set to 0
 #if (BOARD_REVISION == 'A')
@@ -89,9 +90,11 @@ float curr_lv = 0;
 float curr_hvlow = 0;
 float curr_hvtemp = 0;
 float curr_hv_current = 0;
-int curr_rgm = 0; // regen mode
-uint8_t curr_drs = 0;
-float curr_launch = 0;
+int curr_regenmode = 0;
+float curr_drsEnable = 0; // Ensure to make this an LED which turns on when drsEnable is 1
+int curr_drsMode = 0;
+float curr_launchReady = 0;
+float curr_launchStatus = 0;
 // diagnostics ---------------------------------
 float curr_rpm = 0;
 float curr_bms_fault = 0;
@@ -99,15 +102,48 @@ float curr_bms_warn = 0;
 float curr_bms_stat = 0;
 //
 static void can__launch_receive(const CANMessage & inMessage){
-  curr_launch = 0;
+  curr_launchReady = inMessage.data[0]; // Launch Ready
+  /*if (curr_launchReady == 1){
+    digitalWrite(LED_BUILTIN, HIGH);
+  }
+  */
+  
+  curr_launchStatus = inMessage.data[1];
+  /* if (curr_launchStatus == 1){
+    digitalWrite(LED_BUILTIN, HIGH);
+  }
+  */
+  
+  
+  
+
 }
 
 static void can__drs_receive(const CANMessage & inMessage){
-  curr_drs = 0;
+  curr_drsMode = inMessage.data[3]; // DRS Mode
+  /*if (curr_drsMode == 3){
+    digitalWrite(LED_BUILTIN, HIGH);
+  }
+  */
+  
+ curr_drsEnable = inMessage.data[2]; // DRS Enable
+ /*if (curr_drsEnable == 1){
+    digitalWrite(LED_BUILTIN, HIGH);
+  }
+*/
+ 
+    
 }
 
 static void can__regenmode_receive(const CANMessage & inMessage){
-  curr_rgm =  0; 
+  curr_regenmode =  inMessage.data[0];
+  /*if (curr_regenmode == 1){
+    digitalWrite(LED_BUILTIN, HIGH);
+  }
+  */
+
+  
+
 }
 
 static void can__lv_receive (const CANMessage & inMessage)
@@ -119,6 +155,10 @@ static void can__hv_receive (const CANMessage & inMessage)
 {
   curr_hv = ((inMessage.data[4]) | (inMessage.data[5] << 8) | (inMessage.data[6] << 16) | (inMessage.data[7] << 24)) * .001f;
   curr_hv_current = ((inMessage.data[0]) | (inMessage.data[1] << 8) | (inMessage.data[2] << 16) | (inMessage.data[3] << 24)) * .001f;
+  /* if (curr_hv == 1){
+    digitalWrite(LED_BUILTIN, HIGH);
+  }
+  */
 }
 
 static void can__soc_receive (const CANMessage & inMessage)
@@ -128,23 +168,52 @@ static void can__soc_receive (const CANMessage & inMessage)
 
 static void can__hvlow_receive (const CANMessage & inMessage)
 {
-  curr_hvlow = ((inMessage.data[4]) | (inMessage.data[5] << 8)) * 0.001f; // for e car
+  curr_hvlow = ((inMessage.data[5] << 8) | (inMessage.data[4])) * 0.001f;
+  /*
+  if(curr_hvlow == 5){
+    digitalWrite(LED_BUILTIN, HIGH);
+  }
+  */
+  
+  
+  
 }
 
 static void can__hvtemp_receive (const CANMessage & inMessage)
 {
-  curr_hvtemp = ((inMessage.data[6]) | (inMessage.data[7] << 8)) * 0.1f;
+  curr_hvtemp = ((inMessage.data[5] << 8)  | (inMessage.data[4])) * 0.1f;
+  /* if (curr_hvtemp == 50){
+    digitalWrite(LED_BUILTIN, HIGH);
+  }
+  */
+  
+  
+  
+    
 }
 
 // diagnostics ---------------------------------
 static void can__rpm_receive (const CANMessage & inMessage)
 {
   curr_rpm = ((inMessage.data[2]) | (inMessage.data[3] << 8));
-//  Serial.println ("Received RPM ");// + curr_rpm) ;
+  extern uint8_t DISPLAY_SCREEN;
+  /* if (curr_rpm == 1100){
+    digitalWrite(LED_BUILTIN, HIGH);
+  }
+  */
+
+  if(curr_rpm == 2200 && DISPLAY_SCREEN != 0){
+    lcd__clear_screen();
+    DISPLAY_SCREEN = 0;
+    lcd__print_default_screen_template();
+    Serial.println(DISPLAY_SCREEN);
+  }
+  
+
 }
 static void can__bms_fault_receive (const CANMessage & inMessage)
 {
-  curr_bms_fault = inMessage.data[1];
+  curr_bms_fault = inMessage.data[0] << 16;
 }
 static void can__bms_warn_receive (const CANMessage & inMessage)
 {
@@ -158,15 +227,26 @@ static void can__bms_stat_receive (const CANMessage & inMessage)
 
 
 //Accessors
-float can__get_launch(){
-  return curr_launch;
+float can__get_launchReady(){
+  return curr_launchReady;
 }
-bool can__get_drsMode(){
-  return curr_drs;
+
+float can__get_launchStatus(){
+  return curr_launchStatus;
+}
+
+
+float can__get_drsEnable(){
+  return curr_drsEnable;
+}
+
+int can__get_drsMode(){
+  return curr_drsMode;
 
 }
 int can__get_regenmode(){
-  return curr_rgm;
+  return curr_regenmode;
+
 }
 float can__get_hv_current()
 {
@@ -241,22 +321,23 @@ const ACAN2515AcceptanceFilter filters [] =
 const ACAN2515AcceptanceFilter filters [] =
 {
   //Must have addresses in increasing order
-  
+
   {standard2515Filter (CAN_RPM_ADDR, 0, 0), can__rpm_receive},
   // {standard2515Filter (CAN_BMS_FAULT_ADDR, 0, 0), can__bms_fault_receive},  //RXF1 (new stuff)
   // {standard2515Filter (CAN_BMS_WARN_ADDR, 0, 0), can__bms_warn_receive},  //RXF2
   // {standard2515Filter (CAN_BMS_STAT_ADDR, 0, 0), can__bms_stat_receive},  //RXF3
   
-  {standard2515Filter (CAN_LV_ADDR, 0, 0), can__lv_receive},            //RXF0
+  //{standard2515Filter (CAN_LV_ADDR, 0, 0), can__lv_receive},            //RXF0
   {standard2515Filter (CAN_HV_ADDR, 0, 0), can__hv_receive},            //RXF1 // filter for both HV and HV current
-  {standard2515Filter (CAN_SOC_ADDR, 0, 0), can__soc_receive},          //RXF2
-  {standard2515Filter (CAN_HVLOW_ADDR, 0, 0), can__hvlow_receive},          //RXF2
-  {standard2515Filter (CAN_BAT_TEMP_ADDR, 0, 0), can__hvtemp_receive},  //RXF3
-  {standard2515Filter (CAN_REGEN_ADDR, 0, 0), can__regenmode_receive}
-  // need to add filter for DRS and Launch control still ;
+  //{standard2515Filter (CAN_SOC_ADDR, 0, 0), can__soc_receive},          //RXF2
+  {standard2515Filter (CAN_REGEN_ADDR, 0, 0), can__regenmode_receive},
+  {standard2515Filter (CAN_LAUNCH_ADDR, 0, 0), can__launch_receive},
+  {standard2515Filter (CAN_DRS_ADDR, 0,0), can__drs_receive},
+  //{standard2515Filter (CAN_HVLOW_ADDR, 0, 0), can__hvlow_receive},          //RXF2
+  {standard2515Filter (CAN_BAT_TEMP_ADDR, 0, 0), can__hvtemp_receive}  //RXF3
   
 
-} ;
+};
 
 #endif
 
@@ -319,9 +400,9 @@ static uint32_t gSentFrameCount = 0 ;
 void can__send_test()
 {
   CANMessage frame;
-  frame.id = 0x7EE;
+  frame.id = 0x702;
   frame.len = 8;
-  frame.data[0] = 0x53; 
+  frame.data[0] = 0x69; 
   if (gBlinkLedDate < millis ()) {
     gBlinkLedDate += 200 ;
     const bool ok = can.tryToSend (frame) ;

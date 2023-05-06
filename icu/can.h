@@ -49,8 +49,10 @@ float can__get_hvtemp(); // E car accumulator
 float can__get_hv_current();
 float can__get_hvlow(); // E car accumulator
 int can__get_regenmode();
-bool can__get_drsMode();
-float can__get_launch();
+float can__get_drsEnable();
+int can__get_drsMode();
+float can__get_launchReady();
+float can__get_launchStatus();
 // diagnostics ---------------------------
 float can__get_rpm(); // not tested
 float can__get_bms_fault(); //

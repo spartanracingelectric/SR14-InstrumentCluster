@@ -34,11 +34,14 @@ float hv = 0.0f;
 float hvCurr = 0.0f;
 float soc = 0.0f;
 float lv = 0.0f;
+float tps0 = 0.0f;
 float hvtemp = 0.0f;
 float hvlow = 0.0f;
-int rgm = 0;
-uint8_t drs = 0;
-float launch = 0;
+int regenmode = 0;
+float drsEnable = 0.0f;
+int drsMode = 0;
+float launchReady = 0.0f;
+float launchStatus = 0.0f;
 
 // diagnostics ---------------------------
 uint16_t rpm = 0;
@@ -73,6 +76,7 @@ void setup()
   digitalWrite(PICO_CAN_SPI_CS, HIGH);
   pinMode(PICO_LED_SPI_CS, OUTPUT);
   digitalWrite(PICO_LED_SPI_CS, HIGH);
+  pinMode(LED_BUILTIN, OUTPUT);
 
   Serial.begin(9600);
   
@@ -166,9 +170,11 @@ void loop()
   hvtemp = can__get_hvtemp();
   lv = can__get_lv();
   hvlow = can__get_hvlow();
-  rgm = can__get_regenmode();
-  drs = can__get_drsMode();
-  launch = can__get_launch();
+  regenmode = can__get_regenmode();
+  drsEnable = can__get_drsEnable();
+  drsMode = can__get_drsMode();
+  launchReady = can__get_launchReady();
+  launchStatus = can__get_launchStatus();
   
 // diagnostics --------------------------------- // don't work
   cellfault = can__get_bms_fault();
@@ -201,11 +207,15 @@ void loop()
 */
 
 #if (POWERTRAIN_TYPE == 'E')
-//    leds__safety_update_flash(hvlow, hvtemp, curr_millis);
-  lcd__update_screenE(hv, soc, lv, hvlow, hvtemp, hvCurr, drs, rgm, launch, displayScreen, rowCount, prevDisplayScreen, prevRowCount, curr_millis);
+//     leds__safety_update_flash(hvlow, hvtemp, curr_millis);
+    lcd__update_screenE(hv, soc, lv, hvlow, hvtemp, hvCurr, drsMode, regenmode, launchReady, tps0, displayScreen, rowCount, prevDisplayScreen, prevRowCount, curr_millis);
 
-  leds__rpm_update_tach(rpm);
-    
+    leds__rpm_update_tach(rpm);
+    leds__drsEnable(drsEnable);
+    leds__launchReady(launchStatus);
+    //leds__lv(lv);
+    leds__regenMode(regenmode);
+    leds__hvtemp(hvtemp);    
 #endif
   //delay(500);
 }

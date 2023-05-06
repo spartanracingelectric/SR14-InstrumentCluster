@@ -248,7 +248,6 @@ void leds__rpm_update_tach(uint16_t rpm) {
   }
 }
 
-
 /*
 void leds__rpm_update_flash(uint16_t rpm, uint8_t gear, uint32_t curr_millis_flash)
 {
@@ -338,26 +337,55 @@ void leds__oilpress(float oilpress) // float or uint8
 
 void leds__lv(float lv)
 {
-  if (lv < 10.0){
-    leds->setPoint(3, 1, false);
-    leds->setPoint(PIN_LED_RGB_R[3][0], PIN_LED_RGB_R[3][1], true);
+  if (lv < 5.0){
+    leds->setPoint(3, 1, true);
   }
   else{
-    leds->setPoint(PIN_LED_RGB_R[3][0], PIN_LED_RGB_R[3][1], false);
-    leds->setPoint(3, 1, true);
+    leds->setPoint(3, 1, false);
+  }
+ 
+}
+
+void leds__drsEnable(float drsEnable){
+  if(drsEnable == 1){
+    leds->setPoint(4, 0, true);
+  }
+  else{
+    leds->setPoint(4, 0, false);
   }
 }
 
-void leds__hvtemp(float hvtemp)
-{
-  if (hvtemp < 10.0){
-    leds->setPoint(3, 1, false);
-    leds->setPoint(PIN_LED_RGB_R[5][0], PIN_LED_RGB_R[5][1], true);
+void leds__launchReady(float launchReady){
+  if(launchReady == 1){
+    leds->setPoint(4,4, true);
   }
   else{
-    leds->setPoint(PIN_LED_RGB_R[3][0], PIN_LED_RGB_R[3][1], false);
-    leds->setPoint(3, 1, true);
+    leds->setPoint(4,4, false);
   }
+
+}
+void leds__regenMode(int regenmode){
+  if(regenmode == 1 | regenmode == 4){
+    leds->setPoint(4, 2, true);
+  }
+
+  else{
+    leds->setPoint(4, 2, false);
+  }
+}
+void leds__hvtemp(float hvtemp)
+{
+  if(hvtemp > 60){
+    leds->setPoint(3, 3, true);
+  }
+
+  else{
+    leds->setPoint(3, 3, false);
+  }
+}
+
+void leds__hvlow(float hvlow){
+  leds->setPoint(3,5,true);
 }
 
 void leds__safety_update_flash(float hvlow, float hvtemp, uint32_t curr_millis) {
