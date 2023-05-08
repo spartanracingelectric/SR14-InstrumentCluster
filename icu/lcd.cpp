@@ -22,6 +22,7 @@ uint8_t watertemp_prev = -1;
 int drs_prev = -1;
 int rgm_prev = -1;
 float launch_prev = -1;
+int torque_prev = -1;
 
 // LCD Set-up --------------------------------------------------------------- ---------------------------------------------------------------
 void lcd__init(U8G2_ST7565_NHD_C12864_F_4W_SW_SPI *lcd_ptr) // changed from SW -> HW
@@ -204,7 +205,8 @@ void lcd__clear_section (uint8_t sect)
   int drs[] = {100, 15, 30, 14};
   int launch[] = {100, 49, 40, 14};
   int hv[] = {25, 10, 25, 18};
-  int* sections[] = {rgm, drs, launch, hv};
+  int torque[] = {59, 15, 20, 9};
+  int* sections[] = {rgm, drs, launch, hv, torque};
   
   
   lcd->setDrawColor(0);
@@ -214,8 +216,13 @@ void lcd__clear_section (uint8_t sect)
   lcd->setDrawColor(1);
 }
 
-void lcd__print_launch(float launch) {
-  if(launch == launch_prev) return;
+void lcd__print_launch(float launch, int displayScreen) {
+
+  if(displayScreen == 0){
+  if(launch == launch_prev){
+    launch_prev = -1;
+    return;
+  }
   launch_prev = launch;
 
   char launch_str[5] = "   ";
@@ -230,12 +237,23 @@ void lcd__print_launch(float launch) {
   
   lcd__clear_section(2);
   lcd__print8(110, 58, launch_str);
+  }
 }
 
-void lcd__print_rgm(int rgm) {
-  if (rgm == rgm_prev) return;
+void lcd__print_rgm(int rgm, int displayScreen) {
+
+  if(displayScreen != 0 && displayScreen != 1) return;
+  if (rgm == rgm_prev){
+    rgm_prev = -1;
+    return;
+  }
   rgm_prev = rgm;
   char rgm_str[5] = "   ";
+  if(displayScreen == 0){
+  if(rgm == 0){
+    sprintf(rgm_str, "%d", rgm);
+  }
+
   if(rgm == 1){
     sprintf(rgm_str, "%s", "H");
   }
@@ -244,8 +262,15 @@ void lcd__print_rgm(int rgm) {
     sprintf(rgm_str, "%s", "N");
   }
   
+  
   lcd__clear_section(0);
   lcd__print8(100, 43, rgm_str);
+  }
+
+  if(displayScreen == 1){
+    sprintf(rgm_str, "%d", rgm);
+    lcd__print8(80, 33, rgm_str);
+  }
 
 }
 void lcd__print_lv(float lv) // low voltage battery
@@ -318,10 +343,15 @@ void lcd__print_hvtemp(float hvtemp) // Accumulator/Engine temperature
   lcd__print14(94, 64, hvtemp_str);
 }
 
-void lcd__print_drs(int drs)
+void lcd__print_drs(int drs, int displayScreen)
 {
-  if(drs == drs_prev) return;
+  if(displayScreen == 0){
+  if(drs == drs_prev){
+    drs_prev = -1;
+    return;
+  }
   drs_prev = drs;
+
 
   char drs_str[5] = "    ";
 
@@ -338,17 +368,22 @@ void lcd__print_drs(int drs)
     
   } else if (drs == 3)
   {
-    printf(drs_str, "%s", "AUTO");
+    sprintf(drs_str, "%s", "AUTO");
   }
 
   lcd__clear_section(1);
   lcd__print8(100, 25, drs_str);
+  }
 }
 
 // Electric car --------------------------------------------------------------- ---------------------------------------------------------------
-void lcd__print_hv(float hv) // accumulator voltage (comes in float or integer?)
+void lcd__print_hv(float hv, int displayScreen, int prevDisplayScreen) // accumulator voltage (comes in float or integer?)
 {
-  if (hv == hv_prev) return; // if the value is the same, don't update that "section" }
+  if(displayScreen == 0){
+  if (hv == hv_prev && displayScreen == prevDisplayScreen){ // if the value is the same, don't update that "section"
+    hv_prev = -1;
+    return;
+  } 
 
   hv_prev = hv; // else, update value_prev=value and redraw that section
   // to test: 0 == hv_prev & hv=hv_prev--
@@ -359,6 +394,7 @@ void lcd__print_hv(float hv) // accumulator voltage (comes in float or integer?)
 
   lcd__clear_section(3);
   lcd__print14(40, 15, hv_str);
+  }
 }
 
 void lcd__print_soc(float soc) // State of charge 0-100%
@@ -473,18 +509,34 @@ void lcd__debugscreen3(int rowCount, int prevRowCount) {
 
   lcd__print_screen(5, 6, screens, prevRowCount);
 }
+void lcd__print_torque(int torque, int displayScreen){
+  if(displayScreen != 1) return;
+  if (torque == torque_prev){
+    torque_prev = -1;
+    return;
+  } 
+
+  torque_prev = torque; 
+
+  char torque_str[5] = "    ";
+  sprintf(torque_str, "%d", torque);
+  lcd__clear_section(4);
+  lcd__print8(60, 21.5, torque_str);
+
+}
 
 void lcd_settings(int rowCount, int prevRowCount) {
-  const char* zero = "Max Torque Set";
-  const char* one = "Regen Mode";
-  const char* two = "------------";
+  const char* zero = "                Settings";
+  const char* one = "setTorque: ";
+  const char* two = "setRegenMode";
   const char* three = "------------";
   const char* four = "------------";
   const char* back = "Back";
   const char* screens[6] = {zero, one, two, three, four, back};
+  lcd__print_screen(1, 6, screens, prevRowCount);
 
-  lcd__print_screen(5, 6, screens, prevRowCount);
 }
+
 /*
 void lcd__print_rpm_diag(uint16_t rpm)
 {
@@ -511,12 +563,11 @@ void lcd__print_rpm_diag(uint16_t rpm)
   }
   }
 */
-void lcd__update_screenE(float hv, float soc, float lv, float hvlow, float hvtemp, float hvcurr, int drsMode, int regenmode, float launchReady, float tps0, int displayScreen, int& rowCount, int& prevDisplayScreen, int& prevRowCount, uint32_t curr_millis_lcd)
+void lcd__update_screenE(float hv, float soc, float lv, float hvlow, float hvtemp, float hvcurr, int drsMode, int regenmode, float launchReady, float tps0, int displayScreen, int& rowCount, int& prevDisplayScreen,  int& prevRowCount, int torque, int currentStateCLK, int lastStateCLK, int currentStateDT, uint32_t curr_millis_lcd)
 {
   if (curr_millis_lcd - prev_millis_lcd >= LCD_UPDATE_MS) {
     prev_millis_lcd = curr_millis_lcd;
 //    lcd__clear_screen();
-  
     if (displayScreen == 0) 
     {
       if(prevDisplayScreen != displayScreen)
@@ -525,12 +576,11 @@ void lcd__update_screenE(float hv, float soc, float lv, float hvlow, float hvtem
         lcd__clear_screen();
         lcd__print_default_screen_template();
       }
-      lcd__print_hv(hv);
-      //lcd__print_soc(soc);
-      lcd__print_drs(drsMode);
-      lcd__print_rgm(regenmode);
-      lcd__print_launch(launchReady);
-      lcd__print8(123, 64, "0");
+      
+    lcd__print_hv(hv, displayScreen, prevDisplayScreen);
+    lcd__print_drs(drsMode, displayScreen);
+    lcd__print_rgm(regenmode, displayScreen);
+    lcd__print_launch(launchReady, displayScreen);
     }
     if (displayScreen == 1) 
     {
@@ -539,9 +589,12 @@ void lcd__update_screenE(float hv, float soc, float lv, float hvlow, float hvtem
         prevDisplayScreen = displayScreen;
         lcd__clear_screen();
       }
-      lcd__debugscreen(rowCount, prevRowCount);
-      lcd__print8(50, 64, "Display 1");
+      lcd_settings(rowCount, prevRowCount);
+      lcd__print_torque(torque,displayScreen);
+      lcd__print_rgm(regenmode, displayScreen);
     }
+    
+
     if (displayScreen == 2) 
     {
       if(prevDisplayScreen != displayScreen)
@@ -549,8 +602,8 @@ void lcd__update_screenE(float hv, float soc, float lv, float hvlow, float hvtem
         prevDisplayScreen = displayScreen;
         lcd__clear_screen();
       }
-      lcd__debugscreen2(rowCount, prevRowCount);
-      lcd__print8(50, 64, "Display 2");
+      lcd__debugscreen(rowCount, prevRowCount);
+      
     }
     if (displayScreen == 3) 
     {
@@ -559,9 +612,8 @@ void lcd__update_screenE(float hv, float soc, float lv, float hvlow, float hvtem
         prevDisplayScreen = displayScreen;
         lcd__clear_screen();
       }
-      lcd__debugscreen3(rowCount, prevRowCount);
-      lcd__print8(50, 64, "Display 3");
-      //lcd__print_rpm_diag(rpm);
+      lcd__debugscreen2(rowCount, prevRowCount);
+      
     }
     if (displayScreen == 4)
     {
@@ -570,8 +622,9 @@ void lcd__update_screenE(float hv, float soc, float lv, float hvlow, float hvtem
         prevDisplayScreen = displayScreen;
         lcd__clear_screen();
       }
-      lcd_settings(rowCount, prevRowCount);
-      lcd__print8(50, 64, "Display 4");
+      lcd__debugscreen3(rowCount, prevRowCount);
+      
     }
+
   }
 }

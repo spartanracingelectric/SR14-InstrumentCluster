@@ -196,20 +196,10 @@ static void can__hvtemp_receive (const CANMessage & inMessage)
 static void can__rpm_receive (const CANMessage & inMessage)
 {
   curr_rpm = ((inMessage.data[2]) | (inMessage.data[3] << 8));
-  extern uint8_t DISPLAY_SCREEN;
   /* if (curr_rpm == 1100){
     digitalWrite(LED_BUILTIN, HIGH);
   }
   */
-
-  if(curr_rpm == 2200 && DISPLAY_SCREEN != 0){
-    lcd__clear_screen();
-    DISPLAY_SCREEN = 0;
-    lcd__print_default_screen_template();
-    Serial.println(DISPLAY_SCREEN);
-  }
-  
-
 }
 static void can__bms_fault_receive (const CANMessage & inMessage)
 {

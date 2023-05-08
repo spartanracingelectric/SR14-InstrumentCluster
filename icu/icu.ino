@@ -42,6 +42,7 @@ float drsEnable = 0.0f;
 int drsMode = 0;
 float launchReady = 0.0f;
 float launchStatus = 0.0f;
+int torque = 0;
 
 // diagnostics ---------------------------
 uint16_t rpm = 0;
@@ -153,7 +154,7 @@ void loop()
   //can__send_test();
   can__receive();
 
-  displayRotary (currentStateCLK, currentStateSW, currentStateDT, lastStateCLK, displayScreen, rowCount);
+  displayRotary (currentStateCLK, currentStateSW, currentStateDT, lastStateCLK, displayScreen, rowCount, torque);
 
 /* #if(POWERTRAIN_TYPE == 'C')
   rpm = can__get_rpm();
@@ -180,6 +181,7 @@ void loop()
   cellfault = can__get_bms_fault();
   cellwarn = can__get_bms_warn();
   bmsstate = can__get_bms_stat();
+  rpm = can__get_rpm();
 #endif
 
 //  drs = can__get_dr);
@@ -208,8 +210,7 @@ void loop()
 
 #if (POWERTRAIN_TYPE == 'E')
 //     leds__safety_update_flash(hvlow, hvtemp, curr_millis);
-    lcd__update_screenE(hv, soc, lv, hvlow, hvtemp, hvCurr, drsMode, regenmode, launchReady, tps0, displayScreen, rowCount, prevDisplayScreen, prevRowCount, curr_millis);
-
+    lcd__update_screenE(hv, soc, lv, hvlow, hvtemp, hvCurr, drsMode, regenmode, launchReady, tps0, displayScreen, rowCount, prevDisplayScreen, prevRowCount,torque, currentStateCLK, lastStateCLK, currentStateDT, curr_millis);
     leds__rpm_update_tach(rpm);
     leds__drsEnable(drsEnable);
     leds__launchReady(launchStatus);

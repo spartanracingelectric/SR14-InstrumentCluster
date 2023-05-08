@@ -1,83 +1,58 @@
 #include "rotary.h"
-
+#define CLICK_THRESHOLD 100
 int counter = 0;
 
 string currentDir ="";
 unsigned long lastButtonPress = 0;
 
-void displayRotary(int currentStateCLK, int currentStateSW, int currentStateDT, int& lastStateCLK, int& displayScreen, int& rowCount)
+void displayRotary(int currentStateCLK, int currentStateSW, int currentStateDT, int& lastStateCLK, int& displayScreen, int& rowCount, int &torque)
 {
-  
-// If last and current state of CLK are different, then pulse occurred
-// React to only 1 state change to avoid double count
-// currentStateCLK = digitalRead(CLK);
-//  Serial.println(currentStateCLK);
-//            Serial.println(lastStateCLK);
-// Serial.println(currentStateSW);
-// Serial.println(currentStateDT);
-
-if (currentStateCLK != lastStateCLK && currentStateCLK == 1)
+ if (currentStateCLK != lastStateCLK && currentStateCLK == 1)
 {
   // Serial.println(1);
 
   // If the DT state is different than the CLK state then
   // the encoder is rotating CCW so decrement
+  
   if (currentStateDT == currentStateCLK)
   {
-    counter--;
-
-     displayScreen = counter % NUMBER_OF_SCREENS;
-      // rowCount = abs((rowCount - 1) % NUMBER_OF_ROWS); // for menu
-      currentDir = "CCW";
+    torque = torque - 10;
   }
   else
   {
     // Encoder is rotating CW so increment
-    counter++;
-     displayScreen = counter % NUMBER_OF_SCREENS;
-      // rowCount =  (rowCount + 1) % NUMBER_OF_ROWS;
-    currentDir = "CW";
+    torque = torque + 10;
   }
-  char ch[5]; 
-  strcpy(ch, currentDir.c_str()); //convert to Cstring to print out
-
-  Serial.print("Direction: ");
-  Serial.print(ch);
-  Serial.print(" | Counter: ");
-  Serial.print(counter);
-  Serial.print(" | Screen: ");
-  Serial.print(displayScreen);
-  Serial.print(" | Expected Screen: ");
-  Serial.print(counter % NUMBER_OF_SCREENS);
-  Serial.println("");
 }
-
-// Remember last CLK State
-lastStateCLK = currentStateCLK;
-
-// If we detect LOW signal, button is pressed
-//  currentStateSW = digitalRead(SW);
+  // Save the current state of the CLK pin for the next iteration
+  lastStateCLK = currentStateCLK;
+  
 if (currentStateSW == LOW) // LOW is 0V, testing if redefining works
 {
   //  Serial.println(1);
   // if 50ms have passed since last LOW pulse, it means that the
   // button has been pressed, released and pressed again
-  if (millis() - lastButtonPress > 50)
+  if (millis() - lastButtonPress > 5)
   {
-  Serial.println("Button pressed!");
+    counter++;
+    displayScreen = counter % NUMBER_OF_SCREENS;
+    Serial.println("Button pressed!");
   }
-  if (displayScreen == MENU_SCREEN)
+  /* if (displayScreen == MENU_SCREEN)
   {
     displayScreen = rowCount;
   }
+
   else 
   {
     displayScreen = MENU_SCREEN;
 //    Serial.println("FUCK IS THIS NOT WORKING?!?!?!?!");
   }
+  */
   // Remember last button press event
   lastButtonPress = millis();
 }
 
 delay(1);
 }
+

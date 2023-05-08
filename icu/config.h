@@ -89,9 +89,9 @@
 /*---------------------------------------------------------------------------/
 / BUTTON PINS AND Screen CONSTANTS
 /---------------------------------------------------------------------------*/
-#define CLK 8
+#define CLK 6
 #define DT 7
-#define SW 6
+#define SW 8
 // #define BUT4 12 //extra
 
 #define TESTING_SCREEN 0
