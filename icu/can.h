@@ -35,8 +35,16 @@ static void can__hvtemp_receive (const CANMessage & inMessage);
 static void can__regenmode_receive(const CANMessage & inMessage);
 static void can__drs_receive(const CANMessage & inMessage);
 static void can__launch_receive(const CANMessage & inMessage);
+
 static void can__tps0voltage_receive(const CANMessage & inMessage);
-static void can__tps0calibmax_receive(const CANMessage & inMessage);
+static void can__tps1voltage_receive(const CANMessage & inMessage);
+static void can__bps0voltage_receive(const CANMessage & inMessage);
+static void can__cellovervoltage_receive(const CANMessage & inMessage);
+static void can__packovervoltage_receive(const CANMessage & inMessage);
+static void can__monitorcommfault_receive(const CANMessage & inMessage);
+static void can__prechargefault_receive(const CANMessage & inMessage);
+static void can__failedthermistor_receive(const CANMessage & inMessage);
+
 
 // diagnostics ---------------------------
 static void can__rpm_receive (const CANMessage & inMessage); // rpm
@@ -60,9 +68,18 @@ float can__get_rpm(); // not tested
 float can__get_bms_fault(); //
 float can__get_bms_warn(); //
 float can__get_bms_stat(); //
+
 float can__get_tps0voltage();
 float can__get_tps0calibmax();
-
+float can__get_tps1voltage();
+float can__get_tps1calibmax();
+float can__get_bps0voltage();
+float can__get_bps0calibmax();
+float can__get_cellovervoltage();
+float can__get_packovervoltage();
+float can__get_monitorcommfault();
+float can__get_prechargefault();
+float can__get_failedthermistor();
 
 #endif
 

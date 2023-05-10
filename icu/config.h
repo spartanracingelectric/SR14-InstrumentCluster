@@ -135,6 +135,9 @@
 #define CAN_DRS_ADDR 0x50C // Need to validate
 #define CAN_LAUNCH_ADDR 0x50B // Need to validate. technically done, test LCD
 #define CAN_TPS0 0x50
+#define CAN_TPS1 0x501
+#define CAN_BPS0 0x502
+#define CAN_LV 0x507
 
 // Need to validate
 #define CAN_REGEN_ADDR 0x508 // Need to validate. technically done, test LCD
