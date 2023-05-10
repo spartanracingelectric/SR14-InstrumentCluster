@@ -35,6 +35,8 @@ static void can__hvtemp_receive (const CANMessage & inMessage);
 static void can__regenmode_receive(const CANMessage & inMessage);
 static void can__drs_receive(const CANMessage & inMessage);
 static void can__launch_receive(const CANMessage & inMessage);
+static void can__tps0voltage_receive(const CANMessage & inMessage);
+static void can__tps0calibmax_receive(const CANMessage & inMessage);
 
 // diagnostics ---------------------------
 static void can__rpm_receive (const CANMessage & inMessage); // rpm
@@ -58,6 +60,9 @@ float can__get_rpm(); // not tested
 float can__get_bms_fault(); //
 float can__get_bms_warn(); //
 float can__get_bms_stat(); //
+float can__get_tps0voltage();
+float can__get_tps0calibmax();
+
 
 #endif
 

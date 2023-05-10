@@ -134,7 +134,7 @@
 #define CAN_BAT_TEMP_ADDR 0x623
 #define CAN_DRS_ADDR 0x50C // Need to validate
 #define CAN_LAUNCH_ADDR 0x50B // Need to validate. technically done, test LCD
-
+#define CAN_TPS0 0x50
 
 // Need to validate
 #define CAN_REGEN_ADDR 0x508 // Need to validate. technically done, test LCD

@@ -2,10 +2,9 @@
 #define CLICK_THRESHOLD 100
 int counter = 0;
 
-string currentDir ="";
 unsigned long lastButtonPress = 0;
 
-void displayRotary(int currentStateCLK, int currentStateSW, int currentStateDT, int& lastStateCLK, int& displayScreen, int& rowCount, int &torque)
+void displayRotary(int currentStateCLK, bool currentStateSW, int currentStateDT, int& lastStateCLK, int& displayScreen, int& rowCount, int &torque)
 {
  if (currentStateCLK != lastStateCLK && currentStateCLK == 1)
 {
@@ -29,30 +28,16 @@ void displayRotary(int currentStateCLK, int currentStateSW, int currentStateDT, 
   
 if (currentStateSW == LOW) // LOW is 0V, testing if redefining works
 {
-  //  Serial.println(1);
-  // if 50ms have passed since last LOW pulse, it means that the
-  // button has been pressed, released and pressed again
   if (millis() - lastButtonPress > 5)
   {
     counter++;
     displayScreen = counter % NUMBER_OF_SCREENS;
     Serial.println("Button pressed!");
   }
-  /* if (displayScreen == MENU_SCREEN)
-  {
-    displayScreen = rowCount;
-  }
-
-  else 
-  {
-    displayScreen = MENU_SCREEN;
-//    Serial.println("FUCK IS THIS NOT WORKING?!?!?!?!");
-  }
-  */
+ 
   // Remember last button press event
   lastButtonPress = millis();
 }
 
 delay(1);
 }
-

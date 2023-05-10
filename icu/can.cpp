@@ -95,12 +95,16 @@ float curr_drsEnable = 0; // Ensure to make this an LED which turns on when drsE
 int curr_drsMode = 0;
 float curr_launchReady = 0;
 float curr_launchStatus = 0;
+float curr_tps0voltage = 0;
+float curr_tps0calibmax = 0;
 // diagnostics ---------------------------------
 float curr_rpm = 0;
 float curr_bms_fault = 0;
 float curr_bms_warn = 0;
 float curr_bms_stat = 0;
 //
+
+
 static void can__launch_receive(const CANMessage & inMessage){
   curr_launchReady = inMessage.data[0]; // Launch Ready
   /*if (curr_launchReady == 1){
@@ -192,6 +196,11 @@ static void can__hvtemp_receive (const CANMessage & inMessage)
     
 }
 
+static void can__tps0voltage_receive(const CANMessage & inMessage) 
+{
+  curr_tps0voltage = ((inMessage.data[2] << 8) | inMessage.data[3]) * 0.001f;
+  curr_tps0calibmax = ((inMessage.data[6] << 8) | inMessage.data[7]) * 0.001f;
+}
 // diagnostics ---------------------------------
 static void can__rpm_receive (const CANMessage & inMessage)
 {
@@ -286,6 +295,14 @@ float can__get_bms_stat()
 {
   return curr_bms_stat;
 }
+float can__get_tps0voltage() 
+{
+  return curr_tps0voltage;
+}
+float can__get_tps0calibmax() 
+{
+  return curr_tps0calibmax;
+}
 //
 #endif
 
@@ -311,7 +328,6 @@ const ACAN2515AcceptanceFilter filters [] =
 const ACAN2515AcceptanceFilter filters [] =
 {
   //Must have addresses in increasing order
-
   {standard2515Filter (CAN_RPM_ADDR, 0, 0), can__rpm_receive},
   // {standard2515Filter (CAN_BMS_FAULT_ADDR, 0, 0), can__bms_fault_receive},  //RXF1 (new stuff)
   // {standard2515Filter (CAN_BMS_WARN_ADDR, 0, 0), can__bms_warn_receive},  //RXF2

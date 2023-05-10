@@ -53,7 +53,7 @@ uint8_t bmsstate = 0;
 // rotary ---------------------------
 int lastStateCLK;  // Read the initial state of CLK
 int currentStateCLK;
-int currentStateSW;
+bool currentStateSW;
 int currentStateDT;
 
 // lcd ---------------------------
