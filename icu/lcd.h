@@ -38,6 +38,16 @@ void lcd__print_wattemp(uint8_t watertemp); // Water Coolant Temp
 // E & C car
 void lcd__print_lv(float lv); // low voltage battery soc
 void lcd__print_tps0voltage(float tps0);
+void lcd__print_tps0calibmax(float tps0_calib);
+void lcd__print_tps1voltage(float tps1);
+void lcd__print_tps0calibmax(float tps1_calib);
+void lcd__print_bps0voltage(float bps0);
+void lcd__print_bps0calib(float bps0_calib);
+void lcd__print_cellovervoltage(int cov);
+void lcd__print_packovervoltage(int pov);
+void lcd__print_monitorcomm(int mc);
+void lcd__print_precharge(int pc);
+void lcd__print_failedthermistor(int ft);
 void lcd__print_hvtemp(float hvtemp); // Accumulator/Engine temperature
 void lcd__print_hvlow(float hvlow);
 void lcd__print_launch(float launch, int displayScreen);
@@ -62,6 +72,9 @@ void lcd__print_rpm_diag(uint16_t rpm); // rpm diagnostics for ev
 void lcd_settings(int rowCount, int prevRowCount);
 
 void lcd__update_screen(uint16_t rpm, uint8_t gear, float lv, float oilpress, uint8_t drs, uint32_t curr_millis_lcd);
-void lcd__update_screenE(float hv, float soc, float lv, float hvlow, float hvtemp, float hvcurr, int drsMode, int regenmode, float launchReady, float tps0, int displayScreen, int& rowCount, int& prevDisplayScreen, int& prevRowCount,int torque,int currentStateCLK, int lastStateCLK, int currentStateDT, uint32_t curr_millis_lcd);
+void lcd__update_screenE(float hv, float soc, float lv, float hvlow, float hvtemp, float hvcurr, int drsMode, int regenmode, 
+  float launchReady, float tps0volt, float tps0calib, float tps1volt, float tps1calib, float bps0volt, 
+  float bps0calib, int cell_over_volt, int pack_over_volt, int monitor_comm, int precharge, int failedthermistor, int displayScreen, int& rowCount, int& prevDisplayScreen, 
+  int& prevRowCount,int torque,int currentStateCLK, int lastStateCLK, int currentStateDT, uint32_t curr_millis_lcd);
 
 #endif /* LCD_H_ */

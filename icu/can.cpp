@@ -406,7 +406,7 @@ const ACAN2515AcceptanceFilter filters [] =
   // {standard2515Filter (CAN_BMS_WARN_ADDR, 0, 0), can__bms_warn_receive},  //RXF2
   // {standard2515Filter (CAN_BMS_STAT_ADDR, 0, 0), can__bms_stat_receive},  //RXF3
   
-  //{standard2515Filter (CAN_LV_ADDR, 0, 0), can__lv_receive},            //RXF0
+  {standard2515Filter (CAN_LV_ADDR, 0, 0), can__lv_receive},            //RXF0
   {standard2515Filter (CAN_HV_ADDR, 0, 0), can__hv_receive},            //RXF1 // filter for both HV and HV current
   //{standard2515Filter (CAN_SOC_ADDR, 0, 0), can__soc_receive},          //RXF2
   {standard2515Filter (CAN_REGEN_ADDR, 0, 0), can__regenmode_receive},

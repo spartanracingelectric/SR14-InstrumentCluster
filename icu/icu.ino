@@ -34,7 +34,17 @@ float hv = 0.0f;
 float hvCurr = 0.0f;
 float soc = 0.0f;
 float lv = 0.0f;
-float tps0 = 0.0f;
+float tps0volt = 0.0f;
+float tps0calib = 0.0f;
+float tps1volt = 0.0f;
+float tps1calib = 0.0f;
+float bps0volt = 0.0f;
+float bps0calib = 0.0f;
+int cell_over_volt = 0;
+int pack_over_volt = 0;
+int monitor_comm = 0;
+int precharge = 0;
+int failedthermistor = 0;
 float hvtemp = 0.0f;
 float hvlow = 0.0f;
 int regenmode = 0;
@@ -57,7 +67,7 @@ bool currentStateSW;
 int currentStateDT;
 
 // lcd ---------------------------
-int displayScreen = 0;
+int displayScreen = 4;
 int prevDisplayScreen = -1;
 int rowCount = 0;
 int prevRowCount = -1;
@@ -154,7 +164,7 @@ void loop()
   //can__send_test();
   can__receive();
 
-  displayRotary (currentStateCLK, currentStateSW, currentStateDT, lastStateCLK, displayScreen, rowCount, torque);
+//  displayRotary (currentStateCLK, currentStateSW, currentStateDT, lastStateCLK, displayScreen, rowCount, torque);
 
 /* #if(POWERTRAIN_TYPE == 'C')
   rpm = can__get_rpm();
@@ -210,7 +220,10 @@ void loop()
 
 #if (POWERTRAIN_TYPE == 'E')
 //     leds__safety_update_flash(hvlow, hvtemp, curr_millis);
-    lcd__update_screenE(hv, soc, lv, hvlow, hvtemp, hvCurr, drsMode, regenmode, launchReady, tps0, displayScreen, rowCount, prevDisplayScreen, prevRowCount,torque, currentStateCLK, lastStateCLK, currentStateDT, curr_millis);
+    lcd__update_screenE(hv, soc, lv, hvlow, hvtemp, hvCurr, drsMode, regenmode, 
+      launchReady, tps0volt, tps0calib, tps1volt, tps1calib, bps0volt, 
+      bps0calib, cell_over_volt, pack_over_volt, monitor_comm, precharge, failedthermistor, displayScreen, rowCount, prevDisplayScreen, 
+      prevRowCount, torque, currentStateCLK, lastStateCLK, currentStateDT, curr_millis);
     leds__rpm_update_tach(rpm);
     leds__drsEnable(drsEnable);
     leds__launchReady(launchStatus);
