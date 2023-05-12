@@ -121,6 +121,10 @@
 #if (POWERTRAIN_TYPE == 'E')
 #define CANBUS_SPEED 500UL * 1000UL //500 kbit/s
 #define CAN_RPM_ADDR 0x0A5
+#define CAN_TPS0 0x500
+#define CAN_TPS1 0x501
+#define CAN_BPS0 0x502
+#define CAN_LV 0x507
 #define CAN_LV_ADDR 0x507
 #define CAN_HV_ADDR 0x620
 #define CAN_BMS_FAULT_ADDR 0x602 // dec: 1538
@@ -134,10 +138,7 @@
 #define CAN_BAT_TEMP_ADDR 0x623
 #define CAN_DRS_ADDR 0x50C // Need to validate
 #define CAN_LAUNCH_ADDR 0x50B // Need to validate. technically done, test LCD
-#define CAN_TPS0 0x50
-#define CAN_TPS1 0x501
-#define CAN_BPS0 0x502
-#define CAN_LV 0x507
+
 
 // Need to validate
 #define CAN_REGEN_ADDR 0x508 // Need to validate. technically done, test LCD

@@ -101,11 +101,12 @@ float curr_tps1voltage = 0;
 float curr_tps1calibmax = 0;
 float curr_bps0voltage = 0;
 float curr_bps0calibmax = 0;
-float curr_cellovervoltage = 0;
-float curr_packovervoltage = 0;
-float curr_monitorcommfault = 0;
-float curr_prechargefault = 0;
-float curr_failedthermistor = 0;
+int curr_cellovervoltage = 0;
+int curr_packovervoltage = 0;
+int curr_monitorcommfault = 0;
+int curr_prechargefault = 0;
+int curr_failedthermistor = 0;
+float curr_maxtorque;
 // diagnostics ---------------------------------
 float curr_rpm = 0;
 float curr_bms_fault = 0;
@@ -203,40 +204,23 @@ static void can__hvtemp_receive (const CANMessage & inMessage)
 
 static void can__tps0voltage_receive(const CANMessage & inMessage) 
 {
-  curr_tps0voltage = ((inMessage.data[2] << 8) | inMessage.data[3]) * 0.001f;
-  curr_tps0calibmax = ((inMessage.data[6] << 8) | inMessage.data[7]) * 0.001f;
+  curr_tps0voltage = ((inMessage.data[3] << 8) | inMessage.data[2]) * 0.001f;
+  curr_tps0calibmax = ((inMessage.data[7] << 8) | inMessage.data[6]) * 0.001f;
 }
 static void can__tps1voltage_receive(const CANMessage & inMessage) 
 {
-  curr_tps1voltage = ((inMessage.data[2] << 8) | inMessage.data[3]) * 0.001f;
-  curr_tps1calibmax = ((inMessage.data[6] << 8) | inMessage.data[7]) * 0.001f;
+  curr_tps1voltage = ((inMessage.data[3] << 8) | inMessage.data[2]) * 0.001f;
+  curr_tps1calibmax = ((inMessage.data[7] << 8) | inMessage.data[6]) * 0.001f;
 }
 static void can__bps0voltage_receive(const CANMessage & inMessage) 
 {
-  curr_bps0voltage = ((inMessage.data[1] << 8) | inMessage.data[2]) * 0.001f;
-  curr_bps0calibmax = ((inMessage.data[5] << 8) | inMessage.data[6]) * 0.001f;
+  curr_bps0voltage = ((inMessage.data[3] << 8) | inMessage.data[2]) * 0.001f;
+  curr_bps0calibmax = ((inMessage.data[7] << 8) | inMessage.data[6]) * 0.001f;
 }
-static void can__cellovervoltage_receive(const CANMessage & inMessage) // BMS DRS values may not be right, check them plz
+static void can__maxtorque_receive(const CANMessage & inMessage) 
 {
-  curr_cellovervoltage = ((inMessage.data[1] << 8) | inMessage.data[2]);
+  curr_maxtorque = ((inMessage.data[2] << 8) | inMessage.data[3]);
 }
-static void can__packovervoltage_receive(const CANMessage & inMessage)
-{
-  curr_packovervoltage = ((inMessage.data[1] << 8) | inMessage.data[2]);
-}
-static void can__monitorcommfault_receive(const CANMessage & inMessage) 
-{
-  curr_monitorcommfault = ((inMessage.data[1] << 8) | inMessage.data[2]);
-}
-static void can__prechargefault_receive(const CANMessage & inMessage) 
-{
-  curr_prechargefault = ((inMessage.data[0] << 8) | inMessage.data[1]);
-}
-static void can__failedthermistor_receive(const CANMessage & inMessage) 
-{
-  curr_failedthermistor = ((inMessage.data[0] << 8) | inMessage.data[1]);
-}
-
 // diagnostics ---------------------------------
 static void can__rpm_receive (const CANMessage & inMessage)
 {
@@ -249,6 +233,12 @@ static void can__rpm_receive (const CANMessage & inMessage)
 static void can__bms_fault_receive (const CANMessage & inMessage)
 {
   curr_bms_fault = inMessage.data[0] << 16;
+  curr_cellovervoltage = inMessage.data[1];
+  curr_packovervoltage = inMessage.data[1];
+  curr_monitorcommfault = inMessage.data[0] >> 1;
+  curr_prechargefault = inMessage.data[0] >> 2;
+  curr_failedthermistor = inMessage.data[0];
+  
 }
 static void can__bms_warn_receive (const CANMessage & inMessage)
 {
@@ -356,25 +346,28 @@ float can__get_bps0calibmax()
 {
   return curr_bps0calibmax;
 }
-float can__get_cellovervoltage() 
+int can__get_cellovervoltage() 
 {
   return curr_cellovervoltage;
 }
-float can__get_packovervoltage() 
+int can__get_packovervoltage() 
 {
   return curr_packovervoltage;
 }
-float can__get_monitorcommfault() 
+int can__get_monitorcommfault() 
 {
   return curr_monitorcommfault;
 }
-float can__get_prechargefault()
+int can__get_prechargefault()
 {
   return curr_prechargefault;
 }
-float can__get_failedthermistor() 
+int can__get_failedthermistor() 
 {
   return curr_failedthermistor;
+}
+float can__get_maxtorque() {
+  return curr_maxtorque;
 }
 //
 #endif
@@ -402,16 +395,19 @@ const ACAN2515AcceptanceFilter filters [] =
 {
   //Must have addresses in increasing order
   {standard2515Filter (CAN_RPM_ADDR, 0, 0), can__rpm_receive},
-  // {standard2515Filter (CAN_BMS_FAULT_ADDR, 0, 0), can__bms_fault_receive},  //RXF1 (new stuff)
+  {standard2515Filter (CAN_TPS0, 0, 0), can__tps0voltage_receive},
+  {standard2515Filter (CAN_TPS1, 0, 0), can__tps1voltage_receive},
+  {standard2515Filter (CAN_BPS0, 0, 0), can__bps0voltage_receive},
+  {standard2515Filter (CAN_BMS_FAULT_ADDR, 0, 0), can__bms_fault_receive},  //RXF1 (new stuff)
   // {standard2515Filter (CAN_BMS_WARN_ADDR, 0, 0), can__bms_warn_receive},  //RXF2
   // {standard2515Filter (CAN_BMS_STAT_ADDR, 0, 0), can__bms_stat_receive},  //RXF3
   
   {standard2515Filter (CAN_LV_ADDR, 0, 0), can__lv_receive},            //RXF0
-  {standard2515Filter (CAN_HV_ADDR, 0, 0), can__hv_receive},            //RXF1 // filter for both HV and HV current
+  //{standard2515Filter (CAN_HV_ADDR, 0, 0), can__hv_receive},            //RXF1 // filter for both HV and HV current
   //{standard2515Filter (CAN_SOC_ADDR, 0, 0), can__soc_receive},          //RXF2
-  {standard2515Filter (CAN_REGEN_ADDR, 0, 0), can__regenmode_receive},
-  {standard2515Filter (CAN_LAUNCH_ADDR, 0, 0), can__launch_receive},
-  {standard2515Filter (CAN_DRS_ADDR, 0,0), can__drs_receive},
+  //{standard2515Filter (CAN_REGEN_ADDR, 0, 0), can__regenmode_receive},
+  //{standard2515Filter (CAN_LAUNCH_ADDR, 0, 0), can__launch_receive},
+  //{standard2515Filter (CAN_DRS_ADDR, 0,0), can__drs_receive},
   //{standard2515Filter (CAN_HVLOW_ADDR, 0, 0), can__hvlow_receive},          //RXF2
   {standard2515Filter (CAN_BAT_TEMP_ADDR, 0, 0), can__hvtemp_receive}  //RXF3
   

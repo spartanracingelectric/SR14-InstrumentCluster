@@ -23,6 +23,7 @@ int pov_prev = -1;
 int mc_prev = -1;
 int pc_prev = -1;
 int ft_prev = -1;
+float maxtorque_prev = -1.0f;
 float hvtemp_prev = -1.0f;
 float hvlow_prev = -1.0f;
 float hvcurr = -1.0f;
@@ -418,6 +419,16 @@ void lcd__print_failedthermistor(int ft) {
   lcd__print8(90, 10, ft_str);
 }
 
+void lcd__print_maxtorque(float mt) {
+  if (mt == maxtorque_prev) return; // if the value is the same, don't update that "section"
+
+  maxtorque_prev = mt;
+  char mt_str[5] = "   ";
+  sprintf(mt_str, "%0.1f", mt);
+  //lcd__clear_section(2);
+  lcd__print8(80, 32, mt_str);
+}
+
 void lcd__print_hvlow(float hvlow) // low voltage battery
 {
   if (hvlow == hvlow_prev) return; // if the value is the same, don't update that "section"
@@ -680,7 +691,7 @@ void lcd__print_rpm_diag(uint16_t rpm)
 */
 void lcd__update_screenE(float hv, float soc, float lv, float hvlow, float hvtemp, float hvcurr, int drsMode, int regenmode, 
   float launchReady, float tps0volt, float tps0calib, float tps1volt, float tps1calib, float bps0volt,
-  float bps0calib, int cell_over_volt, int pack_over_volt, int monitor_comm, int precharge, int failedthermistor, int displayScreen, int& rowCount, int& prevDisplayScreen, 
+  float bps0calib, int cell_over_volt, int pack_over_volt, int monitor_comm, int precharge, int failedthermistor, float maxtorque, int displayScreen, int& rowCount, int& prevDisplayScreen, 
   int& prevRowCount, int torque, int currentStateCLK, int lastStateCLK, int currentStateDT, uint32_t curr_millis_lcd)
 {
   if (curr_millis_lcd - prev_millis_lcd >= LCD_UPDATE_MS) {
@@ -754,6 +765,7 @@ void lcd__update_screenE(float hv, float soc, float lv, float hvlow, float hvtem
 
       lcd__print_failedthermistor(failedthermistor);
       lcd__print_lv(lv);
+      lcd__print_maxtorque(maxtorque);
     }
 
   }

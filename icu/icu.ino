@@ -45,6 +45,7 @@ int pack_over_volt = 0;
 int monitor_comm = 0;
 int precharge = 0;
 int failedthermistor = 0;
+float maxtorque = 0.0f;
 float hvtemp = 0.0f;
 float hvlow = 0.0f;
 int regenmode = 0;
@@ -67,7 +68,7 @@ bool currentStateSW;
 int currentStateDT;
 
 // lcd ---------------------------
-int displayScreen = 4;
+int displayScreen = 3;
 int prevDisplayScreen = -1;
 int rowCount = 0;
 int prevRowCount = -1;
@@ -186,7 +187,18 @@ void loop()
   drsMode = can__get_drsMode();
   launchReady = can__get_launchReady();
   launchStatus = can__get_launchStatus();
-  
+  tps0volt = can__get_tps0voltage();
+  tps0calib = can__get_tps0calibmax();
+  tps1volt = can__get_tps1voltage();
+  tps1calib = can__get_tps1calibmax();
+  bps0volt = can__get_bps0voltage();
+  bps0calib = can__get_bps0calibmax();
+  cell_over_volt = can__get_cellovervoltage();
+  pack_over_volt = can__get_packovervoltage();
+  monitor_comm = can__get_monitorcommfault();
+  precharge = can__get_prechargefault();
+  failedthermistor = can__get_failedthermistor();
+  maxtorque = can__get_maxtorque();
 // diagnostics --------------------------------- // don't work
   cellfault = can__get_bms_fault();
   cellwarn = can__get_bms_warn();
@@ -222,7 +234,7 @@ void loop()
 //     leds__safety_update_flash(hvlow, hvtemp, curr_millis);
     lcd__update_screenE(hv, soc, lv, hvlow, hvtemp, hvCurr, drsMode, regenmode, 
       launchReady, tps0volt, tps0calib, tps1volt, tps1calib, bps0volt, 
-      bps0calib, cell_over_volt, pack_over_volt, monitor_comm, precharge, failedthermistor, displayScreen, rowCount, prevDisplayScreen, 
+      bps0calib, cell_over_volt, pack_over_volt, monitor_comm, precharge, failedthermistor, maxtorque, displayScreen, rowCount, prevDisplayScreen, 
       prevRowCount, torque, currentStateCLK, lastStateCLK, currentStateDT, curr_millis);
     leds__rpm_update_tach(rpm);
     leds__drsEnable(drsEnable);
