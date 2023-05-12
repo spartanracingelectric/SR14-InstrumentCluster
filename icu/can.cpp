@@ -1,6 +1,7 @@
 #include "can.h"
 #include "config.h"
 #include "lcd.h"
+#include "rotary.h"
 
 //Skip INT pin for Rev A, set to 0
 #if (BOARD_REVISION == 'A')
@@ -11,78 +12,7 @@ ACAN2515 can (PICO_CAN_SPI_CS, SPI1, PICO_CAN_INT);
 
 static const uint32_t QUARTZ_FREQUENCY = 16UL * 1000UL * 1000UL; // 16 MHz
 ACAN2515Settings settings (QUARTZ_FREQUENCY, 500UL * 1000UL) ; // CAN bit rate 500s kb/s
-/*
-#if (POWERTRAIN_TYPE == 'C')
-uint16_t curr_rpm = 0;
-uint8_t curr_gear = 0;
-float curr_oilpress = 0;
-float curr_lv = 0;
-uint8_t curr_drs = 0;
 
-
-static void can__dummy_receive (const CANMessage & inMessage)
-{
-  uint8_t durr;
-  //curr_gear = inMessage.data[1];
-  //Serial.println ("Received Gear " + curr_gear) ;
-}
-
-
-static void can__rpm_receive (const CANMessage & inMessage)
-{
-  curr_rpm = ((inMessage.data[1]) | (inMessage.data[0] << 8));
-  //Serial.println ("Received RPM " + curr_rpm) ;
-}
-
-static void can__gear_receive (const CANMessage & inMessage)
-{
-  curr_gear = inMessage.data[1];
-  //Serial.println ("Received Gear " + curr_gear) ;
-}
-
-static void can__oilpress_receive (const CANMessage & inMessage)
-{
-//  curr_oilpress = inMessage.data[1];
-}
-
-
-static void can__lv_receive (const CANMessage & inMessage)
-{
-//  curr_lv = ((inMessage.data[0]) | (inMessage.data[1] << 8)) * 0.001f; // for e car
-}
-
-static void can__drs_receive (const CANMessage & inMessage)
-{
-//  curr_drs = inMessage.data[1]; // dummy line
-}
-
-// Accessors
-uint16_t can__get_rpm()
-{
-  return curr_rpm;
-}
-
-uint8_t can__get_gear()
-{
-  return curr_gear;
-}
-
-float can__get_oilpress()
-{
-  return curr_oilpress;
-}
-
-
-uint8_t can__get_drs()
-{
-  return curr_drs;
-}
-
-float can__get_lv()
-{
-  return curr_lv;
-}
-*/
 #if (POWERTRAIN_TYPE == 'E') // ------------------------------------------------
 float curr_hv = 0;
 float curr_soc = 0;
@@ -383,20 +313,6 @@ float can__get_failedthermistor()
 const ACAN2515Mask rxm0 = standard2515Mask (0x7FF, 0, 0) ;
 const ACAN2515Mask rxm1 = standard2515Mask (0x7FF, 0, 0) ;
 
-// POWERTRAIN_TYPE == 'C'
-/*
-#if (POWERTRAIN_TYPE == 'C')
-const ACAN2515AcceptanceFilter filters [] =
-{
-//  {standard2515Filter (CAN_GEAR_ADDR, 0, 0), can__drs_receive}, // not defined
-//  {standard2515Filter (CAN_GEAR_ADDR, 0, 0), can__oilpress_receive}, // not defined
-  {standard2515Filter (CAN_RPM_ADDR, 0, 0), can__rpm_receive}, // RXF0
-  {standard2515Filter (CAN_GEAR_ADDR, 0, 0), can__gear_receive} // RXF1
-  
-  //{standard2515Filter (0x7FE, 0, 0), can__dummy_receive}, // RXF2
-} ;
-*/
-// POWERTRAIN_TYPE == 'E'
 #if (POWERTRAIN_TYPE == 'E')
 const ACAN2515AcceptanceFilter filters [] =
 {
@@ -409,6 +325,7 @@ const ACAN2515AcceptanceFilter filters [] =
   //{standard2515Filter (CAN_LV_ADDR, 0, 0), can__lv_receive},            //RXF0
   {standard2515Filter (CAN_HV_ADDR, 0, 0), can__hv_receive},            //RXF1 // filter for both HV and HV current
   //{standard2515Filter (CAN_SOC_ADDR, 0, 0), can__soc_receive},          //RXF2
+
   {standard2515Filter (CAN_REGEN_ADDR, 0, 0), can__regenmode_receive},
   {standard2515Filter (CAN_LAUNCH_ADDR, 0, 0), can__launch_receive},
   {standard2515Filter (CAN_DRS_ADDR, 0,0), can__drs_receive},
@@ -476,12 +393,12 @@ static uint32_t gBlinkLedDate = 0 ;
 static uint32_t gReceivedFrameCount = 0 ;
 static uint32_t gSentFrameCount = 0 ;
 
-void can__send_test()
+void can__send(uint8_t regenmode)
 {
   CANMessage frame;
   frame.id = 0x702;
   frame.len = 8;
-  frame.data[0] = 0x69; 
+  frame.data[0] = regenmode; 
   if (gBlinkLedDate < millis ()) {
     gBlinkLedDate += 200 ;
     const bool ok = can.tryToSend (frame) ;
@@ -494,6 +411,7 @@ void can__send_test()
     }
   }
 }
+
 
 void can__receive()
 {

@@ -22,7 +22,6 @@ uint8_t watertemp_prev = -1;
 int drs_prev = -1;
 int rgm_prev = -1;
 float launch_prev = -1;
-int torque_prev = -1;
 
 // LCD Set-up --------------------------------------------------------------- ---------------------------------------------------------------
 void lcd__init(U8G2_ST7565_NHD_C12864_F_4W_SW_SPI *lcd_ptr) // changed from SW -> HW
@@ -106,13 +105,11 @@ void lcd_welcome_screen()
   char heading_One[] = "SPARTAN";
   char heading_Two[] = "RACING";
 
-  lcd__print24(10,45,LOGO_S);
-  lcd__print24(30,45,LOGO_R);
+  lcd__print24(5,45,LOGO_S);
+  lcd__print24(25,45,LOGO_R);
 
-  lcd__clear_screen();
-
-  lcd__print18(60,27,heading_One);
-  lcd__print24(60,45,heading_Two);
+  lcd__print8(50,27,heading_One);
+  lcd__print14(50,45,heading_Two);
  
   lcd__clear_screen(); 
 }
@@ -269,7 +266,7 @@ void lcd__print_rgm(int rgm, int displayScreen) {
 
   if(displayScreen == 1){
     sprintf(rgm_str, "%d", rgm);
-    lcd__print8(80, 33, rgm_str);
+    lcd__print8(85, 21.5, rgm_str);
   }
 
 }
@@ -509,26 +506,11 @@ void lcd__debugscreen3(int rowCount, int prevRowCount) {
 
   lcd__print_screen(5, 6, screens, prevRowCount);
 }
-void lcd__print_torque(int torque, int displayScreen){
-  if(displayScreen != 1) return;
-  if (torque == torque_prev){
-    torque_prev = -1;
-    return;
-  } 
-
-  torque_prev = torque; 
-
-  char torque_str[5] = "    ";
-  sprintf(torque_str, "%d", torque);
-  lcd__clear_section(4);
-  lcd__print8(60, 21.5, torque_str);
-
-}
 
 void lcd_settings(int rowCount, int prevRowCount) {
   const char* zero = "                Settings";
-  const char* one = "setTorque: ";
-  const char* two = "setRegenMode";
+  const char* one = "Regen on Car: ";
+  const char* two = "------------";
   const char* three = "------------";
   const char* four = "------------";
   const char* back = "Back";
@@ -537,33 +519,7 @@ void lcd_settings(int rowCount, int prevRowCount) {
 
 }
 
-/*
-void lcd__print_rpm_diag(uint16_t rpm)
-{
-  char rpm_str[6] = "     ";
-  //RPM up to 5 digits
-  sprintf(rpm_str, "%5hu", rpm); // transforms int or float or # into a string with a specifying operator in the middle.
-
-  lcd__clear_section(4);
-  lcd__print14(90, 34, rpm_str);
-}
-
-// LCD Screen Update --------------------------------------------------------------- ---------------------------------------------------------------
- void lcd__update_screen(uint16_t rpm, uint8_t gear, float lv, float oilpress, uint8_t drs, uint32_t curr_millis_lcd) // C Car
-  {
-  if (curr_millis_lcd - prev_millis_lcd >= LCD_UPDATE_MS) {
-    prev_millis_lcd = curr_millis_lcd;
-    if (DISPLAY_SCREEN == 0) {
-      //lcd__print_rpm(rpm);
-      //lcd__print_gear(gear);
-      lcd__print_lv(lv);
-      //lcd__print_oilpress(oilpress);
-      lcd__print_drs(drs);
-    }
-  }
-  }
-*/
-void lcd__update_screenE(float hv, float soc, float lv, float hvlow, float hvtemp, float hvcurr, int drsMode, int regenmode, float launchReady, float tps0, int displayScreen, int& rowCount, int& prevDisplayScreen,  int& prevRowCount, int torque, int currentStateCLK, int lastStateCLK, int currentStateDT, uint32_t curr_millis_lcd)
+void lcd__update_screenE(float hv, float soc, float lv, float hvlow, float hvtemp, float hvcurr, int drsMode, int regenmode, float launchReady, float tps0, int displayScreen, int& rowCount, int& prevDisplayScreen,  int& prevRowCount, int currentStateCLK, int lastStateCLK, int currentStateDT, uint32_t curr_millis_lcd)
 {
   if (curr_millis_lcd - prev_millis_lcd >= LCD_UPDATE_MS) {
     prev_millis_lcd = curr_millis_lcd;
@@ -590,7 +546,6 @@ void lcd__update_screenE(float hv, float soc, float lv, float hvlow, float hvtem
         lcd__clear_screen();
       }
       lcd_settings(rowCount, prevRowCount);
-      lcd__print_torque(torque,displayScreen);
       lcd__print_rgm(regenmode, displayScreen);
     }
     

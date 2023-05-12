@@ -7,22 +7,8 @@
 
 
 void can__start();
-void can__send_test();
+void can__send(uint8_t regenmmode);
 void can__receive();
-
-// C car
-/* #if (POWERTRAIN_TYPE == 'C')
-static void can__gear_receive (const CANMessage & inMessage);
-static void can__oilpress_receive (const CANMessage & inMessage);
-static void can__lv_receive (const CANMessage & inMessage);
-static void can__drs_receive (const CANMessage & inMessage);
-
-uint16_t can__get_rpm();
-uint8_t can__get_gear();
-float can__get_oilpress();
-float can__get_lv();
-uint8_t can__get_drs();
-*/
 
 // E car
 #if (POWERTRAIN_TYPE == 'E')

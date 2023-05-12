@@ -346,25 +346,31 @@ void leds__lv(float lv)
  
 }
 
-void leds__drsEnable(float drsEnable){
-  if(drsEnable == 1){
-    leds->setPoint(4, 0, true);
-  }
-  else{
-    leds->setPoint(4, 0, false);
+void leds__drsEnable(float drsEnable, int displayScreen){
+  if(displayScreen == 0){
+    if(drsEnable == 1){
+      leds->setPoint(4, 0, true);
+    }
+    else{
+      leds->setPoint(4, 0, false);
+    }
   }
 }
 
-void leds__launchReady(float launchReady){
-  if(launchReady == 1){
-    leds->setPoint(4,4, true);
-  }
-  else{
+void leds__launchReady(float launchReady, int displayScreen){
+  if(displayScreen == 0){
+    if(launchReady == 1){
+      leds->setPoint(4,4, true);
+    }
+    else{
     leds->setPoint(4,4, false);
+    }
   }
 
 }
-void leds__regenMode(int regenmode){
+void leds__regenMode(int regenmode, int displayScreen){
+
+  if(displayScreen == 0){
   if(regenmode == 1 | regenmode == 4){
     leds->setPoint(4, 2, true);
   }
@@ -372,15 +378,54 @@ void leds__regenMode(int regenmode){
   else{
     leds->setPoint(4, 2, false);
   }
+  }
+  
 }
-void leds__hvtemp(float hvtemp)
+
+void leds__regenModeSet(int regenmode, int displayScreen, uint8_t mode){
+  if(displayScreen == 1){
+    if(mode == 0){
+      leds->setPoint(3, 1, true);
+      leds->setPoint(3, 3, true);
+      leds->setPoint(3, 5, true);
+    }
+    else{
+      leds->setPoint(3, 1, false);
+      leds->setPoint(3, 3, false);
+      leds->setPoint(3, 5, false);
+    }
+
+    if(mode == 4){
+      leds->setPoint(4, 2, true);
+      leds->setPoint(4, 4, true);
+      leds->setPoint(4, 0, true);
+    }
+
+    else{
+      leds->setPoint(4, 2, false);
+      leds->setPoint(4, 4, false);
+      leds->setPoint(4, 0, false);
+    }
+
+    
+  }
+
+}
+
+void leds__hvtemp(float hvtemp, int displayScreen)
 {
+  if(displayScreen == 0){
+    leds->setPoint(3, 1, false);
+    leds->setPoint(3, 3, false);
+    leds->setPoint(3, 5, false);
   if(hvtemp > 60){
     leds->setPoint(3, 3, true);
+    
   }
 
   else{
     leds->setPoint(3, 3, false);
+  }
   }
 }
 
