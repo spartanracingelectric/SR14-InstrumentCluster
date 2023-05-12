@@ -21,14 +21,6 @@ U8G2_ST7565_NHD_C12864_F_4W_SW_SPI lcd_u8g2(U8G2_R2, PICO_LCD_SPI_SCK, PICO_LCD_
 
 MD_MAX72XX leds_md = MD_MAX72XX(MAX72XX_HARDWARE_TYPE, PICO_LED_SPI_CS, 1);
 
-/* #if (POWERTRAIN_TYPE == 'C')
-uint16_t rpm = 0;
-uint8_t gear = 0;
-float oilpress = 0;
-float lv = 0.0f;
-uint8_t drs = 0;
-*/
-
 #if (POWERTRAIN_TYPE == 'E')
 float hv = 0.0f;
 float hvCurr = 0.0f;
@@ -53,13 +45,13 @@ float drsEnable = 0.0f;
 int drsMode = 0;
 float launchReady = 0.0f;
 float launchStatus = 0.0f;
-int torque = 0;
 
 // diagnostics ---------------------------
 uint16_t rpm = 0;
 uint8_t cellfault = 0;
 uint8_t cellwarn = 0;
 uint8_t bmsstate = 0;
+
 
 // rotary ---------------------------
 int lastStateCLK;  // Read the initial state of CLK
@@ -123,6 +115,7 @@ void setup()
 
   //Non functional as clearBuffer in loop overwrites for now
   lcd_welcome_screen();
+  delay(1000);
   lcd__print_default_screen_template();
   leds__set_brightness(MAX_LED_BRIGHTNESS);
   leds__wake();
@@ -165,15 +158,8 @@ void loop()
   //can__send_test();
   can__receive();
 
-//  displayRotary (currentStateCLK, currentStateSW, currentStateDT, lastStateCLK, displayScreen, rowCount, torque);
+  displayRotary (currentStateCLK, currentStateSW, currentStateDT, lastStateCLK, displayScreen, rowCount, regenmode);
 
-/* #if(POWERTRAIN_TYPE == 'C')
-  rpm = can__get_rpm();
-  gear = can__get_gear();
-  oilpress = can__get_oilpress();
-  lv = can__get_lv();
-  drs = can__get_drs();
-*/
 #if (POWERTRAIN_TYPE == 'E')
   hv = can__get_hv();
   hvCurr = can__get_hv_current();
@@ -232,16 +218,17 @@ void loop()
 
 #if (POWERTRAIN_TYPE == 'E')
 //     leds__safety_update_flash(hvlow, hvtemp, curr_millis);
+    
     lcd__update_screenE(hv, soc, lv, hvlow, hvtemp, hvCurr, drsMode, regenmode, 
       launchReady, tps0volt, tps0calib, tps1volt, tps1calib, bps0volt, 
       bps0calib, cell_over_volt, pack_over_volt, monitor_comm, precharge, failedthermistor, maxtorque, displayScreen, rowCount, prevDisplayScreen, 
-      prevRowCount, torque, currentStateCLK, lastStateCLK, currentStateDT, curr_millis);
+      prevRowCount,currentStateCLK, lastStateCLK, currentStateDT, curr_millis);
     leds__rpm_update_tach(rpm);
-    leds__drsEnable(drsEnable);
-    leds__launchReady(launchStatus);
+    leds__drsEnable(drsEnable, displayScreen);
+    leds__launchReady(launchStatus, displayScreen);
     //leds__lv(lv);
-    leds__regenMode(regenmode);
-    leds__hvtemp(hvtemp);    
+    leds__regenMode(regenmode, displayScreen);
+    leds__hvtemp(hvtemp, displayScreen);    
 #endif
   //delay(500);
 }
