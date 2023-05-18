@@ -363,6 +363,8 @@ void lcd__print_bps0calib(float bps0_calib){
 }
 
 void lcd__print_cellovervoltage(int cov){
+  if (cov == 5) cov = 1;
+  if (cov == 4) cov = 0;
   if (cov == cov_prev) return; // if the value is the same, don't update that "section"
 
   cov_prev = cov;
@@ -385,8 +387,9 @@ void lcd__print_packovervoltage(int pov){
 }
 
 void lcd__print_monitorcomm(int mc){
+  if (mc == 3 || mc == 19 || mc == 17) mc = 1;
+  if (mc == 2 || mc == 18 || mc == 16) mc = 0;
   if (mc == mc_prev) return; // if the value is the same, don't update that "section"
-
   mc_prev = mc;
   char mc_str[5] = "   ";
   sprintf(mc_str, "%d", mc);
@@ -396,6 +399,8 @@ void lcd__print_monitorcomm(int mc){
 }
 
 void lcd__print_precharge(int pc){
+  if (pc == 8) pc = 0;
+  if (pc == 9) pc = 1;
   if (pc == pc_prev) return; // if the value is the same, don't update that "section"
 
   pc_prev = pc;

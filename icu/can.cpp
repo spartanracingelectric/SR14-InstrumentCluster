@@ -81,6 +81,7 @@ static void can__drs_receive(const CANMessage & inMessage){
 
 static void can__regenmode_receive(const CANMessage & inMessage){
   curr_regenmode =  inMessage.data[0];
+  curr_maxtorque = inMessage.data[2];
   /*if (curr_regenmode == 1){
     digitalWrite(LED_BUILTIN, HIGH);
   }
@@ -149,7 +150,7 @@ static void can__bps0voltage_receive(const CANMessage & inMessage)
 }
 static void can__maxtorque_receive(const CANMessage & inMessage) 
 {
-  curr_maxtorque = ((inMessage.data[2] << 8) | inMessage.data[3]);
+//  curr_maxtorque = (inMessage.data[2] << 8);
 }
 // diagnostics ---------------------------------
 static void can__rpm_receive (const CANMessage & inMessage)
@@ -163,11 +164,11 @@ static void can__rpm_receive (const CANMessage & inMessage)
 static void can__bms_fault_receive (const CANMessage & inMessage)
 {
   curr_bms_fault = inMessage.data[0] << 16;
-  curr_cellovervoltage = inMessage.data[1];
-  curr_packovervoltage = inMessage.data[1];
+  curr_cellovervoltage = (inMessage.data[1] >> 2);
+  curr_packovervoltage = inMessage.data[1] >> 4;
   curr_monitorcommfault = inMessage.data[0] >> 1;
   curr_prechargefault = inMessage.data[0] >> 2;
-  curr_failedthermistor = inMessage.data[0];
+  curr_failedthermistor = inMessage.data[0] >> 5;
   
 }
 static void can__bms_warn_receive (const CANMessage & inMessage)
@@ -314,15 +315,17 @@ const ACAN2515AcceptanceFilter filters [] =
   {standard2515Filter (CAN_TPS0, 0, 0), can__tps0voltage_receive},
   {standard2515Filter (CAN_TPS1, 0, 0), can__tps1voltage_receive},
   {standard2515Filter (CAN_BPS0, 0, 0), can__bps0voltage_receive},
-  {standard2515Filter (CAN_BMS_FAULT_ADDR, 0, 0), can__bms_fault_receive},  //RXF1 (new stuff)
+  {standard2515Filter (CAN_LV_ADDR, 0, 0), can__lv_receive},            //RXF0
+  {standard2515Filter (CAN_REGEN_ADDR, 0, 0), can__regenmode_receive},
+//  {standard2515Filter (CAN_BMS_FAULT_ADDR, 0, 0), can__bms_fault_receive},  //RXF1 (new stuff)
   // {standard2515Filter (CAN_BMS_WARN_ADDR, 0, 0), can__bms_warn_receive},  //RXF2
   // {standard2515Filter (CAN_BMS_STAT_ADDR, 0, 0), can__bms_stat_receive},  //RXF3
   
-  {standard2515Filter (CAN_LV_ADDR, 0, 0), can__lv_receive},            //RXF0
+  
   //{standard2515Filter (CAN_HV_ADDR, 0, 0), can__hv_receive},            //RXF1 // filter for both HV and HV current
   //{standard2515Filter (CAN_SOC_ADDR, 0, 0), can__soc_receive},          //RXF2
 
-  {standard2515Filter (CAN_REGEN_ADDR, 0, 0), can__regenmode_receive},
+  
   {standard2515Filter (CAN_LAUNCH_ADDR, 0, 0), can__launch_receive},
   {standard2515Filter (CAN_DRS_ADDR, 0,0), can__drs_receive},
   //{standard2515Filter (CAN_HVLOW_ADDR, 0, 0), can__hvlow_receive},          //RXF2
