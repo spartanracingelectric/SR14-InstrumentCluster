@@ -214,6 +214,7 @@ void lcd__clear_section (uint8_t sect)
   int launch[] = {100, 49, 40, 14};
   int hv[] = {25, 10, 25, 18};
   int torque[] = {59, 15, 20, 9};
+  int tps0[] = {50, 5, 30, 30};
   int* sections[] = {rgm, drs, launch, hv, torque};
   
   
@@ -296,14 +297,18 @@ void lcd__print_lv(float lv) // low voltage battery
   lcd__print8(65, 22, lv_str);
 }
 
-void lcd__print_tps0voltage(float tps0){
-  if (tps0 == tps0_voltprev) return; // if the value is the same, don't update that "section"
-
-  tps0_voltprev = tps0;
-  char tps0_str[5] = "   ";
-  sprintf(tps0_str, "%0.1f", tps0);
-  //lcd__clear_section(2);
-  lcd__print8(70, 10, tps0_str);
+void lcd__print_tps0voltage(float tps0, int displayScreen){
+  if (tps0 == tps0_voltprev){
+    tps0_voltprev = -1;
+    return;
+  }
+  if(displayScreen == 2){
+    tps0_voltprev = tps0;
+    char tps0_str[5] = "   ";
+    sprintf(tps0_str, "%0.1f", tps0);
+    lcd__clear_section(2);
+    lcd__print8(70, 10, tps0_str);
+  }
 
 }
 
