@@ -37,7 +37,7 @@ void lcd__print_soc(uint8_t soc); // State of charge 0-100%
 void lcd__print_wattemp(uint8_t watertemp); // Water Coolant Temp
 // E & C car
 void lcd__print_lv(float lv); // low voltage battery soc
-void lcd__print_tps0voltage(float tps0);
+void lcd__print_tps0voltage(float tps0, int displayScreen);
 void lcd__print_tps0calibmax(float tps0_calib);
 void lcd__print_tps1voltage(float tps1);
 void lcd__print_tps0calibmax(float tps1_calib);

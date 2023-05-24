@@ -126,22 +126,25 @@
 #define CAN_BPS0 0x502
 #define CAN_LV 0x507
 #define CAN_LV_ADDR 0x507
-#define CAN_HV_ADDR 0x620
+
+// Need to validate
+#define CAN_REGEN_ADDR 0x508 // Need to validate. technically done, test LCD
+#define CAN_LAUNCH_ADDR 0x50B // Need to validate. technically done, test LCD
+#define CAN_DRS_ADDR 0x50C // Need to validate
 #define CAN_BMS_FAULT_ADDR 0x602 // dec: 1538
 #define CAN_BMS_WARN_ADDR 0x604 // dec: 1540
 #define CAN_BMS_STAT_ADDR 0x610 // dec: 1552 // system status (should be idle - 1)
 
+#define CAN_HV_ADDR 0x620
 #define CAN_HV_CURRENT_ADDR 0x620
 #define CAN_HV_ADDR 0x620 // dec: 1568
 #define CAN_SOC_ADDR 0x621
 #define CAN_HVLOW_ADDR 0x622
 #define CAN_BAT_TEMP_ADDR 0x623
-#define CAN_DRS_ADDR 0x50C // Need to validate
-#define CAN_LAUNCH_ADDR 0x50B // Need to validate. technically done, test LCD
 
 
-// Need to validate
-#define CAN_REGEN_ADDR 0x508 // Need to validate. technically done, test LCD
+
+
 #endif
 
 //  LOW VOLTAGE

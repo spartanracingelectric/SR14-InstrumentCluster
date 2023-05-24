@@ -698,7 +698,7 @@ void lcd_settings(int rowCount, int prevRowCount) {
       }
       lcd__debugscreen(rowCount, prevRowCount);
       
-      lcd__print_tps0voltage(tps0volt);
+      lcd__print_tps0voltage(tps0volt, 2);
       lcd__print_tps0calibmax(tps0calib);
       lcd__print_tps1voltage(tps1volt);
       lcd__print_tps1calibmax(tps1calib);
