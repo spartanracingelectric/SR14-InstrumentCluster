@@ -307,23 +307,23 @@ float can__get_maxtorque() {
 const ACAN2515Mask rxm0 = standard2515Mask (0x7FF, 0, 0) ;
 const ACAN2515Mask rxm1 = standard2515Mask (0x7FF, 0, 0) ;
 
-#if (POWERTRAIN_TYPE == 'E')
-const ACAN2515AcceptanceFilter filters [] =
+#if(displayScreen == 0)
+
+ACAN2515AcceptanceFilter filters [] =
 {
   //Must have addresses in increasing order
+  
   {standard2515Filter (CAN_RPM_ADDR, 0, 0), can__rpm_receive}, //0x0A5
-  {standard2515Filter (CAN_TPS0, 0, 0), can__tps0voltage_receive}, //0x500
-  {standard2515Filter (CAN_TPS1, 0, 0), can__tps1voltage_receive}, //0x501
-  {standard2515Filter (CAN_BPS0, 0, 0), can__bps0voltage_receive}, //0x502
+  
 
   {standard2515Filter (CAN_LV_ADDR, 0, 0), can__lv_receive},            //RXF0 0x507
   {standard2515Filter (CAN_REGEN_ADDR, 0, 0), can__regenmode_receive}, //0x508
-  {standard2515Filter (CAN_LAUNCH_ADDR, 0, 0), can__launch_receive}, //0x50B
-  {standard2515Filter (CAN_DRS_ADDR, 0,0), can__drs_receive}, //0x50C
-  
-  {standard2515Filter (CAN_BMS_FAULT_ADDR, 0, 0), can__bms_fault_receive},  //RXF1 (new stuff) 0x602
-  {standard2515Filter (CAN_BMS_WARN_ADDR, 0, 0), can__bms_warn_receive},  //RXF2 0x604
-  {standard2515Filter (CAN_BMS_STAT_ADDR, 0, 0), can__bms_stat_receive},  //RXF3 0x610
+//  {standard2515Filter (CAN_LAUNCH_ADDR, 0, 0), can__launch_receive}, //0x50B
+//  {standard2515Filter (CAN_DRS_ADDR, 0,0), can__drs_receive}, //0x50C
+//  
+//  {standard2515Filter (CAN_BMS_FAULT_ADDR, 0, 0), can__bms_fault_receive},  //RXF1 (new stuff) 0x602
+//  {standard2515Filter (CAN_BMS_WARN_ADDR, 0, 0), can__bms_warn_receive},  //RXF2 0x604
+//  {standard2515Filter (CAN_BMS_STAT_ADDR, 0, 0), can__bms_stat_receive},  //RXF3 0x610
 
   
 //  {standard2515Filter (CAN_HV_ADDR, 0, 0), can__hv_receive},            //RXF1 // filter for both HV and HV current 0x620
@@ -333,10 +333,15 @@ const ACAN2515AcceptanceFilter filters [] =
   
 //  {standard2515Filter (CAN_HVLOW_ADDR, 0, 0), can__hvlow_receive},          //RXF2 0x622
   {standard2515Filter (CAN_BAT_TEMP_ADDR, 0, 0), can__hvtemp_receive}  //RXF3 0x623
-  
-
 };
 
+#elif(displayScreen == 2) 
+ACAN2515AcceptanceFilter filters [] = 
+{
+  {standard2515Filter (CAN_TPS0, 0, 0), can__tps0voltage_receive}, //0x500
+  {standard2515Filter (CAN_TPS1, 0, 0), can__tps1voltage_receive}, //0x501
+  {standard2515Filter (CAN_BPS0, 0, 0), can__bps0voltage_receive} //0x502
+};
 #endif
 
 void can__start()
