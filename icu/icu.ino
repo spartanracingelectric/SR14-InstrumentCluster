@@ -60,7 +60,7 @@ bool currentStateSW;
 int currentStateDT;
 
 // lcd ---------------------------
-int displayScreen = 2;
+int displayScreen = 0;
 int prevDisplayScreen = -1;
 int rowCount = 0;
 int prevRowCount = -1;
@@ -226,7 +226,8 @@ void loop()
     leds__rpm_update_tach(rpm);
     leds__drsEnable(drsEnable, displayScreen);
     leds__launchReady(launchStatus, displayScreen);
-    //leds__lv(lv);
+    leds__lv(lv,displayScreen);
+    leds__debug(displayScreen);
     leds__regenMode(regenmode, displayScreen);
     leds__hvtemp(hvtemp, displayScreen);    
 #endif

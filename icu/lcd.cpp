@@ -289,7 +289,6 @@ void lcd__print_lv(float lv) // low voltage battery
   lv_prev = lv; // else, update value_prev and redraw that section
 
   char lv_str[5] = "   ";
-  leds__lv(lv); // update low voltage led (bottom left)
   
   sprintf(lv_str, "%0.1f", lv);
 

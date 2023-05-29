@@ -335,15 +335,25 @@ void leds__oilpress(float oilpress) // float or uint8
 }
 */
 
-void leds__lv(float lv)
+void leds__debug(int displayScreen){ // use functions like this to simplify the number of times displayScreen is passed
+  if(displayScreen == 2 | displayScreen == 3 | displayScreen == 4){
+    leds->setPoint(3, 3, false);
+    leds->setPoint(3, 5, false);
+    leds->setPoint(4, 2, false);
+    leds->setPoint(4, 4, false);
+    leds->setPoint(4, 0, false);
+  }
+}
+void leds__lv(float lv, int displayScreen)
 {
-  if (lv < 5.0){
-    leds->setPoint(3, 1, true);
+  if(displayScreen == 4){
+    if (lv < 5.0){
+      leds->setPoint(3, 1, true);
+    }
+    else{
+      leds->setPoint(3, 1, false);
+    }
   }
-  else{
-    leds->setPoint(3, 1, false);
-  }
- 
 }
 
 void leds__drsEnable(float drsEnable, int displayScreen){
@@ -416,7 +426,6 @@ void leds__hvtemp(float hvtemp, int displayScreen)
 {
   if(displayScreen == 0){
     leds->setPoint(3, 1, false);
-    leds->setPoint(3, 3, false);
     leds->setPoint(3, 5, false);
   if(hvtemp > 60){
     leds->setPoint(3, 3, true);
