@@ -151,10 +151,7 @@ void loop()
   currentStateDT = digitalRead(DT);
   uint32_t curr_millis = millis(); // switch time var
   
-  #if (BOARD_REVISION == 'A')
-    can__start();
-    delay(10);
-  #endif
+  can__filtersetup();
   //can__send_test();
   can__receive();
 
@@ -218,7 +215,6 @@ void loop()
 
 #if (POWERTRAIN_TYPE == 'E')
 //     leds__safety_update_flash(hvlow, hvtemp, curr_millis);
-    
     lcd__update_screenE(hv, soc, lv, hvlow, hvtemp, hvCurr, drsMode, regenmode, 
       launchReady, tps0volt, tps0calib, tps1volt, tps1calib, bps0volt, 
       bps0calib, cell_over_volt, pack_over_volt, monitor_comm, precharge, failedthermistor, maxtorque, displayScreen, rowCount, prevDisplayScreen, 
@@ -229,7 +225,8 @@ void loop()
     leds__lv(lv,displayScreen);
     leds__debug(displayScreen);
     leds__regenMode(regenmode, displayScreen);
-    leds__hvtemp(hvtemp, displayScreen);    
+    leds__hvtemp(hvtemp, displayScreen);
+
 #endif
   //delay(500);
 }

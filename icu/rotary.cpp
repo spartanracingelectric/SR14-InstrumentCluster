@@ -45,7 +45,6 @@ if (currentStateSW == LOW) // LOW is 0V, testing if redefining works
   {
     counter++;
     displayScreen = counter % NUMBER_OF_SCREENS;
-    Serial.println("Button pressed!");
   }
  
   // Remember last button press event

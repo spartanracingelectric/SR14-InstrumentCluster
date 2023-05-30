@@ -64,8 +64,7 @@ int can__get_monitorcommfault();
 int can__get_prechargefault();
 int can__get_failedthermistor();
 float can__get_maxtorque();
-
-
+void can__filtersetup();
 #endif
 
 void can__stop();

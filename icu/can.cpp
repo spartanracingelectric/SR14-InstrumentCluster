@@ -2,6 +2,8 @@
   #include "config.h"
   #include "lcd.h"
   #include "rotary.h"
+  extern int displayScreen;
+  #define screen_0 (displayScreen == 0)
 
   //Skip INT pin for Rev A, set to 0
   #if (BOARD_REVISION == 'A')
@@ -306,24 +308,52 @@
 
   const ACAN2515Mask rxm0 = standard2515Mask (0x7FF, 0, 0) ;
   const ACAN2515Mask rxm1 = standard2515Mask (0x7FF, 0, 0) ;
-  ACAN2515AcceptanceFilter filters [] =
+
+  ACAN2515AcceptanceFilter filters0 [] = 
   {
     //Must have addresses in increasing order
     {standard2515Filter (CAN_RPM_ADDR, 0, 0), can__rpm_receive}, //0x0A5
-    {standard2515Filter (CAN_LV_ADDR, 0, 0), can__lv_receive},            //RXF0 0x507
     {standard2515Filter (CAN_REGEN_ADDR, 0, 0), can__regenmode_receive}, //0x508
     {standard2515Filter (CAN_LAUNCH_ADDR, 0, 0), can__launch_receive}, //0x50B
     {standard2515Filter (CAN_DRS_ADDR, 0,0), can__drs_receive}, //0x50C
-    {standard2515Filter (CAN_BAT_TEMP_ADDR, 0, 0), can__hvtemp_receive}  //RXF3 0x623
+    {standard2515Filter (CAN_HV_ADDR, 0, 0), can__hv_receive}, // 0x620
+    {standard2515Filter (CAN_BAT_TEMP_ADDR, 0, 0), can__hvtemp_receive}, // 0x623
+    
+  };
+
+  ACAN2515AcceptanceFilter filters1[] = 
+  {
+    {standard2515Filter (CAN_REGEN_ADDR, 0, 0), can__regenmode_receive}, //0x508
+  };
+
+  ACAN2515AcceptanceFilter filters2[] = 
+  {
+    {standard2515Filter (CAN_TPS0, 0, 0), can__tps0voltage_receive},// 0x500
+    {standard2515Filter (CAN_TPS1, 0, 0), can__tps1voltage_receive}, // 0x501
+    {standard2515Filter (CAN_BPS0, 0, 0), can__bps0voltage_receive}, // 0x502
+  };
+
+   ACAN2515AcceptanceFilter filters3[] = 
+   {
+    {standard2515Filter (CAN_BPS0, 0, 0), can__bps0voltage_receive}, // 0x502
+    {standard2515Filter (CAN_BMS_FAULT_ADDR, 0, 0), can__bms_fault_receive}, // 0x602
+   };
+
+  ACAN2515AcceptanceFilter filters4[] = 
+  {
+    {standard2515Filter (CAN_LV_ADDR, 0, 0), can__lv_receive}, // 0x507
+    {standard2515Filter (CAN_REGEN_ADDR, 0, 0), can__regenmode_receive}, //0x508
+    {standard2515Filter (CAN_BMS_FAULT_ADDR, 0, 0), can__bms_fault_receive}, // 0x602
   };
 
 
   void can__start()
   {
     //--- Configure ACAN2515
-    const uint16_t errorCode = can.begin (settings, [] { can.isr () ; },
-                                          rxm0, rxm1, filters, 6) ;
     
+    const uint16_t errorCode = can.begin(settings, [] { can.isr () ; },
+                                         rxm0, rxm1, filters0, 6);
+
     if (errorCode == 0) {
       Serial.print ("Bit Rate prescaler: ") ;
       Serial.println (settings.mBitRatePrescaler) ;
@@ -357,6 +387,24 @@
     }
   
   }
+
+  void can__filtersetup(){
+    if (displayScreen == 1){
+      can.setFiltersOnTheFly(rxm0, rxm1, filters1, 1);    
+    }
+    else if(displayScreen == 2){
+      can.setFiltersOnTheFly(rxm0, rxm1, filters2, 3);    
+    }
+    else if(displayScreen == 3){
+      can.setFiltersOnTheFly(rxm0, rxm1, filters3, 2);    
+    }
+    else if(displayScreen == 4){
+      can.setFiltersOnTheFly(rxm0, rxm1, filters4, 3);
+    }    
+    else{
+      can.setFiltersOnTheFly(rxm0, rxm1, filters0, 6);
+    }
+  } 
 
   void can__stop()
   {
