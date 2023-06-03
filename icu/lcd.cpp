@@ -214,8 +214,20 @@ void lcd__clear_section (uint8_t sect)
   int launch[] = {100, 49, 40, 14};
   int hv[] = {25, 10, 25, 18};
   int torque[] = {59, 15, 20, 9};
-  int tps0[] = {50, 5, 30, 30};
-  int* sections[] = {rgm, drs, launch, hv, torque};
+  int tps0volt[] = {70, 2, 20, 10};
+  int tps0calib[] = {80, 14, 20, 10};
+  int tps1volt[] = {70, 26, 20, 10};
+  int tps1calib[] = {80, 38, 20, 10};
+  int bps0volt[] = {70, 50, 20, 10};
+  int bps0calib[] = {80, 2, 20, 10};
+  int cov[] = {90, 14, 10, 10};
+  int pov[] = {90, 26, 10, 10};
+  int mc[] = {100, 38, 10, 10};
+  int precharge[] = {80, 50, 10, 10};
+  int failedtherm[] = {90, 2, 10, 10};
+  int lv[] = {65, 14, 20, 10};
+  int maxtorque[] = {80, 26, 20, 10};
+  int* sections[] = {rgm, drs, launch, hv, torque, tps0volt, tps0calib, tps1volt, tps1calib, bps0volt, bps0calib, cov, pov, mc, precharge, failedtherm, lv, maxtorque};
   
   
   lcd->setDrawColor(0);
@@ -282,19 +294,6 @@ void lcd__print_rgm(int rgm, int displayScreen) {
   }
 
 }
-void lcd__print_lv(float lv) // low voltage battery
-{
-  if (lv == lv_prev) return; // if the value is the same, don't update that "section"
-
-  lv_prev = lv; // else, update value_prev and redraw that section
-
-  char lv_str[5] = "   ";
-  
-  sprintf(lv_str, "%0.1f", lv);
-
-  //lcd__clear_section(2);
-  lcd__print8(65, 22, lv_str);
-}
 
 void lcd__print_tps0voltage(float tps0, int displayScreen){
   if (tps0 == tps0_voltprev){
@@ -305,134 +304,192 @@ void lcd__print_tps0voltage(float tps0, int displayScreen){
     tps0_voltprev = tps0;
     char tps0_str[5] = "   ";
     sprintf(tps0_str, "%0.1f", tps0);
-    lcd__clear_section(2);
+    lcd__clear_section(5);
+    lcd->sendBuffer();
     lcd__print8(70, 10, tps0_str);
   }
 
 }
 
-void lcd__print_tps0calibmax(float tps0_calib){
-  if (tps0_calib == tps0_calibprev) return; // if the value is the same, don't update that "section"
-
-  tps0_calibprev = tps0_calib;
-  char tps0_str[5] = "   ";
-  sprintf(tps0_str, "%0.1f", tps0_calib);
-  //lcd__clear_section(2);
-  lcd__print8(80, 23, tps0_str);
-
+void lcd__print_tps0calibmax(float tps0_calib, int displayScreen){
+  if (tps0_calib == tps0_calibprev) {
+    tps0_calibprev = -1;
+    return; 
+  }
+  if(displayScreen == 2) {
+    tps0_calibprev = tps0_calib;
+    char tps0_str[5] = "   ";
+    sprintf(tps0_str, "%0.1f", tps0_calib);
+    lcd__clear_section(6);
+    lcd->sendBuffer();
+    lcd__print8(80, 23, tps0_str);
+  }
 }
 
-void lcd__print_tps1voltage(float tps1){
-  if (tps1 == tps1_voltprev) return; // if the value is the same, don't update that "section"
-
-  tps1_voltprev = tps1;
-  char tps1_str[5] = "   ";
-  sprintf(tps1_str, "%0.1f", tps1);
-  //lcd__clear_section(2);
-  lcd__print8(70, 34, tps1_str);
-
+void lcd__print_tps1voltage(float tps1, int displayScreen){
+  if (tps1 == tps1_voltprev) {
+    tps1_voltprev = -1;
+    return; 
+  }
+  if(displayScreen == 2) {
+    tps1_voltprev = tps1;
+    char tps1_str[5] = "   ";
+    sprintf(tps1_str, "%0.1f", tps1);
+    lcd__clear_section(7);
+    lcd->sendBuffer();
+    lcd__print8(70, 34, tps1_str);
+  }
 }
 
-void lcd__print_tps1calibmax(float tps1_calib){
-  if (tps1_calib == tps1_calibprev) return; // if the value is the same, don't update that "section"
-
-  tps1_calibprev = tps1_calib;
-  char tps1_str[5] = "   ";
-  sprintf(tps1_str, "%0.1f", tps1_calib);
-  //lcd__clear_section(2);
-  lcd__print8(80, 45, tps1_str);
-
+void lcd__print_tps1calibmax(float tps1_calib, int displayScreen){
+  if (tps1_calib == tps1_calibprev) {
+    tps1_calibprev = -1;
+    return;
+  }
+  if(displayScreen == 2) {
+    tps1_calibprev = tps1_calib;
+    char tps1_str[5] = "   ";
+    sprintf(tps1_str, "%0.1f", tps1_calib);
+    lcd__clear_section(8);
+    lcd->sendBuffer();
+    lcd__print8(80, 45, tps1_str);
+  }
 }
 
-void lcd__print_bps0voltage(float bps0){
-  if (bps0 == bps0_voltprev) return; // if the value is the same, don't update that "section"
-
-  bps0_voltprev = bps0;
-  char bps0_str[5] = "   ";
-  sprintf(bps0_str, "%0.1f", bps0);
-  //lcd__clear_section(2);
-  lcd__print8(70, 57, bps0_str);
-
+void lcd__print_bps0voltage(float bps0, int displayScreen){
+  if (bps0 == bps0_voltprev) {
+    bps0_voltprev = -1;
+    return; 
+  }
+  if(displayScreen == 2) {
+    bps0_voltprev = bps0;
+    char bps0_str[5] = "   ";
+    sprintf(bps0_str, "%0.1f", bps0);
+    lcd__clear_section(9);
+    lcd->sendBuffer();
+    lcd__print8(70, 57, bps0_str);
+  }
 }
 
-void lcd__print_bps0calib(float bps0_calib){
-  if (bps0_calib == bps0_calibprev) return; // if the value is the same, don't update that "section"
-
-  bps0_calibprev = bps0_calib;
-  char bps0_str[5] = "   ";
-  sprintf(bps0_str, "%0.1f", bps0_calib);
-  //lcd__clear_section(2);
-  lcd__print8(80, 10, bps0_str);
-
+void lcd__print_bps0calib(float bps0_calib, int displayScreen){
+  if (bps0_calib == bps0_calibprev) {
+    bps0_calibprev = -1;
+    return; 
+  }
+  if(displayScreen == 3) {
+    bps0_calibprev = bps0_calib;
+    char bps0_str[5] = "   ";
+    sprintf(bps0_str, "%0.1f", bps0_calib);
+    lcd__clear_section(10);
+    lcd->sendBuffer();
+    lcd__print8(80, 10, bps0_str);
+  }
 }
 
-void lcd__print_cellovervoltage(int cov){
+void lcd__print_cellovervoltage(int cov, int displayScreen){
   if (cov == 5) cov = 1;
   if (cov == 4) cov = 0;
-  if (cov == cov_prev) return; // if the value is the same, don't update that "section"
-
-  cov_prev = cov;
-  char cov_str[5] = "   ";
-  sprintf(cov_str, "%d", cov);
-  //lcd__clear_section(2);
-  lcd__print8(90, 23, cov_str);
-
+  if (cov == cov_prev) {
+    cov_prev = -1;
+    return; 
+  }
+  if(displayScreen == 3) {
+    cov_prev = cov;
+    char cov_str[5] = "   ";
+    sprintf(cov_str, "%d", cov);
+    lcd__clear_section(11);
+    lcd__print8(90, 23, cov_str);
+  }
 }
 
-void lcd__print_packovervoltage(int pov){
-  if (pov == pov_prev) return; // if the value is the same, don't update that "section"
-
-  pov_prev = pov;
-  char pov_str[5] = "   ";
-  sprintf(pov_str, "%d", pov);
-  //lcd__clear_section(2);
-  lcd__print8(90, 35, pov_str);
-
+void lcd__print_packovervoltage(int pov, int displayScreen){
+  if (pov == pov_prev) {
+    pov_prev = -1;
+    return; 
+  }
+    if(displayScreen == 3) {
+      pov_prev = pov;
+      char pov_str[5] = "   ";
+      sprintf(pov_str, "%d", pov);
+      lcd__clear_section(12);
+      lcd__print8(90, 35, pov_str);
+  }
 }
 
-void lcd__print_monitorcomm(int mc){
+void lcd__print_monitorcomm(int mc, int displayScreen){
   if (mc == 3 || mc == 19 || mc == 17) mc = 1;
   if (mc == 2 || mc == 18 || mc == 16) mc = 0;
-  if (mc == mc_prev) return; // if the value is the same, don't update that "section"
-  mc_prev = mc;
-  char mc_str[5] = "   ";
-  sprintf(mc_str, "%d", mc);
-  //lcd__clear_section(2);
-  lcd__print8(100, 46, mc_str);
-
+  if (mc == mc_prev) {
+    mc_prev = -1;
+    return; 
+  }
+  if(displayScreen == 3) {
+    mc_prev = mc;
+    char mc_str[5] = "   ";
+    sprintf(mc_str, "%d", mc);
+    lcd__clear_section(13);
+    lcd__print8(100, 46, mc_str);
+  }
 }
 
-void lcd__print_precharge(int pc){
+void lcd__print_precharge(int pc, int displayScreen){
   if (pc == 8) pc = 0;
   if (pc == 9) pc = 1;
-  if (pc == pc_prev) return; // if the value is the same, don't update that "section"
-
-  pc_prev = pc;
-  char pc_str[5] = "   ";
-  sprintf(pc_str, "%d", pc);
-  //lcd__clear_section(2);
-  lcd__print8(80, 57, pc_str);
-
+  if (pc == pc_prev) {
+    pc_prev = -1;
+    return; 
+  }
+  if(displayScreen == 3) {
+    pc_prev = pc;
+    char pc_str[5] = "   ";
+    sprintf(pc_str, "%d", pc);
+    lcd__clear_section(14);
+    lcd__print8(80, 57, pc_str);
+  }
 }
 
-void lcd__print_failedthermistor(int ft) {
-  if (ft == ft_prev) return; // if the value is the same, don't update that "section"
-
-  ft_prev = ft;
-  char ft_str[5] = "   ";
-  sprintf(ft_str, "%d", ft);
-  //lcd__clear_section(2);
-  lcd__print8(90, 10, ft_str);
+void lcd__print_failedthermistor(int ft, int displayScreen) {
+  if (ft == ft_prev) {
+    ft_prev = -1;
+    return; 
+  }
+  if(displayScreen == 4) {
+    ft_prev = ft;
+    char ft_str[5] = "   ";
+    sprintf(ft_str, "%d", ft);
+    lcd__clear_section(15);
+    lcd__print8(90, 10, ft_str);
+  }
 }
 
-void lcd__print_maxtorque(float mt) {
-  if (mt == maxtorque_prev) return; // if the value is the same, don't update that "section"
+void lcd__print_lv(float lv, int displayScreen) // low voltage battery
+{
+  if (lv == lv_prev) {
+    lv_prev = -1;
+    return;
+  }
+  if(displayScreen == 4) {
+    lv_prev = lv; 
+    char lv_str[5] = "   ";
+    sprintf(lv_str, "%0.1f", lv);
+    lcd__clear_section(16);
+    lcd__print8(65, 22, lv_str);
+  }
+}
 
-  maxtorque_prev = mt;
-  char mt_str[5] = "   ";
-  sprintf(mt_str, "%0.1f", mt);
-  //lcd__clear_section(2);
-  lcd__print8(80, 32, mt_str);
+void lcd__print_maxtorque(float mt, int displayScreen) {
+  if (mt == maxtorque_prev) {
+    maxtorque_prev = -1;
+    return; 
+  }
+
+  if(displayScreen == 4) {
+    maxtorque_prev = mt;
+    char mt_str[5] = "   ";
+    sprintf(mt_str, "%0.1f", mt);
+    lcd__clear_section(17);
+    lcd__print8(80, 32, mt_str);
+  }
 }
 
 void lcd__print_hvlow(float hvlow) // low voltage battery
@@ -698,10 +755,10 @@ void lcd_settings(int rowCount, int prevRowCount) {
       lcd__debugscreen(rowCount, prevRowCount);
       
       lcd__print_tps0voltage(tps0volt, 2);
-      lcd__print_tps0calibmax(tps0calib);
-      lcd__print_tps1voltage(tps1volt);
-      lcd__print_tps1calibmax(tps1calib);
-      lcd__print_bps0voltage(bps0volt);
+      lcd__print_tps0calibmax(tps0calib, 2);
+      lcd__print_tps1voltage(tps1volt, 2);
+      lcd__print_tps1calibmax(tps1calib, 2);
+      lcd__print_bps0voltage(bps0volt, 2);
     }
     if (displayScreen == 3) 
     {
@@ -712,11 +769,11 @@ void lcd_settings(int rowCount, int prevRowCount) {
       }
       lcd__debugscreen2(rowCount, prevRowCount);
 
-      lcd__print_bps0calib(bps0calib);
-      lcd__print_cellovervoltage(cell_over_volt);
-      lcd__print_packovervoltage(pack_over_volt);
-      lcd__print_monitorcomm(monitor_comm);
-      lcd__print_precharge(precharge);
+      lcd__print_bps0calib(bps0calib, 3);
+      lcd__print_cellovervoltage(cell_over_volt, 3);
+      lcd__print_packovervoltage(pack_over_volt, 3);
+      lcd__print_monitorcomm(monitor_comm, 3);
+      lcd__print_precharge(precharge, 3);
     }
     if (displayScreen == 4)
     {
@@ -727,9 +784,9 @@ void lcd_settings(int rowCount, int prevRowCount) {
       }
       lcd__debugscreen3(rowCount, prevRowCount);
 
-      lcd__print_failedthermistor(failedthermistor);
-      lcd__print_lv(lv);
-      lcd__print_maxtorque(maxtorque);
+      lcd__print_failedthermistor(failedthermistor, 4);
+      lcd__print_lv(lv, 4);
+      lcd__print_maxtorque(maxtorque, 4);
     }
 
   }

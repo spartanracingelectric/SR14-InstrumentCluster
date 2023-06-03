@@ -60,7 +60,7 @@ bool currentStateSW;
 int currentStateDT;
 
 // lcd ---------------------------
-int displayScreen = 0;
+int displayScreen = 3;
 int prevDisplayScreen = -1;
 int rowCount = 0;
 int prevRowCount = -1;

@@ -36,19 +36,19 @@ void lcd__print_hv(float hv, int displayScreen, int prevDisplayScreen); // accum
 void lcd__print_soc(uint8_t soc); // State of charge 0-100%
 void lcd__print_wattemp(uint8_t watertemp); // Water Coolant Temp
 // E & C car
-void lcd__print_lv(float lv); // low voltage battery soc
+void lcd__print_lv(float lv, int displayScreen); // low voltage battery soc
 void lcd__print_tps0voltage(float tps0, int displayScreen);
-void lcd__print_tps0calibmax(float tps0_calib);
-void lcd__print_tps1voltage(float tps1);
-void lcd__print_tps0calibmax(float tps1_calib);
-void lcd__print_bps0voltage(float bps0);
-void lcd__print_bps0calib(float bps0_calib);
-void lcd__print_cellovervoltage(int cov);
-void lcd__print_packovervoltage(int pov);
-void lcd__print_monitorcomm(int mc);
-void lcd__print_precharge(int pc);
-void lcd__print_failedthermistor(int ft);
-void lcd__print_maxtorque(float mt); 
+void lcd__print_tps0calibmax(float tps0_calib, int displayScreen);
+void lcd__print_tps1voltage(float tps1, int displayScreen);
+void lcd__print_tps0calibmax(float tps1_calib, int displayScreen);
+void lcd__print_bps0voltage(float bps0, int displayScreen);
+void lcd__print_bps0calib(float bps0_calib, int displayScreen);
+void lcd__print_cellovervoltage(int cov, int displayScreen);
+void lcd__print_packovervoltage(int pov, int displayScreen);
+void lcd__print_monitorcomm(int mc, int displayScreen);
+void lcd__print_precharge(int pc, int displayScreen);
+void lcd__print_failedthermistor(int ft, int displayScreen);
+void lcd__print_maxtorque(float mt, int displayScreen); 
 void lcd__print_hvtemp(float hvtemp); // Accumulator/Engine temperature
 void lcd__print_hvlow(float hvlow);
 void lcd__print_launch(float launch, int displayScreen);
