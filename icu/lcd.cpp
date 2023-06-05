@@ -227,7 +227,8 @@ void lcd__clear_section (uint8_t sect)
   int failedtherm[] = {90, 2, 10, 10};
   int lv[] = {65, 14, 20, 10};
   int maxtorque[] = {80, 26, 20, 10};
-  int* sections[] = {rgm, drs, launch, hv, torque, tps0volt, tps0calib, tps1volt, tps1calib, bps0volt, bps0calib, cov, pov, mc, precharge, failedtherm, lv, maxtorque};
+  int rgm2[] = {81, 13, 10, 10};
+  int* sections[] = {rgm, drs, launch, hv, torque, tps0volt, tps0calib, tps1volt, tps1calib, bps0volt, bps0calib, cov, pov, mc, precharge, failedtherm, lv, maxtorque, rgm2};
   
   
   lcd->setDrawColor(0);
@@ -288,8 +289,10 @@ void lcd__print_rgm(int rgm, int displayScreen) {
   lcd__print8(100, 43, rgm_str);
   }
 
-  if(displayScreen == 1){
+  else if(displayScreen == 1){
     sprintf(rgm_str, "%d", rgm);
+    lcd__clear_section(18);
+    lcd->sendBuffer();
     lcd__print8(85, 21.5, rgm_str);
   }
 
@@ -381,7 +384,6 @@ void lcd__print_bps0calib(float bps0_calib, int displayScreen){
     char bps0_str[5] = "   ";
     sprintf(bps0_str, "%0.1f", bps0_calib);
     lcd__clear_section(10);
-    lcd->sendBuffer();
     lcd__print8(80, 10, bps0_str);
   }
 }
@@ -741,7 +743,7 @@ void lcd_settings(int rowCount, int prevRowCount) {
         lcd__clear_screen();
       }
       lcd_settings(rowCount, prevRowCount);
-      lcd__print_rgm(regenmode, displayScreen);
+      lcd__print_rgm(regenmode, 1);
     }
     
 

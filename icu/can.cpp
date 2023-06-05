@@ -396,7 +396,7 @@
       can.setFiltersOnTheFly(rxm0, rxm1, filters2, 3);    
     }
     else if(displayScreen == 3){
-      can.setFiltersOnTheFly(rxm0, rxm1, filters3, 2);    
+      can.setFiltersOnTheFly(rxm0, rxm1, filters3, 3);    
     }
     else if(displayScreen == 4){
       can.setFiltersOnTheFly(rxm0, rxm1, filters4, 3);
