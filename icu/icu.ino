@@ -60,7 +60,7 @@ bool currentStateSW;
 int currentStateDT;
 
 // lcd ---------------------------
-int displayScreen = 3;
+int displayScreen = 0;
 int prevDisplayScreen = -1;
 int rowCount = 0;
 int prevRowCount = -1;
@@ -70,10 +70,10 @@ void setup()
 {
 
   // Set encoder pins as inputs
-  pinMode(CLK, INPUT);
-  pinMode(DT, INPUT);
-  pinMode(SW, INPUT);
-  int lastStateCLK = digitalRead(CLK);  // Read the initial state of CLK
+  //pinMode(CLK, INPUT);
+  //pinMode(DT, INPUT);
+  //pinMode(SW, INPUT);
+  //int lastStateCLK = digitalRead(CLK);  // Read the initial state of CLK
 
   // CAN Pins
   pinMode(PICO_CAN_SPI_CS, OUTPUT);
@@ -146,16 +146,17 @@ void setup()
 void loop()
 {
   // rotary position variables
-  currentStateCLK = digitalRead(CLK);
-  currentStateSW = digitalRead(SW);
-  currentStateDT = digitalRead(DT);
-  uint32_t curr_millis = millis(); // switch time var
+  //currentStateCLK = digitalRead(CLK);
+  //currentStateSW = digitalRead(SW);
+  //currentStateDT = digitalRead(DT);
+  //uint32_t curr_millis = millis(); // switch time var
+  uint32_t curr_millis = millis();
   
   can__filtersetup();
   //can__send_test();
   can__receive();
 
-  displayRotary (currentStateCLK, currentStateSW, currentStateDT, lastStateCLK, displayScreen, rowCount, regenmode);
+  //displayRotary (currentStateCLK, currentStateSW, currentStateDT, lastStateCLK, displayScreen, rowCount, regenmode);
 
 #if (POWERTRAIN_TYPE == 'E')
   hv = can__get_hv();
