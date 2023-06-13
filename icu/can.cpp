@@ -321,7 +321,7 @@
     
   };
 
-  ACAN2515AcceptanceFilter filters1[] = 
+  /* ACAN2515AcceptanceFilter filters1[] = 
   {
     {standard2515Filter (CAN_REGEN_ADDR, 0, 0), can__regenmode_receive}, //0x508
   };
@@ -345,6 +345,8 @@
     {standard2515Filter (CAN_REGEN_ADDR, 0, 0), can__regenmode_receive}, //0x508
     {standard2515Filter (CAN_BMS_FAULT_ADDR, 0, 0), can__bms_fault_receive}, // 0x602
   };
+
+  */
 
 
   void can__start()
@@ -388,7 +390,7 @@
   
   }
 
-  void can__filtersetup(){
+   /* void can__filtersetup(){
     if (displayScreen == 1){
       can.setFiltersOnTheFly(rxm0, rxm1, filters1, 1);    
     }
@@ -404,7 +406,7 @@
     else{
       can.setFiltersOnTheFly(rxm0, rxm1, filters0, 6);
     }
-  } 
+  }*/
 
   void can__stop()
   {

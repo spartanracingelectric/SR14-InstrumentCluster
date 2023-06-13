@@ -70,10 +70,10 @@ void setup()
 {
 
   // Set encoder pins as inputs
-  //pinMode(CLK, INPUT);
-  //pinMode(DT, INPUT);
-  //pinMode(SW, INPUT);
-  //int lastStateCLK = digitalRead(CLK);  // Read the initial state of CLK
+  pinMode(CLK, INPUT);
+  pinMode(DT, INPUT);
+  pinMode(SW, INPUT);
+  int lastStateCLK = digitalRead(CLK);  // Read the initial state of CLK
 
   // CAN Pins
   pinMode(PICO_CAN_SPI_CS, OUTPUT);
@@ -146,13 +146,12 @@ void setup()
 void loop()
 {
   // rotary position variables
-  //currentStateCLK = digitalRead(CLK);
-  //currentStateSW = digitalRead(SW);
-  //currentStateDT = digitalRead(DT);
-  //uint32_t curr_millis = millis(); // switch time var
-  uint32_t curr_millis = millis();
+  currentStateCLK = digitalRead(CLK);
+  currentStateSW = digitalRead(SW);
+  currentStateDT = digitalRead(DT);
+  uint32_t curr_millis = millis(); // switch time var
   
-  can__filtersetup();
+  //can__filtersetup();
   //can__send_test();
   can__receive();
 
