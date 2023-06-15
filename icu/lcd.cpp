@@ -33,6 +33,7 @@ uint8_t watertemp_prev = -1;
 int drs_prev = -1;
 int rgm_prev = -1;
 float launch_prev = -1;
+float bmsState_prev = -1;
 
 // LCD Set-up --------------------------------------------------------------- ---------------------------------------------------------------
 void lcd__init(U8G2_ST7565_NHD_C12864_F_4W_SW_SPI *lcd_ptr) // changed from SW -> HW
@@ -214,8 +215,8 @@ void lcd__clear_section (uint8_t sect)
   int launch[] = {100, 49, 40, 14};
   int hv[] = {25, 10, 25, 18};
   int torque[] = {59, 15, 20, 9};
-  int tps0volt[] = {70, 2, 20, 10};
-  int tps0calib[] = {80, 14, 20, 10};
+  int tps0volt[] = {80, 2, 20, 10};
+  int tps0calib[] = {65, 14, 20, 10};
   int tps1volt[] = {70, 26, 20, 10};
   int tps1calib[] = {80, 38, 20, 10};
   int bps0volt[] = {70, 50, 20, 10};
@@ -236,6 +237,24 @@ void lcd__clear_section (uint8_t sect)
 
   lcd->sendBuffer();
   lcd->setDrawColor(1);
+}
+
+void lcd__print_bmsstate(uint8_t bmsState, int displayScreen){
+  if(displayScreen == 3){
+    if(bmsState == bmsState_prev){
+      bmsState_prev = -1;
+      return;
+    }
+  }
+
+  bmsState_prev = bmsState;
+
+  char bmsState_str[5] = "   ";
+  bmsState_prev = bmsState;
+  sprintf(bmsState_str, "%d", bmsState);
+  lcd__clear_section(6);
+  lcd->sendBuffer();
+  lcd__print8(65, 21, bmsState_str);
 }
 
 void lcd__print_launch(float launch, int displayScreen) {
@@ -455,7 +474,7 @@ void lcd__print_failedthermistor(int ft, int displayScreen) {
     ft_prev = -1;
     return; 
   }
-  if(displayScreen == 4) {
+  if(displayScreen == 3) {
     ft_prev = ft;
     char ft_str[5] = "   ";
     sprintf(ft_str, "%d", ft);
@@ -494,18 +513,22 @@ void lcd__print_maxtorque(float mt, int displayScreen) {
   }
 }
 
-void lcd__print_hvlow(float hvlow) // low voltage battery
+void lcd__print_hvlow(float hvlow, int displayScreen) // low voltage battery
 {
-  if (hvlow == hvlow_prev) return; // if the value is the same, don't update that "section"
+  if (hvlow == hvlow_prev){
+    hvlow_prev = -1;
+    return;
+  }
 
-  hvlow_prev = hvlow; // else, update value_prev and redraw that section
+  if(displayScreen == 3){
+    char hv_str[6] = "   ";
+    hvlow_prev = hvlow;
+    sprintf(hv_str, "%0.1f", hvlow);
+    lcd__clear_section(5);
+    lcd->sendBuffer();
+    lcd__print8(80, 8, hv_str);
+  }
 
-  char hvlow_str[5] = "   ";
-
-  sprintf(hvlow_str, "%1.2f", hvlow);
-
-  //lcd__clear_section(2);
-  lcd__print14(0, 64, hvlow_str);
 }
 
 void lcd__print_hvcurr(float hvcurr) // hv current
@@ -677,12 +700,12 @@ void lcd__debugscreen(int rowCount, int prevRowCount)
 
 void lcd__debugscreen2(int rowCount, int prevRowCount) {
   // Screens
-  const char* zero = "BPS0CalibMax";
-  const char* one = "CellOverVoltage";
-  const char* two = "PackOverVoltage";
-  const char* three = "MonitorCommFault";
-  const char* four = "PrechargeFault";
-  const char* back = "Back";
+  const char* zero = "LowestCell (V):";
+  const char* one = "BMS State: ";
+  const char* two = "                ";
+  const char* three = "                ";
+  const char* four = "                ";
+  const char* back = "                ";
   const char* screens[6] = {zero, one, two, three, four, back};
 
   lcd__print_screen(5, 6, screens, prevRowCount);
@@ -716,7 +739,7 @@ void lcd_settings(int rowCount, int prevRowCount) {
  void lcd__update_screenE(float hv, float soc, float lv, float hvlow, float hvtemp, float hvcurr, int drsMode, int regenmode, 
   float launchReady, float tps0volt, float tps0calib, float tps1volt, float tps1calib, float bps0volt,
   float bps0calib, int cell_over_volt, int pack_over_volt, int monitor_comm, int precharge, int failedthermistor, float maxtorque, int displayScreen, int& rowCount, int& prevDisplayScreen, 
-  int& prevRowCount,int currentStateCLK, int lastStateCLK, int currentStateDT, uint32_t curr_millis_lcd)
+  int& prevRowCount,int currentStateCLK, int lastStateCLK, int currentStateDT, uint8_t bmsState, uint32_t curr_millis_lcd)
 {
   if (curr_millis_lcd - prev_millis_lcd >= LCD_UPDATE_MS) {
     prev_millis_lcd = curr_millis_lcd;
@@ -771,11 +794,14 @@ void lcd_settings(int rowCount, int prevRowCount) {
       }
       lcd__debugscreen2(rowCount, prevRowCount);
 
-      lcd__print_bps0calib(bps0calib, 3);
-      lcd__print_cellovervoltage(cell_over_volt, 3);
-      lcd__print_packovervoltage(pack_over_volt, 3);
-      lcd__print_monitorcomm(monitor_comm, 3);
-      lcd__print_precharge(precharge, 3);
+      //lcd__print_bps0calib(bps0calib, 3);
+      //lcd__print_failedthermistor(failedthermistor, 3);
+      //lcd__print_cellovervoltage(cell_over_volt, 3);
+      //lcd__print_packovervoltage(pack_over_volt, 3);
+      //lcd__print_monitorcomm(monitor_comm, 3);
+      //lcd__print_precharge(precharge, 3);
+      lcd__print_hvlow(hvlow,3);
+      lcd__print_bmsstate(bmsState, 3);
     }
     if (displayScreen == 4)
     {

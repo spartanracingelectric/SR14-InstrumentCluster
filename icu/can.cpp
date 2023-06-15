@@ -39,6 +39,7 @@
   int curr_prechargefault = 0;
   int curr_failedthermistor = 0;
   float curr_maxtorque;
+  float curr_hv_lowestCell = 0;
   // diagnostics ---------------------------------
   float curr_rpm = 0;
   float curr_bms_fault = 0;
@@ -102,10 +103,7 @@
   {
     curr_hv = ((inMessage.data[4]) | (inMessage.data[5] << 8) | (inMessage.data[6] << 16) | (inMessage.data[7] << 24)) * .001f;
     curr_hv_current = ((inMessage.data[0]) | (inMessage.data[1] << 8) | (inMessage.data[2] << 16) | (inMessage.data[3] << 24)) * .001f;
-    /* if (curr_hv == 1){
-      digitalWrite(LED_BUILTIN, HIGH);
-    }
-    */
+    
   }
 
   static void can__soc_receive (const CANMessage & inMessage)
@@ -116,14 +114,11 @@
   static void can__hvlow_receive (const CANMessage & inMessage)
   {
     curr_hvlow = ((inMessage.data[5] << 8) | (inMessage.data[4])) * 0.001f;
-    /*
-    if(curr_hvlow == 5){
+    
+    /* if(curr_hvlow == 5){
       digitalWrite(LED_BUILTIN, HIGH);
     }
     */
-    
-    
-    
   }
 
   static void can__hvtemp_receive (const CANMessage & inMessage)
@@ -171,6 +166,11 @@
     curr_monitorcommfault = inMessage.data[0] >> 1;
     curr_prechargefault = inMessage.data[0] >> 2;
     curr_failedthermistor = inMessage.data[0] >> 5;
+    /* if (curr_failedthermistor == 1){
+      digitalWrite(LED_BUILTIN, HIGH);
+    }
+    */
+    
     
   }
   static void can__bms_warn_receive (const CANMessage & inMessage)
@@ -312,12 +312,17 @@
   ACAN2515AcceptanceFilter filters0 [] = 
   {
     //Must have addresses in increasing order
-    {standard2515Filter (CAN_RPM_ADDR, 0, 0), can__rpm_receive}, //0x0A5
-    {standard2515Filter (CAN_REGEN_ADDR, 0, 0), can__regenmode_receive}, //0x508
-    {standard2515Filter (CAN_LAUNCH_ADDR, 0, 0), can__launch_receive}, //0x50B
-    {standard2515Filter (CAN_DRS_ADDR, 0,0), can__drs_receive}, //0x50C
-    {standard2515Filter (CAN_HV_ADDR, 0, 0), can__hv_receive}, // 0x620
-    {standard2515Filter (CAN_BAT_TEMP_ADDR, 0, 0), can__hvtemp_receive}, // 0x623
+
+    // {standard2515Filter (CAN_RPM_ADDR, 0, 0), can__rpm_receive}, //0x0A5
+    // {standard2515Filter (CAN_REGEN_ADDR, 0, 0), can__regenmode_receive}, //0x508
+    // {standard2515Filter (CAN_LAUNCH_ADDR, 0, 0), can__launch_receive}, //0x50B
+    // {standard2515Filter (CAN_DRS_ADDR, 0,0), can__drs_receive}, //0x50C
+    // {standard2515Filter (CAN_HV_ADDR, 0, 0), can__hv_receive}, // 0x620
+    // {standard2515Filter (CAN_BAT_TEMP_ADDR, 0, 0), can__hvtemp_receive}, // 0x623
+    {standard2515Filter (CAN_BMS_FAULT_ADDR, 0, 0), can__bms_fault_receive}, // 0x602
+    {standard2515Filter (CAN_BMS_STAT_ADDR, 0, 0), can__bms_stat_receive}, // 0x610
+    {standard2515Filter (CAN_HVLOW_ADDR, 0, 0), can__hvlow_receive}, // 0x622
+
     
   };
 
@@ -415,7 +420,7 @@
   static uint32_t gReceivedFrameCount = 0 ;
   static uint32_t gSentFrameCount = 0 ;
 
-  void can__send(uint8_t regenmode)
+  void can__send(uint8_t regenmode) 
   {
     CANMessage frame;
     frame.id = 0x702;

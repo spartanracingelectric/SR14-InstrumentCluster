@@ -50,7 +50,7 @@ void lcd__print_precharge(int pc, int displayScreen);
 void lcd__print_failedthermistor(int ft, int displayScreen);
 void lcd__print_maxtorque(float mt, int displayScreen); 
 void lcd__print_hvtemp(float hvtemp); // Accumulator/Engine temperature
-void lcd__print_hvlow(float hvlow);
+void lcd__print_hvlow(float hvlow, int displayScreen);
 void lcd__print_launch(float launch, int displayScreen);
 void lcd__print_drs(float drsMode, int displayScreen);
 void lcd__print_rgm(int regenmode, int displayScreen);
@@ -76,6 +76,6 @@ void lcd__update_screenE(float hv, float soc, float lv, float hvlow, float hvtem
 void lcd__update_screenE(float hv, float soc, float lv, float hvlow, float hvtemp, float hvcurr, int drsMode, int regenmode, 
   float launchReady, float tps0volt, float tps0calib, float tps1volt, float tps1calib, float bps0volt, 
   float bps0calib, int cell_over_volt, int pack_over_volt, int monitor_comm, int precharge, int failedthermistor, float maxtorque, int displayScreen, int& rowCount, int& prevDisplayScreen, 
-  int& prevRowCount, int currentStateCLK, int lastStateCLK, int currentStateDT, uint32_t curr_millis_lcd);
+  int& prevRowCount, int currentStateCLK, int lastStateCLK, int currentStateDT, uint8_t bmsState, uint32_t curr_millis_lcd);
 
 #endif /* LCD_H_ */

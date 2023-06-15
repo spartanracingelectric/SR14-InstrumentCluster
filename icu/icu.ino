@@ -151,11 +151,11 @@ void loop()
   currentStateDT = digitalRead(DT);
   uint32_t curr_millis = millis(); // switch time var
   
-  can__filtersetup();
+  //can__filtersetup();
   //can__send_test();
   can__receive();
 
-  displayRotary (currentStateCLK, currentStateSW, currentStateDT, lastStateCLK, displayScreen, rowCount, regenmode);
+  //displayRotary (currentStateCLK, currentStateSW, currentStateDT, lastStateCLK, displayScreen, rowCount, regenmode);
 
 #if (POWERTRAIN_TYPE == 'E')
   hv = can__get_hv();
@@ -218,7 +218,7 @@ void loop()
     lcd__update_screenE(hv, soc, lv, hvlow, hvtemp, hvCurr, drsMode, regenmode, 
       launchReady, tps0volt, tps0calib, tps1volt, tps1calib, bps0volt, 
       bps0calib, cell_over_volt, pack_over_volt, monitor_comm, precharge, failedthermistor, maxtorque, displayScreen, rowCount, prevDisplayScreen, 
-      prevRowCount,currentStateCLK, lastStateCLK, currentStateDT, curr_millis);
+      prevRowCount,currentStateCLK, lastStateCLK, currentStateDT, bmsstate, curr_millis);
     leds__rpm_update_tach(rpm);
     leds__drsEnable(drsEnable, displayScreen);
     leds__launchReady(launchStatus, displayScreen);
