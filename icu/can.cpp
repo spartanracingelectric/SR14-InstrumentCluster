@@ -322,6 +322,7 @@
     {standard2515Filter (CAN_BMS_FAULT_ADDR, 0, 0), can__bms_fault_receive}, // 0x602
     {standard2515Filter (CAN_BMS_STAT_ADDR, 0, 0), can__bms_stat_receive}, // 0x610
     {standard2515Filter (CAN_HVLOW_ADDR, 0, 0), can__hvlow_receive}, // 0x622
+    {standard2515Filter (CAN_BAT_TEMP_ADDR, 0, 0), can__hvtemp_receive}, // 0x623
 
     
   };

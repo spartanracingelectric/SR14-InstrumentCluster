@@ -217,7 +217,7 @@ void lcd__clear_section (uint8_t sect)
   int torque[] = {59, 15, 20, 9};
   int tps0volt[] = {80, 2, 20, 10};
   int tps0calib[] = {65, 14, 20, 10};
-  int tps1volt[] = {70, 26, 20, 10};
+  int tps1volt[] = {95, 26, 50, 10};
   int tps1calib[] = {80, 38, 20, 10};
   int bps0volt[] = {70, 50, 20, 10};
   int bps0calib[] = {80, 2, 20, 10};
@@ -251,7 +251,14 @@ void lcd__print_bmsstate(uint8_t bmsState, int displayScreen){
 
   char bmsState_str[5] = "   ";
   bmsState_prev = bmsState;
-  sprintf(bmsState_str, "%d", bmsState);
+  if(bmsState == 3){
+    sprintf(bmsState_str, "%s", "IDLE");
+  }
+
+  if(bmsState == 6){
+    sprintf(bmsState_str, "%s", "FAULT");
+
+  }
   lcd__clear_section(6);
   lcd->sendBuffer();
   lcd__print8(65, 21, bmsState_str);
@@ -545,19 +552,25 @@ void lcd__print_hvcurr(float hvcurr) // hv current
   lcd__print14(0, 34, hvcurr_str);
 }
 
-void lcd__print_hvtemp(float hvtemp) // Accumulator/Engine temperature
+void lcd__print_hvtemp(float hvtemp, int displayScreen) // Accumulator/Engine temperature
 {
-  if (hvtemp == hvtemp_prev) return; // if the value is the same, don't update that "section"
+  if(displayScreen == 3){
+    if (hvtemp == hvtemp_prev){
+      hvtemp_prev = -1;
+      return;
+    }
 
-  hvtemp_prev = hvtemp; // else, update value_prev and redraw that section
+    hvtemp_prev = hvtemp;
 
   char hvtemp_str[5] = "    ";
 //  leds__hvtemp(hvtemp);
 
   sprintf(hvtemp_str, "%2.1f", hvtemp);
 
-  //lcd__clear_section(0);
-  lcd__print14(94, 64, hvtemp_str);
+  lcd__clear_section(7);
+  lcd->sendBuffer();
+  lcd__print8(95, 34, hvtemp_str);
+  }
 }
 
 void lcd__print_drs(int drs, int displayScreen)
@@ -702,7 +715,7 @@ void lcd__debugscreen2(int rowCount, int prevRowCount) {
   // Screens
   const char* zero = "LowestCell (V):";
   const char* one = "BMS State: ";
-  const char* two = "                ";
+  const char* two = "Lowest Cell Temp: ";
   const char* three = "                ";
   const char* four = "                ";
   const char* back = "                ";
@@ -802,6 +815,7 @@ void lcd_settings(int rowCount, int prevRowCount) {
       //lcd__print_precharge(precharge, 3);
       lcd__print_hvlow(hvlow,3);
       lcd__print_bmsstate(bmsState, 3);
+      lcd__print_hvtemp(hvtemp, 3);
     }
     if (displayScreen == 4)
     {

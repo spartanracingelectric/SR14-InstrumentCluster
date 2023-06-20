@@ -49,7 +49,7 @@ void lcd__print_monitorcomm(int mc, int displayScreen);
 void lcd__print_precharge(int pc, int displayScreen);
 void lcd__print_failedthermistor(int ft, int displayScreen);
 void lcd__print_maxtorque(float mt, int displayScreen); 
-void lcd__print_hvtemp(float hvtemp); // Accumulator/Engine temperature
+void lcd__print_hvtemp(float hvtemp, int displayScreen); // Accumulator/Engine temperature
 void lcd__print_hvlow(float hvlow, int displayScreen);
 void lcd__print_launch(float launch, int displayScreen);
 void lcd__print_drs(float drsMode, int displayScreen);
