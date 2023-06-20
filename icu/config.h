@@ -124,6 +124,7 @@
 #define CAN_TPS0 0x500
 #define CAN_TPS1 0x501
 #define CAN_BPS0 0x502
+#define CAN_SAFETY 0x506
 #define CAN_LV 0x507
 #define CAN_LV_ADDR 0x507
 

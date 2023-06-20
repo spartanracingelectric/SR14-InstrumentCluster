@@ -26,6 +26,7 @@ static void can__tps0voltage_receive(const CANMessage & inMessage);
 static void can__tps1voltage_receive(const CANMessage & inMessage);
 static void can__bps0voltage_receive(const CANMessage & inMessage);
 static void can__maxtorque_receive(const CANMessage & inMessage);
+static void can__vcu_safety_receive(const CANMessage &inMessage);
 
 
 
@@ -46,6 +47,7 @@ float can__get_drsEnable();
 int can__get_drsMode();
 float can__get_launchReady();
 float can__get_launchStatus();
+int can__get_hvil();
 // diagnostics ---------------------------
 float can__get_rpm(); // not tested
 float can__get_bms_fault(); //

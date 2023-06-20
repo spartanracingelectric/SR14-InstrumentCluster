@@ -356,6 +356,19 @@ void leds__lv(float lv, int displayScreen)
   }
 }
 
+void leds__hvil(int hvil, float hv){
+  if(hvil == 0 && hv >= 60){
+    leds->setPoint(4, 1, true);
+    leds->setPoint(3, 1, true);
+  }
+
+  else{
+    leds->setPoint(4, 1, false);
+     leds->setPoint(3, 1, false);
+  }
+}
+
+
 void leds__drsEnable(float drsEnable, int displayScreen){
   if(displayScreen == 0){
     if(drsEnable == 1){

@@ -45,6 +45,7 @@ float drsEnable = 0.0f;
 int drsMode = 0;
 float launchReady = 0.0f;
 float launchStatus = 0.0f;
+int hvil = 1;
 
 // diagnostics ---------------------------
 uint16_t rpm = 0;
@@ -160,6 +161,7 @@ void loop()
 #if (POWERTRAIN_TYPE == 'E')
   hv = can__get_hv();
   hvCurr = can__get_hv_current();
+  hvil = can__get_hvil();
   soc = can__get_soc();
 //  wattemp = can__get_wattemp(); // no can
   hvtemp = can__get_hvtemp();
@@ -226,6 +228,7 @@ void loop()
     leds__debug(displayScreen);
     leds__regenMode(regenmode, displayScreen);
     leds__hvtemp(hvtemp, displayScreen);
+    leds__hvil(hvil, hv);
 
 #endif
   //delay(500);

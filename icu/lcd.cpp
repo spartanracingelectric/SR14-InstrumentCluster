@@ -34,6 +34,7 @@ int drs_prev = -1;
 int rgm_prev = -1;
 float launch_prev = -1;
 
+
 // LCD Set-up --------------------------------------------------------------- ---------------------------------------------------------------
 void lcd__init(U8G2_ST7565_NHD_C12864_F_4W_SW_SPI *lcd_ptr) // changed from SW -> HW
 {
@@ -135,12 +136,12 @@ void lcd__print_default_screen_template()
   //lcd__print8(0, 10, "HV CURR");
   lcd__print8(57, 28, "DRS");
   lcd__print8(57, 43, "REGEN");
-  lcd__print8(57, 58, "LAUNCH"); // Launch Control
+  //lcd__print8(57, 58, "LAUNCH"); // Launch Control
   // lcd__print8(10, 10, "SOC"); // State of Charge
   //lcd__print8(10, 10, "VOL");
   //lcd__print8(10, 20, "0/400"); // Max Pack Voltage
   lcd__print8(0, 20, "HV T"); // Lowest Cell Temp
-  //lcd__print8(0, 38, "LV"); // Low Voltage
+  lcd__print8(0, 38, "HV"); // Low Voltage
   //lcd__print14(10, 62, "SOC");
   // lcd__print8(5,5,"------");
 
@@ -733,7 +734,7 @@ void lcd_settings(int rowCount, int prevRowCount) {
     lcd__print_hv(hv, displayScreen, prevDisplayScreen);
     lcd__print_drs(drsMode, displayScreen);
     lcd__print_rgm(regenmode, displayScreen);
-    lcd__print_launch(launchReady, displayScreen);
+    //lcd__print_launch(launchReady, displayScreen);
     }
     if (displayScreen == 1) 
     {

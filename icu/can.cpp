@@ -39,6 +39,7 @@
   int curr_prechargefault = 0;
   int curr_failedthermistor = 0;
   float curr_maxtorque;
+  int curr_hvil = 1;
   // diagnostics ---------------------------------
   float curr_rpm = 0;
   float curr_bms_fault = 0;
@@ -181,10 +182,23 @@
   {
     curr_bms_stat = inMessage.data[6];
   }
+
+  static void can__vcu_safety_receive(const CANMessage &inMessage)
+  {
+    curr_hvil = inMessage.data[6];
+    if (curr_hvil == 1){
+      digitalWrite(LED_BUILTIN, HIGH);
+    }
+    
+
+  }
   //
 
 
   //Accessors
+  int can__get_hvil(){
+    return curr_hvil;
+  }
   float can__get_launchReady(){
     return curr_launchReady;
   }
@@ -314,8 +328,9 @@
     //Must have addresses in increasing order
     {standard2515Filter (CAN_RPM_ADDR, 0, 0), can__rpm_receive}, //0x0A5
     {standard2515Filter (CAN_REGEN_ADDR, 0, 0), can__regenmode_receive}, //0x508
-    {standard2515Filter (CAN_LAUNCH_ADDR, 0, 0), can__launch_receive}, //0x50B
+    //{standard2515Filter (CAN_LAUNCH_ADDR, 0, 0), can__launch_receive}, //0x50B
     {standard2515Filter (CAN_DRS_ADDR, 0,0), can__drs_receive}, //0x50C
+    {standard2515Filter (CAN_SAFETY, 0, 0), can__vcu_safety_receive},
     {standard2515Filter (CAN_HV_ADDR, 0, 0), can__hv_receive}, // 0x620
     {standard2515Filter (CAN_BAT_TEMP_ADDR, 0, 0), can__hvtemp_receive}, // 0x623
     
