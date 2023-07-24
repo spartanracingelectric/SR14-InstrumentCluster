@@ -261,7 +261,7 @@ void lcd__print_bmsstate(uint8_t bmsState, int displayScreen){
   }
   lcd__clear_section(6);
   lcd->sendBuffer();
-  lcd__print8(65, 21, bmsState_str);
+  lcd__print8(65, 33, bmsState_str);
 }
 
 void lcd__print_launch(float launch, int displayScreen) {
@@ -617,13 +617,13 @@ void lcd__print_hv(float hv, int displayScreen, int prevDisplayScreen) // accumu
 
   hv_prev = hv; // else, update value_prev=value and redraw that section
   // to test: 0 == hv_prev & hv=hv_prev--
-
-  char hv_str[6] = "   ";
+  hv_prev = 12.0f;
+  char hv_str[6] = "";
   // Round to one decimal place
   sprintf(hv_str, "%05.1f", hv);
 
   lcd__clear_section(3);
-  lcd__print14(40, 15, hv_str);
+  lcd__print8(65, 9, hv_str);
   }
 }
 
@@ -646,7 +646,7 @@ void lcd__print_soc(float soc) // State of charge 0-100%
   }
 
   //lcd__clear_section(3);
-  lcd__print14(70, 62, soc_str);
+  lcd__print14(70, 45, soc_str);
 }
 // Menu Functions --------------------------------------------------------------- ---------------------------------------------------------------
 void lcd__highlight_screen(uint8_t row, const char* screen) // number 0-5
@@ -712,12 +712,13 @@ void lcd__debugscreen(int rowCount, int prevRowCount)
 }
 
 void lcd__debugscreen2(int rowCount, int prevRowCount) {
+  // Charging cart screen
   // Screens
-  const char* zero = "LowestCell (V):";
-  const char* one = "BMS State: ";
-  const char* two = "Lowest Cell Temp: ";
-  const char* three = "                ";
-  const char* four = "                ";
+  const char* zero = "Accumulator (V):";
+  const char* one = "AMP(Hrs):"
+  const char* two = "BMS State: ";
+  const char* three = "SOC";
+  const char* four = "Lowest Cell(Temp):";
   const char* back = "                ";
   const char* screens[6] = {zero, one, two, three, four, back};
 
